@@ -1,7 +1,9 @@
 package com.primezat.demo.service.impl;
 
 import com.primezat.demo.exception.ResourceNotFoundException;
+import com.primezat.demo.exception.UnauthorizedException;
 import com.primezat.demo.model.Project;
+import com.primezat.demo.model.User;
 import com.primezat.demo.repository.ProjectRepository;
 import com.primezat.demo.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +23,19 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<Project> getProjectsByUser(User user) {
+        return projectRepository.findByUser(user);
+    }
+
+    @Override
     public Project getProjectById(Long id) {
         return projectRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + id));
     }
 
     @Override
-    public Project createProject(Project project) {
+    public Project createProjectForUser(Project project, User user) {
+        project.setUser(user);
         if (project.getBlocksJson() == null || project.getBlocksJson().trim().isEmpty()) {
             project.setBlocksJson("[]");
         }
@@ -38,8 +46,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project updateProject(Long id, Project updatedProject) {
+    public Project updateProjectForUser(Long id, Project updatedProject, User user) {
         Project project = getProjectById(id);
+        
+        // Ownership check
+        if (project.getUser() == null || !project.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedException("You do not have permission to modify this project");
+        }
+
         if (updatedProject.getName() != null) {
             project.setName(updatedProject.getName());
         }
@@ -56,11 +70,15 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void deleteProject(Long id) {
-        if (!projectRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Project not found with id: " + id);
+    public void deleteProjectForUser(Long id, User user) {
+        Project project = getProjectById(id);
+        
+        // Ownership check
+        if (project.getUser() == null || !project.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedException("You do not have permission to delete this project");
         }
-        projectRepository.deleteById(id);
+        
+        projectRepository.delete(project);
     }
 }
 

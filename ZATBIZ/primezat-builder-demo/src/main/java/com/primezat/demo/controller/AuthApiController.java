@@ -27,6 +27,10 @@ public class AuthApiController {
         String email = request.get("email");
         String password = request.get("password");
 
+        if (email != null) {
+            email = email.trim().toLowerCase();
+        }
+
         if (username == null || username.trim().isEmpty() ||
             email == null || email.trim().isEmpty() ||
             password == null || password.trim().isEmpty()) {
@@ -64,6 +68,10 @@ public class AuthApiController {
     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String password = request.get("password");
+
+        if (email != null) {
+            email = email.trim().toLowerCase();
+        }
 
         if (email == null || email.trim().isEmpty() ||
             password == null || password.trim().isEmpty()) {

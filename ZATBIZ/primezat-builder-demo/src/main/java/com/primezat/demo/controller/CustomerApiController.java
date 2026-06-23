@@ -1,7 +1,9 @@
 package com.primezat.demo.controller;
 
 import com.primezat.demo.model.Customer;
+import com.primezat.demo.model.User;
 import com.primezat.demo.repository.CustomerRepository;
+import com.primezat.demo.repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +22,19 @@ public class CustomerApiController {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // Register customer for a specific business website
     @PostMapping("/register")
     public ResponseEntity<?> registerCustomer(@RequestBody Map<String, String> request) {
         String name = request.get("name");
         String email = request.get("email");
         String password = request.get("password");
+
+        if (email != null) {
+            email = email.trim().toLowerCase();
+        }
         String projectIdStr = request.get("projectId");
         String phone = request.get("phone");
         String address = request.get("address");
@@ -66,11 +75,15 @@ public class CustomerApiController {
         return ResponseEntity.ok(response);
     }
 
-    // Login customer for a specific business website
+    // Login customer/staff for a specific business website
     @PostMapping("/login")
     public ResponseEntity<?> loginCustomer(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String password = request.get("password");
+
+        if (email != null) {
+            email = email.trim().toLowerCase();
+        }
         String projectIdStr = request.get("projectId");
 
         if (email == null || email.trim().isEmpty() ||
@@ -84,7 +97,27 @@ public class CustomerApiController {
         Long projectId = Long.parseLong(projectIdStr);
         Optional<Customer> optionalCustomer = customerRepository.findByProjectIdAndEmail(projectId, email.trim());
 
-        if (optionalCustomer.isEmpty() || !BCrypt.checkpw(password, optionalCustomer.get().getPassword())) {
+        if (optionalCustomer.isEmpty()) {
+            // Check if it's a staff/builder user logging into their store staff portal
+            Optional<User> optionalUser = userRepository.findByEmail(email.trim());
+            if (optionalUser.isPresent() && BCrypt.checkpw(password, optionalUser.get().getPassword())) {
+                User user = optionalUser.get();
+                Map<String, Object> response = new HashMap<>();
+                response.put("id", -1L); // -1 represents Staff/Owner
+                response.put("name", "Staff (" + user.getUsername() + ")");
+                response.put("email", user.getEmail());
+                response.put("phone", "N/A");
+                response.put("address", "ZatBiz Core Staff Console");
+                response.put("projectId", projectId);
+                return ResponseEntity.ok(response);
+            }
+            
+            Map<String, String> error = new HashMap<>();
+            error.put("message", "Invalid email or password!");
+            return ResponseEntity.status(401).body(error);
+        }
+
+        if (!BCrypt.checkpw(password, optionalCustomer.get().getPassword())) {
             Map<String, String> error = new HashMap<>();
             error.put("message", "Invalid email or password!");
             return ResponseEntity.status(401).body(error);
