@@ -6,6 +6,7 @@ E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\co
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\controller\CategoryApiController.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\controller\CouponApiController.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\controller\CustomerApiController.java
+E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\controller\HospitalInfoApiController.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\controller\OrderApiController.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\controller\ProductApiController.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\controller\ProjectApiController.java
@@ -22,6 +23,7 @@ E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\mo
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\model\Category.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\model\Coupon.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\model\Customer.java
+E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\model\HospitalInfo.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\model\Order.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\model\Product.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\model\Project.java
@@ -41,6 +43,7 @@ E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\re
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\repository\CategoryRepository.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\repository\CouponRepository.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\repository\CustomerRepository.java
+E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\repository\HospitalInfoRepository.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\repository\OrderRepository.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\repository\ProductRepository.java
 E:\ZATBIZ - Copy\ZATBIZ\primezat-builder-demo\src\main\java\com\primezat\demo\repository\ProjectRepository.java

@@ -13,6 +13,7 @@ com\primezat\demo\repository\RealEstateInfoRepository.class
 com\primezat\demo\model\RealEstateLead.class
 com\primezat\demo\service\ProjectService.class
 com\primezat\demo\config\JwtUtil.class
+com\primezat\demo\model\HospitalInfo.class
 com\primezat\demo\model\Reservation.class
 com\primezat\demo\repository\RealEstateLeadRepository.class
 com\primezat\demo\controller\CustomerApiController.class
@@ -25,6 +26,7 @@ com\primezat\demo\repository\CustomerRepository.class
 com\primezat\demo\repository\OrderRepository.class
 com\primezat\demo\config\CorsConfig$1.class
 com\primezat\demo\repository\RestaurantDataRepository.class
+com\primezat\demo\repository\HospitalInfoRepository.class
 com\primezat\demo\model\StoreSettings.class
 com\primezat\demo\model\RealEstateBroker.class
 com\primezat\demo\repository\ProductRepository.class
@@ -45,6 +47,7 @@ com\primezat\demo\service\impl\ProductServiceImpl.class
 com\primezat\demo\config\CorsConfig.class
 com\primezat\demo\controller\ProductApiController.class
 com\primezat\demo\model\Coupon.class
+com\primezat\demo\controller\HospitalInfoApiController.class
 com\primezat\demo\controller\StoreSettingsApiController.class
 com\primezat\demo\model\RealEstateInvoice.class
 com\primezat\demo\exception\GlobalExceptionHandler.class

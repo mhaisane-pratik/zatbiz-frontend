@@ -255,3 +255,41 @@ CREATE TABLE IF NOT EXISTS restaurant_data (
     data_json TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 19. Hospital/Clinic Custom Information Table
+CREATE TABLE IF NOT EXISTS hospital_info (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    subcategory VARCHAR(255),
+    company_name VARCHAR(255),
+    business_name VARCHAR(255),
+    company_description VARCHAR(2000),
+    owner_name VARCHAR(255),
+    mobile_no VARCHAR(255),
+    email VARCHAR(255),
+    city VARCHAR(255),
+    state VARCHAR(255),
+    country VARCHAR(255),
+    pincode VARCHAR(255),
+    logo_url TEXT,
+    theme_color VARCHAR(255)
+);
+
+-- 20. Gym/Fitness Center Custom Information Table
+CREATE TABLE IF NOT EXISTS gym_info (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    subcategory VARCHAR(255),
+    club_name VARCHAR(255),
+    business_name VARCHAR(255),
+    description VARCHAR(2000),
+    owner_name VARCHAR(255),
+    mobile_no VARCHAR(255),
+    email VARCHAR(255),
+    city VARCHAR(255),
+    state VARCHAR(255),
+    country VARCHAR(255),
+    pincode VARCHAR(255),
+    logo_url TEXT,
+    theme_color VARCHAR(255)
+);
