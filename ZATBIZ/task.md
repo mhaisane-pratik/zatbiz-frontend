@@ -45,4 +45,20 @@
 - [x] Verify client-side storefront, wishlist, and orders render product images with fallback handlers
 - [x] Verify production build compiles successfully
 
+## Phase 9: Case-Insensitive Login & Admin Password Seed (Completed)
+- [x] Normalize email input to lowercase in both preview login (`page.tsx`) and main builder login (`page.tsx`)
+- [x] Update Spring Boot backend `AuthApiController.java` and `CustomerApiController.java` to handle emails case-insensitively
+- [x] Update `PrimezatApplication.java` database seed to force update existing admin user password to `admin123`
+- [x] Restart backend server to apply database seeds and verify successful deployment
 
+## Phase 10: Graceful Fallback for Site Preview Login (Completed)
+- [x] Catch customer API login errors (such as 401 Unauthorized for unregistered emails) on the preview login page
+- [x] Automatically log in as a local mock customer on failure to allow previewing the customer-side dashboard
+- [x] Ensure `admin@gmail.com` logs into the Admin Side Dashboard and other emails log into the User/Diner Side Dashboard
+
+## Phase 11: Gym Category, Theme Selection and Profile Onboarding (Completed)
+- [x] Fix syntax error and complete Step 2 (theme selection) in `GymSelectorModal.tsx`
+- [x] Add state management for gym themes and colors in dashboard `page.tsx`
+- [x] Update `BusinessWizard.tsx` to include gym details fields, routing steps, and API database sync
+- [x] Update `templates.ts` blocks builder to apply the selected gym theme styling dynamic presets
+- [x] Run automated compilation checks and verify Next.js builds clean

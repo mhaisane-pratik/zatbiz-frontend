@@ -293,3 +293,23 @@ CREATE TABLE IF NOT EXISTS gym_info (
     logo_url TEXT,
     theme_color VARCHAR(255)
 );
+
+-- 21. Restaurant Custom Information Table
+CREATE TABLE IF NOT EXISTS restaurant_info (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    subcategory VARCHAR(255),
+    restaurant_name VARCHAR(255),
+    business_name VARCHAR(255),
+    description VARCHAR(2000),
+    owner_name VARCHAR(255),
+    mobile_no VARCHAR(255),
+    email VARCHAR(255),
+    city VARCHAR(255),
+    state VARCHAR(255),
+    country VARCHAR(255),
+    pincode VARCHAR(255),
+    logo_url TEXT,
+    theme_color VARCHAR(255)
+);
+
