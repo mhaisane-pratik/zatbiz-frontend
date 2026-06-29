@@ -310,7 +310,11 @@ CREATE TABLE IF NOT EXISTS restaurant_info (
     country VARCHAR(255),
     pincode VARCHAR(255),
     logo_url TEXT,
-    theme_color VARCHAR(255)
+    theme_color VARCHAR(255),
+    selected_theme VARCHAR(255),
+    selected_homepage_layout VARCHAR(255),
+    selected_login_layout VARCHAR(255),
+    selected_dashboard_layout VARCHAR(255)
 );
 
 -- 22. Medical Shop Custom Information Table
@@ -464,5 +468,20 @@ CREATE TABLE IF NOT EXISTS event_billing (
     status VARCHAR(255),
     details_json TEXT
 );
+
+-- 30. Restaurant Registered Users Table
+CREATE TABLE IF NOT EXISTS restaurant_users (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(255),
+    address VARCHAR(255),
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE gym_info ADD COLUMN IF NOT EXISTS header_bg_image TEXT;
+ALTER TABLE gym_info ADD COLUMN IF NOT EXISTS selected_login_layout VARCHAR(255);
 
 

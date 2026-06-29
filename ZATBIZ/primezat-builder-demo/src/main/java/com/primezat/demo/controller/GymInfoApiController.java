@@ -72,5 +72,7 @@ public class GymInfoApiController {
         existing.setPincode(source.getPincode());
         existing.setLogoUrl(source.getLogoUrl());
         existing.setThemeColor(source.getThemeColor());
+        existing.setHeaderBgImage(source.getHeaderBgImage());
+        existing.setSelectedLoginLayout(source.getSelectedLoginLayout());
     }
 }

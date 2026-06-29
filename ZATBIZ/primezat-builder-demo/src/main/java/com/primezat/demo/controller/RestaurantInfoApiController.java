@@ -73,5 +73,9 @@ public class RestaurantInfoApiController {
         existing.setPincode(source.getPincode());
         existing.setLogoUrl(source.getLogoUrl());
         existing.setThemeColor(source.getThemeColor());
+        existing.setSelectedTheme(source.getSelectedTheme());
+        existing.setSelectedHomepageLayout(source.getSelectedHomepageLayout());
+        existing.setSelectedLoginLayout(source.getSelectedLoginLayout());
+        existing.setSelectedDashboardLayout(source.getSelectedDashboardLayout());
     }
 }

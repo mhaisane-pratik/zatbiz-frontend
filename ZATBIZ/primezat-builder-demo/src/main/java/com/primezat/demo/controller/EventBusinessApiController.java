@@ -280,6 +280,18 @@ public class EventBusinessApiController {
             existing.setWorkingHours(info.getWorkingHours());
             existing.setGstNumber(info.getGstNumber());
             existing.setSocialMediaLinks(info.getSocialMediaLinks());
+            
+            // Copy website/layout configurations
+            if (info.getTagline() != null) existing.setTagline(info.getTagline());
+            if (info.getAboutText() != null) existing.setAboutText(info.getAboutText());
+            if (info.getPrimaryColor() != null) existing.setPrimaryColor(info.getPrimaryColor());
+            if (info.getSecondaryColor() != null) existing.setSecondaryColor(info.getSecondaryColor());
+            
+            // Copy SEO configurations
+            if (info.getSeoTitle() != null) existing.setSeoTitle(info.getSeoTitle());
+            if (info.getSeoKeywords() != null) existing.setSeoKeywords(info.getSeoKeywords());
+            if (info.getSeoDescription() != null) existing.setSeoDescription(info.getSeoDescription());
+
             return agencyInfoRepository.save(existing);
         }
         return agencyInfoRepository.save(info);

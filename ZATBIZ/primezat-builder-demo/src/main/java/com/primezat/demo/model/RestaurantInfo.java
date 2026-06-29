@@ -39,6 +39,11 @@ public class RestaurantInfo {
 
     private String themeColor;
 
+    private String selectedTheme;
+    private String selectedHomepageLayout;
+    private String selectedLoginLayout;
+    private String selectedDashboardLayout;
+
     public RestaurantInfo() {
     }
 
@@ -177,5 +182,37 @@ public class RestaurantInfo {
 
     public void setThemeColor(String themeColor) {
         this.themeColor = themeColor;
+    }
+
+    public String getSelectedTheme() {
+        return selectedTheme;
+    }
+
+    public void setSelectedTheme(String selectedTheme) {
+        this.selectedTheme = selectedTheme;
+    }
+
+    public String getSelectedHomepageLayout() {
+        return selectedHomepageLayout;
+    }
+
+    public void setSelectedHomepageLayout(String selectedHomepageLayout) {
+        this.selectedHomepageLayout = selectedHomepageLayout;
+    }
+
+    public String getSelectedLoginLayout() {
+        return selectedLoginLayout;
+    }
+
+    public void setSelectedLoginLayout(String selectedLoginLayout) {
+        this.selectedLoginLayout = selectedLoginLayout;
+    }
+
+    public String getSelectedDashboardLayout() {
+        return selectedDashboardLayout;
+    }
+
+    public void setSelectedDashboardLayout(String selectedDashboardLayout) {
+        this.selectedDashboardLayout = selectedDashboardLayout;
     }
 }

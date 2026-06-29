@@ -39,6 +39,11 @@ public class GymInfo {
 
     private String themeColor;
 
+    @Column(columnDefinition = "TEXT")
+    private String headerBgImage;
+
+    private String selectedLoginLayout;
+
     public GymInfo() {
     }
 
@@ -177,5 +182,21 @@ public class GymInfo {
 
     public void setThemeColor(String themeColor) {
         this.themeColor = themeColor;
+    }
+
+    public String getHeaderBgImage() {
+        return headerBgImage;
+    }
+
+    public void setHeaderBgImage(String headerBgImage) {
+        this.headerBgImage = headerBgImage;
+    }
+
+    public String getSelectedLoginLayout() {
+        return selectedLoginLayout;
+    }
+
+    public void setSelectedLoginLayout(String selectedLoginLayout) {
+        this.selectedLoginLayout = selectedLoginLayout;
     }
 }
