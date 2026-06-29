@@ -3,15 +3,17 @@ package com.primezat.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "event_service")
-public class EventService {
+@Table(name = "event_catalog")
+public class EventCatalog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long projectId;
-    private String name;
+    private String type; // service, package, portfolio, gallery, category, testimonial, blog, faq, team_member, vendor
+    private String title;
+    private String subtitle;
     
     @Column(length = 2000)
     private String description;
@@ -20,8 +22,11 @@ public class EventService {
     
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
+    
+    @Column(columnDefinition = "TEXT")
+    private String dataJson; // for dynamic type-specific fields
 
-    public EventService() {}
+    public EventCatalog() {}
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -29,8 +34,14 @@ public class EventService {
     public Long getProjectId() { return projectId; }
     public void setProjectId(Long projectId) { this.projectId = projectId; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public String getSubtitle() { return subtitle; }
+    public void setSubtitle(String subtitle) { this.subtitle = subtitle; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
@@ -40,4 +51,7 @@ public class EventService {
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getDataJson() { return dataJson; }
+    public void setDataJson(String dataJson) { this.dataJson = dataJson; }
 }

@@ -313,3 +313,73 @@ CREATE TABLE IF NOT EXISTS restaurant_info (
     theme_color VARCHAR(255)
 );
 
+-- 22. Medical Shop Custom Information Table
+CREATE TABLE IF NOT EXISTS medical_shop_info (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    subcategory VARCHAR(255),
+    company_name VARCHAR(255),
+    business_name VARCHAR(255),
+    company_description VARCHAR(2000),
+    owner_name VARCHAR(255),
+    mobile_no VARCHAR(255),
+    email VARCHAR(255),
+    city VARCHAR(255),
+    state VARCHAR(255),
+    country VARCHAR(255),
+    pincode VARCHAR(255),
+    logo_url TEXT,
+    theme_color VARCHAR(255),
+    selected_theme VARCHAR(255),
+    selected_homepage_layout VARCHAR(255),
+    selected_login_layout VARCHAR(255),
+    selected_dashboard_layout VARCHAR(255)
+);
+
+-- 23. Medical Shop Products Table
+CREATE TABLE IF NOT EXISTS medical_shop_product (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    name VARCHAR(255),
+    brand VARCHAR(255),
+    generic_name VARCHAR(255),
+    category VARCHAR(255),
+    description VARCHAR(2000),
+    uses VARCHAR(1000),
+    dosage VARCHAR(1000),
+    ingredients VARCHAR(1000),
+    side_effects VARCHAR(1000),
+    warnings VARCHAR(1000),
+    storage_instructions VARCHAR(1000),
+    expiry_information VARCHAR(255),
+    price DOUBLE PRECISION,
+    discount INTEGER,
+    stock_status VARCHAR(255),
+    stock_count INTEGER,
+    rating DOUBLE PRECISION,
+    image_url TEXT,
+    prescription_required BOOLEAN DEFAULT FALSE
+);
+
+-- 24. Medical Shop Orders Table
+CREATE TABLE IF NOT EXISTS medical_shop_order (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    customer_name VARCHAR(255),
+    customer_email VARCHAR(255),
+    customer_phone VARCHAR(255),
+    shipping_address VARCHAR(1000),
+    delivery_slot VARCHAR(255),
+    payment_method VARCHAR(255),
+    prescription_url TEXT,
+    doctor_notes VARCHAR(1000),
+    pharmacist_verified BOOLEAN DEFAULT FALSE,
+    status VARCHAR(255) DEFAULT 'Order Placed',
+    items_json TEXT,
+    subtotal DOUBLE PRECISION,
+    delivery_charges DOUBLE PRECISION,
+    total DOUBLE PRECISION,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+

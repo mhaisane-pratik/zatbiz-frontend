@@ -19,6 +19,11 @@ public class EventCustomer {
     @Column(length = 2000)
     private String notes;
 
+    private String type; // customer, lead, contact, support, notification
+    private String status; // Active, Lead, Resolved, Unread, etc.
+    @Column(columnDefinition = "TEXT")
+    private String messageJson; // JSON for dynamic fields (budget, inquiry details)
+
     public EventCustomer() {}
 
     public Long getId() { return id; }
@@ -41,4 +46,13 @@ public class EventCustomer {
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getMessageJson() { return messageJson; }
+    public void setMessageJson(String messageJson) { this.messageJson = messageJson; }
 }

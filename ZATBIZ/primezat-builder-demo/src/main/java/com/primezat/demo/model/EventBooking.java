@@ -25,6 +25,12 @@ public class EventBooking {
     
     private String status; // New, Contacted, Confirmed, Completed, Cancelled
 
+    @Column(columnDefinition = "TEXT")
+    private String checklistJson;
+    
+    @Column(columnDefinition = "TEXT")
+    private String calendarJson;
+
     public EventBooking() {}
 
     public Long getId() { return id; }
@@ -62,4 +68,10 @@ public class EventBooking {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public String getChecklistJson() { return checklistJson; }
+    public void setChecklistJson(String checklistJson) { this.checklistJson = checklistJson; }
+
+    public String getCalendarJson() { return calendarJson; }
+    public void setCalendarJson(String calendarJson) { this.calendarJson = calendarJson; }
 }

@@ -382,4 +382,87 @@ CREATE TABLE IF NOT EXISTS medical_shop_order (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 25. Event Planner Agency Information Table (Consolidated)
+CREATE TABLE IF NOT EXISTS event_agency_info (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    company_name VARCHAR(255),
+    owner_name VARCHAR(255),
+    business_email VARCHAR(255),
+    phone VARCHAR(255),
+    whats_app VARCHAR(255),
+    business_address VARCHAR(1000),
+    city VARCHAR(255),
+    state VARCHAR(255),
+    country VARCHAR(255),
+    logo_url TEXT,
+    cover_image_url TEXT,
+    working_hours VARCHAR(255),
+    gst_number VARCHAR(255),
+    social_media_links TEXT,
+    tagline VARCHAR(255),
+    about_text TEXT,
+    primary_color VARCHAR(255),
+    secondary_color VARCHAR(255),
+    seo_title VARCHAR(255),
+    seo_keywords TEXT,
+    seo_description TEXT
+);
+
+-- 26. Event Planner Catalog Items Table (Consolidated Services/Packages/Portfolio/etc.)
+CREATE TABLE IF NOT EXISTS event_catalog (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    type VARCHAR(255),
+    title VARCHAR(255),
+    subtitle VARCHAR(255),
+    description VARCHAR(2000),
+    price DOUBLE PRECISION,
+    image_url TEXT,
+    data_json TEXT
+);
+
+-- 27. Event Planner Bookings Table (Consolidated Bookings/Checklists/Calendar)
+CREATE TABLE IF NOT EXISTS event_booking (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    customer_name VARCHAR(255),
+    customer_email VARCHAR(255),
+    customer_phone VARCHAR(255),
+    event_type VARCHAR(255),
+    event_date VARCHAR(255),
+    budget DOUBLE PRECISION,
+    location VARCHAR(255),
+    guests_count INTEGER,
+    message VARCHAR(2000),
+    status VARCHAR(255),
+    checklist_json TEXT,
+    calendar_json TEXT
+);
+
+-- 28. Event Planner Customer Relations Table (Consolidated Customers/Leads/Contacts/Support)
+CREATE TABLE IF NOT EXISTS event_customer (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    phone VARCHAR(255),
+    address VARCHAR(255),
+    notes VARCHAR(2000),
+    type VARCHAR(255),
+    status VARCHAR(255),
+    message_json TEXT
+);
+
+-- 29. Event Planner Billing & Finance Table (Consolidated Payments/Invoices/Expenses/Coupons)
+CREATE TABLE IF NOT EXISTS event_billing (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT,
+    type VARCHAR(255),
+    amount DOUBLE PRECISION,
+    date VARCHAR(255),
+    status VARCHAR(255),
+    details_json TEXT
+);
+
 

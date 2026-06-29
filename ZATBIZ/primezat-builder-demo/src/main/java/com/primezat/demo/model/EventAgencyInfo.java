@@ -33,6 +33,20 @@ public class EventAgencyInfo {
     @Column(columnDefinition = "TEXT")
     private String socialMediaLinks; // JSON or comma-separated links
 
+    // Consolidated Website Settings properties
+    private String tagline;
+    @Column(columnDefinition = "TEXT")
+    private String aboutText;
+    private String primaryColor;
+    private String secondaryColor;
+
+    // Consolidated SEO Settings properties
+    private String seoTitle;
+    @Column(columnDefinition = "TEXT")
+    private String seoKeywords;
+    @Column(columnDefinition = "TEXT")
+    private String seoDescription;
+
     public EventAgencyInfo() {}
 
     public Long getId() { return id; }
@@ -82,4 +96,27 @@ public class EventAgencyInfo {
 
     public String getSocialMediaLinks() { return socialMediaLinks; }
     public void setSocialMediaLinks(String socialMediaLinks) { this.socialMediaLinks = socialMediaLinks; }
+
+    // Website Settings getters/setters
+    public String getTagline() { return tagline; }
+    public void setTagline(String tagline) { this.tagline = tagline; }
+
+    public String getAboutText() { return aboutText; }
+    public void setAboutText(String aboutText) { this.aboutText = aboutText; }
+
+    public String getPrimaryColor() { return primaryColor; }
+    public void setPrimaryColor(String primaryColor) { this.primaryColor = primaryColor; }
+
+    public String getSecondaryColor() { return secondaryColor; }
+    public void setSecondaryColor(String secondaryColor) { this.secondaryColor = secondaryColor; }
+
+    // SEO Settings getters/setters
+    public String getSeoTitle() { return seoTitle; }
+    public void setSeoTitle(String seoTitle) { this.seoTitle = seoTitle; }
+
+    public String getSeoKeywords() { return seoKeywords; }
+    public void setSeoKeywords(String seoKeywords) { this.seoKeywords = seoKeywords; }
+
+    public String getSeoDescription() { return seoDescription; }
+    public void setSeoDescription(String seoDescription) { this.seoDescription = seoDescription; }
 }
