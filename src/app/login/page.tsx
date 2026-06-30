@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -17,7 +17,29 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Collapsible configuration panel states
+  const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const [apiUrlInput, setApiUrlInput] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('zatbizApiEndpoint');
+      if (saved) {
+        setApiUrlInput(saved);
+      } else if (process.env.NEXT_PUBLIC_API_URL) {
+        setApiUrlInput(process.env.NEXT_PUBLIC_API_URL);
+      } else if (window.location.hostname !== 'localhost') {
+        setApiUrlInput('https://zatbiz-backend.onrender.com');
+      } else {
+        setApiUrlInput('http://localhost:8080');
+      }
+    }
+  }, []);
+
   const getApiBaseUrl = () => {
+    if (apiUrlInput) {
+      return apiUrlInput.replace(/\/$/, '');
+    }
     if (process.env.NEXT_PUBLIC_API_URL) {
       return process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '');
     }
@@ -25,6 +47,9 @@ export default function LoginPage() {
       const saved = localStorage.getItem('zatbizApiEndpoint');
       if (saved) {
         return saved.replace(/\/$/, '');
+      }
+      if (window.location.hostname !== 'localhost') {
+        return 'https://zatbiz-backend.onrender.com';
       }
     }
     return 'http://localhost:8080';
@@ -34,6 +59,12 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
+
+    // Persist configured API URL to localStorage
+    const trimmedUrl = apiUrlInput.trim();
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('zatbizApiEndpoint', trimmedUrl);
+    }
 
     const baseUrl = getApiBaseUrl();
     const endpoint = isRegisterMode ? '/api/auth/register' : '/api/auth/login';
@@ -270,6 +301,37 @@ export default function LoginPage() {
                   <a href="#" className="text-xs text-slate-400 hover:text-white transition">
                     Forgot Password?
                   </a>
+                </div>
+              )}
+            </div>
+
+            {/* Collapsible API Endpoint Configuration for Deployed Environments */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setIsConfigOpen(!isConfigOpen)}
+                className="text-[10px] text-slate-400 hover:text-white font-bold uppercase tracking-wider flex items-center gap-1.5 transition cursor-pointer bg-transparent border-0 outline-none"
+              >
+                <i className={`fa-solid ${isConfigOpen ? 'fa-chevron-down' : 'fa-cog'} text-[10px]`} />
+                <span>API Server Settings {apiUrlInput !== 'http://localhost:8080' && apiUrlInput !== '' && ' (Custom)'}</span>
+              </button>
+
+              {isConfigOpen && (
+                <div className="mt-2.5 p-3.5 bg-white/[0.03] border border-white/5 rounded-2xl space-y-2 text-left animate-fade-in">
+                  <label className="block font-bold text-[9px] text-slate-400 uppercase tracking-widest">
+                    Spring Boot API Endpoint
+                  </label>
+                  <input
+                    type="url"
+                    required
+                    value={apiUrlInput}
+                    onChange={(e) => setApiUrlInput(e.target.value)}
+                    className="w-full rounded-xl px-3 py-2 bg-white/[0.05] border border-white/10 text-xs text-white placeholder:text-slate-500 outline-none transition focus:ring-1 focus:ring-primary/40 focus:bg-white/[0.08]"
+                    placeholder="e.g. https://zatbiz-backend.onrender.com"
+                  />
+                  <p className="text-[9px] text-slate-500 leading-relaxed font-semibold">
+                    Set this to your deployed Spring Boot URL (e.g. Render) to load database website layouts.
+                  </p>
                 </div>
               )}
             </div>

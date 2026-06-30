@@ -59,9 +59,14 @@ export default function DashboardPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Spring Boot backend settings
-  const [apiEndpoint, setApiEndpoint] = useState(
-    process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-  );
+  const [apiEndpoint, setApiEndpoint] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('zatbizApiEndpoint');
+      if (saved) return saved;
+      if (window.location.hostname !== 'localhost') return 'https://zatbiz-backend.onrender.com';
+    }
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+  });
   const [backendStatus, setBackendStatus] = useState<'testing' | 'online' | 'offline'>('testing');
 
   // Create empty project modal state
@@ -145,6 +150,8 @@ export default function DashboardPage() {
       setApiEndpoint(savedEndpoint);
     } else if (process.env.NEXT_PUBLIC_API_URL) {
       setApiEndpoint(process.env.NEXT_PUBLIC_API_URL);
+    } else if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+      setApiEndpoint('https://zatbiz-backend.onrender.com');
     }
 
     const promoClosed = localStorage.getItem('zatbiz_promo_closed') === 'true';
@@ -1460,6 +1467,20 @@ export default function DashboardPage() {
               )}
             </button>
 
+            {/* Connection Status Badge */}
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200/60 bg-slate-50/50 shadow-sm select-none">
+              <span className={`w-2 h-2 rounded-full ${
+                backendStatus === 'online' 
+                  ? 'bg-emerald-500' 
+                  : backendStatus === 'testing' 
+                    ? 'bg-amber-400 animate-pulse' 
+                    : 'bg-rose-400'
+              } flex-shrink-0`} />
+              <span className="text-[9px] font-black text-slate-500 uppercase tracking-wider">
+                {backendStatus === 'online' ? 'Database Sync' : backendStatus === 'testing' ? 'Connecting...' : 'Sandbox Mode'}
+              </span>
+            </div>
+
             {/* Profile Dropdown */}
             <div className="flex items-center gap-3 pl-3 border-l border-slate-200">
               <div className="w-9 h-9 rounded-full overflow-hidden border border-slate-200 shadow-sm relative flex-shrink-0">
@@ -2074,7 +2095,7 @@ export default function DashboardPage() {
                     required
                     value={apiEndpoint}
                     onChange={(e) => setApiEndpoint(e.target.value)}
-                    placeholder="e.g. http://localhost:8080"
+                    placeholder="e.g. https://zatbiz-backend.onrender.com"
                     className="w-full bg-slate-50 border border-slate-200 focus:border-indigo-550 focus:bg-white rounded-xl px-4 py-2.5 text-xs text-slate-900 outline-none transition"
                   />
                   <p className="text-[10px] text-slate-450 font-medium mt-1.5">

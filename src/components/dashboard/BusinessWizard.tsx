@@ -482,6 +482,9 @@ export default function BusinessWizard({
       if (typeof window !== 'undefined') {
         const saved = localStorage.getItem('zatbizApiEndpoint');
         if (saved) return saved.replace(/\/$/, '');
+        if (window.location.hostname !== 'localhost') {
+          return 'https://zatbiz-backend.onrender.com';
+        }
       }
       return 'http://localhost:8080';
     };

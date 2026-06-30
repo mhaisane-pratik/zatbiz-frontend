@@ -85,9 +85,13 @@ const getApiBaseUrl = () => {
       const normalized = saved.replace(/\/$/, '');
       return `${normalized}/api`;
     }
+    if (window.location.hostname !== 'localhost') {
+      return 'https://zatbiz-backend.onrender.com/api';
+    }
   }
   return 'http://localhost:8080/api';
 };
+
 
 const isProjectApiPath = (path: string) =>
   path === '/projects' || /^\/projects\/\d+/.test(path);
