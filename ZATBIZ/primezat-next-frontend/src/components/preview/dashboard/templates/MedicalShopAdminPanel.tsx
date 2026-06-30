@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Project } from '@/types';
 import { api } from '@/services/api';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 interface MedicalShopAdminPanelProps {
   projectId: number;
@@ -25,6 +26,7 @@ export default function MedicalShopAdminPanel({
   logoIcon,
   logoUrl,
 }: MedicalShopAdminPanelProps) {
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   // Tabs
   const [activeTab, setActiveTab] = useState<'dashboard' | 'products' | 'prescriptions' | 'orders' | 'customers' | 'coupons' | 'settings'>('dashboard');
 
@@ -421,13 +423,22 @@ export default function MedicalShopAdminPanel({
               <span className="block text-[8px] text-slate-500 font-bold">admin@gmail.com</span>
             </div>
           </div>
-          <button 
-            onClick={onLogout}
-            className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition cursor-pointer"
-            title="Log Out Admin"
-          >
-            🚪
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={toggleDarkMode}
+              className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition cursor-pointer"
+              title={isDarkMode ? "Light Mode" : "Dark Mode"}
+            >
+              <span>{isDarkMode ? '☀️' : '🌙'}</span>
+            </button>
+            <button 
+              onClick={onLogout}
+              className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition cursor-pointer"
+              title="Log Out Admin"
+            >
+              🚪
+            </button>
+          </div>
         </div>
       </aside>
 

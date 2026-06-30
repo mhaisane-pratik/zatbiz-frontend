@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { api, getRandomFoodImage } from '@/services/api';
 import { Project, Product } from '@/types';
 import { useFileEncoder } from '@/hooks/useFileEncoder';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 import {
   UserProfilePanel,
@@ -55,6 +56,7 @@ export default function EcommerceDashboard({
   shopNiche,
 }: EcommerceDashboardProps) {
   const { encodeFile } = useFileEncoder();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [walletBalance, setWalletBalance] = useState<number>(1250);
 
@@ -771,12 +773,20 @@ export default function EcommerceDashboard({
             </nav>
           </div>
 
-          <button
-            onClick={onLogout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-rose-400 rounded-xl hover:bg-rose-955/30 hover:text-rose-300 transition text-left cursor-pointer border-none bg-transparent"
-          >
-            🚪 Logout
-          </button>
+          <div className="space-y-1.5">
+            <button
+              onClick={toggleDarkMode}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-400 rounded-xl hover:text-white hover:bg-slate-800 transition text-left cursor-pointer border-none bg-transparent"
+            >
+              {isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+            </button>
+            <button
+              onClick={onLogout}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-rose-400 rounded-xl hover:bg-rose-955/30 hover:text-rose-300 transition text-left cursor-pointer border-none bg-transparent"
+            >
+              🚪 Logout
+            </button>
+          </div>
         </aside>
 
         {/* Main Content Area */}
@@ -1121,12 +1131,20 @@ export default function EcommerceDashboard({
           </nav>
         </div>
 
-        <button
-          onClick={onLogout}
-          className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-rose-600 rounded-xl hover:bg-rose-50 transition text-left cursor-pointer border-none bg-transparent"
-        >
-          🚪 Sign Out Session
-        </button>
+        <div className="space-y-1.5">
+          <button
+            onClick={toggleDarkMode}
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-550 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition text-left cursor-pointer border-none bg-transparent"
+          >
+            {isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          </button>
+          <button
+            onClick={onLogout}
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-rose-600 rounded-xl hover:bg-rose-50 transition text-left cursor-pointer border-none bg-transparent"
+          >
+            🚪 Sign Out Session
+          </button>
+        </div>
       </aside>
 
       {/* Main Content Area */}

@@ -160,7 +160,7 @@ export default function BlockMarkup({
     }
 
     case 'hero': {
-      const isGym = (block.theme && block.theme.startsWith('gym-')) ||
+      const isGym = (block.theme && typeof block.theme === 'string' && block.theme.startsWith('gym-')) ||
                     (gymInfo && gymInfo.projectId) ||
                     (c.title && (c.title.toLowerCase().includes('fitness') || c.title.toLowerCase().includes('strength') || c.title.toLowerCase().includes('gym'))) ||
                     (c.subtitle && (c.subtitle.toLowerCase().includes('gym') || c.subtitle.toLowerCase().includes('fitness') || c.subtitle.toLowerCase().includes('workout')));

@@ -7,6 +7,7 @@ import { FineDiningDinerOverview } from './FineDiningDinerOverview';
 import { FineDiningBookingsView } from './FineDiningBookingsView';
 import { FineDiningItemsView } from './FineDiningItemsView';
 import { api } from '@/services/api';
+import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   UserProfilePanel,
   UserOrdersPanel,
@@ -29,6 +30,7 @@ export function FineDiningDashboard({
   logoUrl,
   shopNiche,
 }: RestaurantDashboardProps) {
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [activeTab, setActiveTab] = useState<string>('overview');
 
   const {
@@ -189,12 +191,20 @@ export function FineDiningDashboard({
           </nav>
         </div>
 
-        <button
-          onClick={onLogout}
-          className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-rose-455 hover:text-rose-300 hover:bg-rose-950/10 rounded-xl transition text-left cursor-pointer border-none bg-transparent uppercase tracking-wider"
-        >
-          🚪 Exit Console
-        </button>
+        <div className="space-y-1.5">
+          <button
+            onClick={toggleDarkMode}
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-stone-404 hover:text-white hover:bg-stone-900/40 rounded-xl transition text-left cursor-pointer border-none bg-transparent uppercase tracking-wider"
+          >
+            {isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          </button>
+          <button
+            onClick={onLogout}
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-rose-455 hover:text-rose-300 hover:bg-rose-955/10 rounded-xl transition text-left cursor-pointer border-none bg-transparent uppercase tracking-wider"
+          >
+            🚪 Exit Console
+          </button>
+        </div>
       </aside>
 
       {/* Main Content Area */}

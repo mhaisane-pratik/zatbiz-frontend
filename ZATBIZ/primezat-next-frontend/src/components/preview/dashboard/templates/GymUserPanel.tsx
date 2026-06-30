@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Project } from '@/types';
 import { api } from '@/services/api';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 interface GymUserPanelProps {
   projectId: number;
@@ -38,6 +39,7 @@ export default function GymUserPanel({
   companyName,
   logoIcon,
 }: GymUserPanelProps) {
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [member, setMember] = useState<any>(null);
   const [trainers, setTrainers] = useState<any[]>([]);
@@ -450,13 +452,22 @@ export default function GymUserPanel({
                 <span className="text-[9px] text-zinc-500 font-semibold truncate">{clientEmail}</span>
               </div>
             </div>
-            <button
-              onClick={onLogout}
-              title="Sign Out"
-              className="w-7 h-7 flex items-center justify-center text-zinc-550 hover:text-red-500 rounded-xl hover:bg-zinc-800 transition duration-150 border-0 bg-transparent"
-            >
-              <i className="fa-solid fa-right-from-bracket text-xs" />
-            </button>
+            <div className="flex gap-1">
+              <button
+                onClick={toggleDarkMode}
+                title={isDarkMode ? "Light Mode" : "Dark Mode"}
+                className="w-7 h-7 flex items-center justify-center text-zinc-550 hover:text-amber-500 rounded-xl hover:bg-zinc-800 transition duration-150 border-0 bg-transparent cursor-pointer"
+              >
+                <span>{isDarkMode ? '☀️' : '🌙'}</span>
+              </button>
+              <button
+                onClick={onLogout}
+                title="Sign Out"
+                className="w-7 h-7 flex items-center justify-center text-zinc-550 hover:text-red-500 rounded-xl hover:bg-zinc-800 transition duration-150 border-0 bg-transparent cursor-pointer"
+              >
+                <i className="fa-solid fa-right-from-bracket text-xs" />
+              </button>
+            </div>
           </div>
         </div>
       </aside>

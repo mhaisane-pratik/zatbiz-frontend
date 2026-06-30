@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '@/services/api';
 import { Project, Product, Order, Customer } from '@/types';
+import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   RESTAURANT_THEMES,
   RESTAURANT_HOMEPAGES,
@@ -29,6 +30,7 @@ export default function RestaurantAdminDashboard({
   companyName,
   logoIcon,
 }: RestaurantAdminDashboardProps) {
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   // Navigation tabs
   const [activeTab, setActiveTab] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -973,12 +975,20 @@ export default function RestaurantAdminDashboard({
         </div>
 
         {/* Footer Logout Button */}
-        <button
-          onClick={onLogout}
-          className="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-rose-500 hover:bg-rose-50 rounded-xl transition text-left cursor-pointer border border-transparent hover:border-rose-200 bg-transparent uppercase tracking-wider mt-4"
-        >
-          🚪 {sidebarOpen && <span>Exit Console</span>}
-        </button>
+        <div className="space-y-1.5 mt-4">
+          <button
+            onClick={toggleDarkMode}
+            className="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-stone-500 hover:bg-stone-50 rounded-xl transition text-left cursor-pointer border border-transparent hover:border-stone-200 bg-transparent uppercase tracking-wider"
+          >
+            {isDarkMode ? '☀️' : '🌙'} {sidebarOpen && <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>}
+          </button>
+          <button
+            onClick={onLogout}
+            className="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-rose-500 hover:bg-rose-50 rounded-xl transition text-left cursor-pointer border border-transparent hover:border-rose-200 bg-transparent uppercase tracking-wider"
+          >
+            🚪 {sidebarOpen && <span>Exit Console</span>}
+          </button>
+        </div>
       </aside>
 
       {/* Main Console body */}

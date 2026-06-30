@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '@/services/api';
 import { Project } from '@/types';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 interface EventDashboardProps {
   projectId: number;
@@ -201,6 +202,7 @@ export default function EventDashboard({
   shopNiche,
   selectedDashboardOption = 1,
 }: EventDashboardProps) {
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   const isAdmin = clientEmail === 'admin@gmail.com';
   const currentTheme = getDashboardTheme(selectedDashboardOption);
   const projectDisplayName = initialCompanyName || project.name || 'Wedding & Event Planner';
@@ -1053,9 +1055,14 @@ export default function EventDashboard({
                 <p className="text-xs font-bold text-white truncate max-w-[120px]">{clientProfile.name}</p>
                 <p className="text-[10px] text-slate-500 truncate max-w-[120px]">{clientEmail}</p>
               </div>
-              <button onClick={onLogout} title="Logout" className="p-1.5 rounded bg-slate-900 hover:bg-red-950 text-slate-455 hover:text-red-400 transition">
-                🚪
-              </button>
+              <div className="flex gap-2">
+                <button onClick={toggleDarkMode} title={isDarkMode ? "Light Mode" : "Dark Mode"} className="p-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-455 hover:text-white transition cursor-pointer">
+                  {isDarkMode ? '☀️' : '🌙'}
+                </button>
+                <button onClick={onLogout} title="Logout" className="p-1.5 rounded bg-slate-900 hover:bg-red-950 text-slate-455 hover:text-red-400 transition cursor-pointer">
+                  🚪
+                </button>
+              </div>
             </div>
           </aside>
 
@@ -1776,9 +1783,14 @@ export default function EventDashboard({
                 <p className="text-xs font-bold text-white truncate max-w-[120px]">{agencyInfo.ownerName}</p>
                 <p className="text-[9px] text-slate-500 truncate max-w-[120px]">{clientEmail}</p>
               </div>
-              <button onClick={onLogout} title="Logout" className="p-1.5 rounded bg-slate-900 hover:bg-red-950 text-slate-455 hover:text-red-400 transition">
-                🚪
-              </button>
+              <div className="flex gap-2">
+                <button onClick={toggleDarkMode} title={isDarkMode ? "Light Mode" : "Dark Mode"} className="p-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-455 hover:text-white transition cursor-pointer">
+                  {isDarkMode ? '☀️' : '🌙'}
+                </button>
+                <button onClick={onLogout} title="Logout" className="p-1.5 rounded bg-slate-900 hover:bg-red-950 text-slate-455 hover:text-red-400 transition cursor-pointer">
+                  🚪
+                </button>
+              </div>
             </div>
           </aside>
 

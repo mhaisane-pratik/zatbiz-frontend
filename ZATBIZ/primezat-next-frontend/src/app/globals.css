@@ -723,4 +723,268 @@ body {
   color: #78716c !important;
 }
 
+/* --- Dynamic Accent Theme System --- */
 
+/* 1. Light Mode Variable Defaults & Themes */
+.theme-indigo {
+  --theme-primary: #5c3bee;
+  --theme-primary-hover: #4f46e5;
+  --theme-primary-light: rgba(92, 59, 238, 0.08);
+  --theme-primary-text: #5c3bee;
+  --theme-primary-border: rgba(92, 59, 238, 0.2);
+}
+.theme-emerald {
+  --theme-primary: #10b981;
+  --theme-primary-hover: #059669;
+  --theme-primary-light: rgba(16, 185, 129, 0.08);
+  --theme-primary-text: #047857;
+  --theme-primary-border: rgba(16, 185, 129, 0.2);
+}
+.theme-rose {
+  --theme-primary: #f43f5e;
+  --theme-primary-hover: #e11d48;
+  --theme-primary-light: rgba(244, 63, 94, 0.08);
+  --theme-primary-text: #be123c;
+  --theme-primary-border: rgba(244, 63, 94, 0.2);
+}
+.theme-amber {
+  --theme-primary: #f59e0b;
+  --theme-primary-hover: #d97706;
+  --theme-primary-light: rgba(245, 158, 11, 0.08);
+  --theme-primary-text: #b45309;
+  --theme-primary-border: rgba(245, 158, 11, 0.2);
+}
+.theme-violet {
+  --theme-primary: #8b5cf6;
+  --theme-primary-hover: #7c3aed;
+  --theme-primary-light: rgba(139, 92, 246, 0.08);
+  --theme-primary-text: #6d28d9;
+  --theme-primary-border: rgba(139, 92, 246, 0.2);
+}
+.theme-teal {
+  --theme-primary: #0d9488;
+  --theme-primary-hover: #0f766e;
+  --theme-primary-light: rgba(13, 148, 136, 0.08);
+  --theme-primary-text: #115e59;
+  --theme-primary-border: rgba(13, 148, 136, 0.2);
+}
+.theme-blue {
+  --theme-primary: #3b82f6;
+  --theme-primary-hover: #2563eb;
+  --theme-primary-light: rgba(59, 130, 246, 0.08);
+  --theme-primary-text: #1d4ed8;
+  --theme-primary-border: rgba(59, 130, 246, 0.2);
+}
+.theme-crimson {
+  --theme-primary: #dc2626;
+  --theme-primary-hover: #b91c1c;
+  --theme-primary-light: rgba(220, 38, 38, 0.08);
+  --theme-primary-text: #991b1b;
+  --theme-primary-border: rgba(220, 38, 38, 0.2);
+}
+.theme-charcoal {
+  --theme-primary: #475569;
+  --theme-primary-hover: #334155;
+  --theme-primary-light: rgba(71, 85, 105, 0.08);
+  --theme-primary-text: #1e293b;
+  --theme-primary-border: rgba(71, 85, 105, 0.2);
+}
+.theme-sunset {
+  --theme-primary: #ea580c;
+  --theme-primary-hover: #c2410c;
+  --theme-primary-light: rgba(234, 88, 12, 0.08);
+  --theme-primary-text: #9a3412;
+  --theme-primary-border: rgba(234, 88, 12, 0.2);
+}
+
+/* 2. Dark Mode Themes Variable Overrides */
+.dark-mode.theme-indigo {
+  --theme-primary: #818cf8;
+  --theme-primary-hover: #a5b4fc;
+  --theme-primary-light: rgba(129, 140, 248, 0.15);
+  --theme-primary-text: #818cf8;
+  --theme-primary-border: rgba(129, 140, 248, 0.3);
+}
+.dark-mode.theme-emerald {
+  --theme-primary: #34d399;
+  --theme-primary-hover: #6ee7b7;
+  --theme-primary-light: rgba(52, 211, 153, 0.15);
+  --theme-primary-text: #34d399;
+  --theme-primary-border: rgba(52, 211, 153, 0.3);
+}
+.dark-mode.theme-rose {
+  --theme-primary: #fb7185;
+  --theme-primary-hover: #fca5a5;
+  --theme-primary-light: rgba(251, 113, 133, 0.15);
+  --theme-primary-text: #fb7185;
+  --theme-primary-border: rgba(251, 113, 133, 0.3);
+}
+.dark-mode.theme-amber {
+  --theme-primary: #fbbf24;
+  --theme-primary-hover: #fcd34d;
+  --theme-primary-light: rgba(251, 191, 36, 0.15);
+  --theme-primary-text: #fbbf24;
+  --theme-primary-border: rgba(251, 191, 36, 0.3);
+}
+.dark-mode.theme-violet {
+  --theme-primary: #a78bfa;
+  --theme-primary-hover: #c4b5fd;
+  --theme-primary-light: rgba(167, 139, 250, 0.15);
+  --theme-primary-text: #a78bfa;
+  --theme-primary-border: rgba(167, 139, 250, 0.3);
+}
+.dark-mode.theme-teal {
+  --theme-primary: #2dd4bf;
+  --theme-primary-hover: #5eead4;
+  --theme-primary-light: rgba(45, 212, 191, 0.15);
+  --theme-primary-text: #2dd4bf;
+  --theme-primary-border: rgba(45, 212, 191, 0.3);
+}
+.dark-mode.theme-blue {
+  --theme-primary: #60a5fa;
+  --theme-primary-hover: #93c5fd;
+  --theme-primary-light: rgba(96, 165, 250, 0.15);
+  --theme-primary-text: #60a5fa;
+  --theme-primary-border: rgba(96, 165, 250, 0.3);
+}
+.dark-mode.theme-crimson {
+  --theme-primary: #f87171;
+  --theme-primary-hover: #fca5a5;
+  --theme-primary-light: rgba(248, 113, 113, 0.15);
+  --theme-primary-text: #f87171;
+  --theme-primary-border: rgba(248, 113, 113, 0.3);
+}
+.dark-mode.theme-charcoal {
+  --theme-primary: #94a3b8;
+  --theme-primary-hover: #cbd5e1;
+  --theme-primary-light: rgba(148, 163, 184, 0.15);
+  --theme-primary-text: #94a3b8;
+  --theme-primary-border: rgba(148, 163, 184, 0.3);
+}
+.dark-mode.theme-sunset {
+  --theme-primary: #fb923c;
+  --theme-primary-hover: #fdba74;
+  --theme-primary-light: rgba(251, 146, 60, 0.15);
+  --theme-primary-text: #fb923c;
+  --theme-primary-border: rgba(251, 146, 60, 0.3);
+}
+
+/* 3. Class Override Mappings */
+/* Apply to all themes */
+
+/* Dynamic Background Accent */
+.theme-indigo .bg-\[\#5c3bee\], .theme-emerald .bg-\[\#5c3bee\], .theme-rose .bg-\[\#5c3bee\], .theme-amber .bg-\[\#5c3bee\], .theme-violet .bg-\[\#5c3bee\], .theme-teal .bg-\[\#5c3bee\], .theme-blue .bg-\[\#5c3bee\], .theme-crimson .bg-\[\#5c3bee\], .theme-charcoal .bg-\[\#5c3bee\], .theme-sunset .bg-\[\#5c3bee\],
+.theme-indigo .bg-indigo-600, .theme-emerald .bg-indigo-600, .theme-rose .bg-indigo-600, .theme-amber .bg-indigo-600, .theme-violet .bg-indigo-600, .theme-teal .bg-indigo-600, .theme-blue .bg-indigo-600, .theme-crimson .bg-indigo-600, .theme-charcoal .bg-indigo-600, .theme-sunset .bg-indigo-600,
+.theme-indigo .bg-indigo-650, .theme-emerald .bg-indigo-650, .theme-rose .bg-indigo-650, .theme-amber .bg-indigo-650, .theme-violet .bg-indigo-650, .theme-teal .bg-indigo-650, .theme-blue .bg-indigo-650, .theme-crimson .bg-indigo-650, .theme-charcoal .bg-indigo-650, .theme-sunset .bg-indigo-650,
+.theme-indigo .bg-indigo-755, .theme-emerald .bg-indigo-755, .theme-rose .bg-indigo-755, .theme-amber .bg-indigo-755, .theme-violet .bg-indigo-755, .theme-teal .bg-indigo-755, .theme-blue .bg-indigo-755, .theme-crimson .bg-indigo-755, .theme-charcoal .bg-indigo-755, .theme-sunset .bg-indigo-755,
+.theme-indigo .bg-indigo-900, .theme-emerald .bg-indigo-900, .theme-rose .bg-indigo-900, .theme-amber .bg-indigo-900, .theme-violet .bg-indigo-900, .theme-teal .bg-indigo-900, .theme-blue .bg-indigo-900, .theme-crimson .bg-indigo-900, .theme-charcoal .bg-indigo-900, .theme-sunset .bg-indigo-900 {
+  background-color: var(--theme-primary) !important;
+}
+
+/* Dynamic Hover States */
+.theme-indigo .hover\:bg-indigo-700:hover, .theme-emerald .hover\:bg-indigo-700:hover, .theme-rose .hover\:bg-indigo-700:hover, .theme-amber .hover\:bg-indigo-700:hover, .theme-violet .hover\:bg-indigo-700:hover, .theme-teal .hover\:bg-indigo-700:hover, .theme-blue .hover\:bg-indigo-700:hover, .theme-crimson .hover\:bg-indigo-700:hover, .theme-charcoal .hover\:bg-indigo-700:hover, .theme-sunset .hover\:bg-indigo-700:hover,
+.theme-indigo .hover\:bg-\[\#4f46e5\]:hover, .theme-emerald .hover\:bg-\[\#4f46e5\]:hover, .theme-rose .hover\:bg-\[\#4f46e5\]:hover, .theme-amber .hover\:bg-\[\#4f46e5\]:hover, .theme-violet .hover\:bg-\[\#4f46e5\]:hover, .theme-teal .hover\:bg-\[\#4f46e5\]:hover, .theme-blue .hover\:bg-\[\#4f46e5\]:hover, .theme-crimson .hover\:bg-\[\#4f46e5\]:hover, .theme-charcoal .hover\:bg-\[\#4f46e5\]:hover, .theme-sunset .hover\:bg-\[\#4f46e5\]:hover,
+.theme-indigo .hover\:bg-indigo-600:hover, .theme-emerald .hover\:bg-indigo-600:hover, .theme-rose .hover\:bg-indigo-600:hover, .theme-amber .hover\:bg-indigo-600:hover, .theme-violet .hover\:bg-indigo-600:hover, .theme-teal .hover\:bg-indigo-600:hover, .theme-blue .hover\:bg-indigo-600:hover, .theme-crimson .hover\:bg-indigo-600:hover, .theme-charcoal .hover\:bg-indigo-600:hover, .theme-sunset .hover\:bg-indigo-600:hover {
+  background-color: var(--theme-primary-hover) !important;
+}
+
+/* Dynamic Light Accent Background */
+.theme-indigo .bg-indigo-50, .theme-emerald .bg-indigo-50, .theme-rose .bg-indigo-50, .theme-amber .bg-indigo-50, .theme-violet .bg-indigo-50, .theme-teal .bg-indigo-50, .theme-blue .bg-indigo-50, .theme-crimson .bg-indigo-50, .theme-charcoal .bg-indigo-50, .theme-sunset .bg-indigo-50,
+.theme-indigo .bg-indigo-100, .theme-emerald .bg-indigo-100, .theme-rose .bg-indigo-100, .theme-amber .bg-indigo-100, .theme-violet .bg-indigo-100, .theme-teal .bg-indigo-100, .theme-blue .bg-indigo-100, .theme-crimson .bg-indigo-100, .theme-charcoal .bg-indigo-100, .theme-sunset .bg-indigo-100,
+.theme-indigo .bg-\[\#f0eaff\], .theme-emerald .bg-\[\#f0eaff\], .theme-rose .bg-\[\#f0eaff\], .theme-amber .bg-\[\#f0eaff\], .theme-violet .bg-\[\#f0eaff\], .theme-teal .bg-\[\#f0eaff\], .theme-blue .bg-\[\#f0eaff\], .theme-crimson .bg-\[\#f0eaff\], .theme-charcoal .bg-\[\#f0eaff\], .theme-sunset .bg-\[\#f0eaff\] {
+  background-color: var(--theme-primary-light) !important;
+}
+
+/* Dynamic Text Accent Colors */
+.theme-indigo .text-indigo-600, .theme-emerald .text-indigo-600, .theme-rose .text-indigo-600, .theme-amber .text-indigo-600, .theme-violet .text-indigo-600, .theme-teal .text-indigo-600, .theme-blue .text-indigo-600, .theme-crimson .text-indigo-600, .theme-charcoal .text-indigo-600, .theme-sunset .text-indigo-600,
+.theme-indigo .text-indigo-650, .theme-emerald .text-indigo-650, .theme-rose .text-indigo-650, .theme-amber .text-indigo-650, .theme-violet .text-indigo-650, .theme-teal .text-indigo-650, .theme-blue .text-indigo-650, .theme-crimson .text-indigo-650, .theme-charcoal .text-indigo-650, .theme-sunset .text-indigo-650,
+.theme-indigo .text-indigo-700, .theme-emerald .text-indigo-700, .theme-rose .text-indigo-700, .theme-amber .text-indigo-700, .theme-violet .text-indigo-700, .theme-teal .text-indigo-700, .theme-blue .text-indigo-700, .theme-crimson .text-indigo-700, .theme-charcoal .text-indigo-700, .theme-sunset .text-indigo-700,
+.theme-indigo .text-indigo-755, .theme-emerald .text-indigo-755, .theme-rose .text-indigo-755, .theme-amber .text-indigo-755, .theme-violet .text-indigo-755, .theme-teal .text-indigo-755, .theme-blue .text-indigo-755, .theme-crimson .text-indigo-755, .theme-charcoal .text-indigo-755, .theme-sunset .text-indigo-755,
+.theme-indigo .text-\[\#5c3bee\], .theme-emerald .text-\[\#5c3bee\], .theme-rose .text-\[\#5c3bee\], .theme-amber .text-\[\#5c3bee\], .theme-violet .text-\[\#5c3bee\], .theme-teal .text-\[\#5c3bee\], .theme-blue .text-\[\#5c3bee\], .theme-crimson .text-\[\#5c3bee\], .theme-charcoal .text-\[\#5c3bee\], .theme-sunset .text-\[\#5c3bee\],
+.theme-indigo .hover\:text-indigo-600:hover, .theme-emerald .hover\:text-indigo-600:hover, .theme-rose .hover\:text-indigo-600:hover, .theme-amber .hover\:text-indigo-600:hover, .theme-violet .hover\:text-indigo-600:hover, .theme-teal .hover\:text-indigo-600:hover, .theme-blue .hover\:text-indigo-600:hover, .theme-crimson .hover\:text-indigo-600:hover, .theme-charcoal .hover\:text-indigo-600:hover, .theme-sunset .hover\:text-indigo-600:hover {
+  color: var(--theme-primary-text) !important;
+}
+
+/* Dynamic Borders */
+.theme-indigo .border-indigo-100, .theme-emerald .border-indigo-100, .theme-rose .border-indigo-100, .theme-amber .border-indigo-100, .theme-violet .border-indigo-100, .theme-teal .border-indigo-100, .theme-blue .border-indigo-100, .theme-crimson .border-indigo-100, .theme-charcoal .border-indigo-100, .theme-sunset .border-indigo-100,
+.theme-indigo .border-indigo-150, .theme-emerald .border-indigo-150, .theme-rose .border-indigo-150, .theme-amber .border-indigo-150, .theme-violet .border-indigo-150, .theme-teal .border-indigo-150, .theme-blue .border-indigo-150, .theme-crimson .border-indigo-150, .theme-charcoal .border-indigo-150, .theme-sunset .border-indigo-150,
+.theme-indigo .border-indigo-200, .theme-emerald .border-indigo-200, .theme-rose .border-indigo-200, .theme-amber .border-indigo-200, .theme-violet .border-indigo-200, .theme-teal .border-indigo-200, .theme-blue .border-indigo-200, .theme-crimson .border-indigo-200, .theme-charcoal .border-indigo-200, .theme-sunset .border-indigo-200,
+.theme-indigo .border-indigo-600, .theme-emerald .border-indigo-600, .theme-rose .border-indigo-600, .theme-amber .border-indigo-600, .theme-violet .border-indigo-600, .theme-teal .border-indigo-600, .theme-blue .border-indigo-600, .theme-crimson .border-indigo-600, .theme-charcoal .border-indigo-600, .theme-sunset .border-indigo-600 {
+  border-color: var(--theme-primary-border) !important;
+}
+
+/* Focus states */
+.theme-indigo .focus\:border-indigo-500:focus, .theme-emerald .focus\:border-indigo-500:focus, .theme-rose .focus\:border-indigo-500:focus, .theme-amber .focus\:border-indigo-500:focus, .theme-violet .focus\:border-indigo-500:focus, .theme-teal .focus\:border-indigo-500:focus, .theme-blue .focus\:border-indigo-500:focus, .theme-crimson .focus\:border-indigo-500:focus, .theme-charcoal .focus\:border-indigo-500:focus, .theme-sunset .focus\:border-indigo-500:focus,
+.theme-indigo .focus\:border-indigo-550:focus, .theme-emerald .focus\:border-indigo-550:focus, .theme-rose .focus\:border-indigo-550:focus, .theme-amber .focus\:border-indigo-550:focus, .theme-violet .focus\:border-indigo-550:focus, .theme-teal .focus\:border-indigo-550:focus, .theme-blue .focus\:border-indigo-550:focus, .theme-crimson .focus\:border-indigo-550:focus, .theme-charcoal .focus\:border-indigo-550:focus, .theme-sunset .focus\:border-indigo-550:focus,
+.theme-indigo .focus\:border-indigo-650:focus, .theme-emerald .focus\:border-indigo-650:focus, .theme-rose .focus\:border-indigo-650:focus, .theme-amber .focus\:border-indigo-650:focus, .theme-violet .focus\:border-indigo-650:focus, .theme-teal .focus\:border-indigo-650:focus, .theme-blue .focus\:border-indigo-650:focus, .theme-crimson .focus\:border-indigo-650:focus, .theme-charcoal .focus\:border-indigo-650:focus, .theme-sunset .focus\:border-indigo-650:focus {
+  border-color: var(--theme-primary) !important;
+}
+
+/* Spinners */
+.theme-indigo .border-t-indigo-600, .theme-emerald .border-t-indigo-600, .theme-rose .border-t-indigo-600, .theme-amber .border-t-indigo-600, .theme-violet .border-t-indigo-600, .theme-teal .border-t-indigo-600, .theme-blue .border-t-indigo-600, .theme-crimson .border-t-indigo-600, .theme-charcoal .border-t-indigo-600, .theme-sunset .border-t-indigo-600 {
+  border-top-color: var(--theme-primary) !important;
+}
+.theme-indigo .border-indigo-650, .theme-emerald .border-indigo-650, .theme-rose .border-indigo-650, .theme-amber .border-indigo-650, .theme-violet .border-indigo-650, .theme-teal .border-indigo-650, .theme-blue .border-indigo-650, .theme-crimson .border-indigo-650, .theme-charcoal .border-indigo-650, .theme-sunset .border-indigo-650 {
+  border-color: var(--theme-primary) !important;
+}
+
+/* Active Nav State Icons */
+.theme-indigo nav button.bg-\[\#f0eaff\] i, .theme-emerald nav button.bg-\[\#f0eaff\] i, .theme-rose nav button.bg-\[\#f0eaff\] i, .theme-amber nav button.bg-\[\#f0eaff\] i, .theme-violet nav button.bg-\[\#f0eaff\] i, .theme-teal nav button.bg-\[\#f0eaff\] i, .theme-blue nav button.bg-\[\#f0eaff\] i, .theme-crimson nav button.bg-\[\#f0eaff\] i, .theme-charcoal nav button.bg-\[\#f0eaff\] i, .theme-sunset nav button.bg-\[\#f0eaff\] i {
+  color: var(--theme-primary-text) !important;
+}
+.theme-indigo span.bg-white, .theme-emerald span.bg-white, .theme-rose span.bg-white, .theme-amber span.bg-white, .theme-violet span.bg-white, .theme-teal span.bg-white, .theme-blue span.bg-white, .theme-crimson span.bg-white, .theme-charcoal span.bg-white, .theme-sunset span.bg-white {
+  color: var(--theme-primary-text) !important;
+}
+
+/* --- Global Light Mode Overrides for Hardcoded Dark Dashboards --- */
+body:not(.dark-mode) aside,
+body:not(.dark-mode) .bg-zinc-900,
+body:not(.dark-mode) .bg-slate-950,
+body:not(.dark-mode) .bg-stone-900,
+body:not(.dark-mode) .bg-zinc-950,
+body:not(.dark-mode) .bg-\[\#09090b\],
+body:not(.dark-mode) .bg-\[\#0a0a0c\],
+body:not(.dark-mode) main.bg-zinc-950,
+body:not(.dark-mode) main.bg-slate-950,
+body:not(.dark-mode) main.bg-stone-900,
+body:not(.dark-mode) main.bg-zinc-900,
+body:not(.dark-mode) main.bg-\[\#09090b\],
+body:not(.dark-mode) main.bg-\[\#0a0a0c\] {
+  background-color: #fafaf9 !important;
+  color: #1c1917 !important;
+  border-color: #e7e5e4 !important;
+}
+
+body:not(.dark-mode) .bg-zinc-850,
+body:not(.dark-mode) .bg-zinc-900\/50,
+body:not(.dark-mode) .bg-zinc-750,
+body:not(.dark-mode) .bg-slate-900\/25,
+body:not(.dark-mode) .bg-slate-900,
+body:not(.dark-mode) .bg-stone-800 {
+  background-color: #f5f5f4 !important;
+}
+
+body:not(.dark-mode) .text-white,
+body:not(.dark-mode) .text-zinc-100,
+body:not(.dark-mode) .text-stone-100,
+body:not(.dark-mode) .text-slate-100,
+body:not(.dark-mode) .text-zinc-300 {
+  color: #1c1917 !important;
+}
+
+body:not(.dark-mode) .text-zinc-400,
+body:not(.dark-mode) .text-stone-400,
+body:not(.dark-mode) .text-slate-400,
+body:not(.dark-mode) .text-zinc-500,
+body:not(.dark-mode) .text-zinc-550 {
+  color: #78716c !important;
+}
+
+body:not(.dark-mode) .border-zinc-800,
+body:not(.dark-mode) .border-zinc-700,
+body:not(.dark-mode) .border-slate-800,
+body:not(.dark-mode) .border-slate-900,
+body:not(.dark-mode) .border-stone-850,
+body:not(.dark-mode) .border-\[\#2a2c35\]\/20 {
+  border-color: #e7e5e4 !important;
+}

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { api, getRandomFoodImage } from '@/services/api';
 import { Project, Product } from '@/types';
 import { useFileEncoder } from '@/hooks/useFileEncoder';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 import {
   UserProfilePanel,
@@ -53,6 +54,7 @@ export default function RealEstateDashboard({
 }: RealEstateDashboardProps) {
   const router = useRouter();
   const { encodeFile } = useFileEncoder();
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   // Real Estate States
   const [realEstateInfo, setRealEstateInfo] = useState<any>(null);
 
@@ -5077,12 +5079,20 @@ export default function RealEstateDashboard({
           </nav>
         </div>
 
-        <button
-          onClick={onLogout}
-          className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-rose-600 rounded-xl hover:bg-rose-50 transition text-left cursor-pointer border-none bg-transparent"
-        >
-          🚪 Exit Console
-        </button>
+        <div className="space-y-1.5">
+          <button
+            onClick={toggleDarkMode}
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-slate-550 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition text-left cursor-pointer border-none bg-transparent"
+          >
+            {isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          </button>
+          <button
+            onClick={onLogout}
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-rose-600 rounded-xl hover:bg-rose-50 transition text-left cursor-pointer border-none bg-transparent"
+          >
+            🚪 Exit Console
+          </button>
+        </div>
       </aside>
 
       {/* Main Content Area */}

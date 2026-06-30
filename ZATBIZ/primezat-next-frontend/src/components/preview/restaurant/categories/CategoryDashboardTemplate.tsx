@@ -6,6 +6,7 @@ import { DashboardDinerOverview } from './DashboardDinerOverview';
 import { DashboardBookingsView } from './DashboardBookingsView';
 import { DashboardItemsView } from './DashboardItemsView';
 import { api } from '@/services/api';
+import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   UserProfilePanel,
   UserOrdersPanel,
@@ -33,6 +34,7 @@ export function CategoryDashboardTemplate({
   emoji,
   metrics
 }: DashboardTemplateProps) {
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [activeTab, setActiveTab] = useState<string>('overview');
   const router = useRouter();
 
@@ -182,12 +184,20 @@ export function CategoryDashboardTemplate({
           </nav>
         </div>
 
-        <button
-          onClick={onLogout}
-          className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-rose-500 hover:text-rose-450 hover:bg-rose-50 rounded-xl transition text-left cursor-pointer border-none bg-transparent uppercase tracking-wider"
-        >
-          🚪 Exit Console
-        </button>
+        <div className="space-y-1.5">
+          <button
+            onClick={toggleDarkMode}
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-stone-500 hover:text-stone-900 hover:bg-stone-55 rounded-xl transition text-left cursor-pointer border-none bg-transparent uppercase tracking-wider"
+          >
+            {isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          </button>
+          <button
+            onClick={onLogout}
+            className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-rose-500 hover:text-rose-455 hover:bg-rose-50 rounded-xl transition text-left cursor-pointer border-none bg-transparent uppercase tracking-wider"
+          >
+            🚪 Exit Console
+          </button>
+        </div>
       </aside>
 
       {/* Main Content Area */}

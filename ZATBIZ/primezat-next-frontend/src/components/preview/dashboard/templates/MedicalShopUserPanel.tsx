@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Project } from '@/types';
 import { api } from '@/services/api';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 interface MedicalShopUserPanelProps {
   projectId: number;
@@ -28,6 +29,7 @@ export default function MedicalShopUserPanel({
   logoUrl,
   shopNiche,
 }: MedicalShopUserPanelProps) {
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
   // Navigation & Page views
   const [activeTab, setActiveTab] = useState<'home' | 'shop' | 'prescription' | 'dashboard' | 'about' | 'contact' | 'faq' | 'blog'>('home');
   const [selectedProduct, setSelectedProduct] = useState<any>(null); // For details page / quick view
@@ -422,6 +424,13 @@ export default function MedicalShopUserPanel({
               <span className="block text-[10px] font-black text-slate-800">{clientEmail.split('@')[0]}</span>
               <span className="block text-[8px] font-bold text-slate-400">Customer</span>
             </div>
+            <button 
+              onClick={toggleDarkMode} 
+              className="w-9 h-9 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl flex items-center justify-center transition cursor-pointer text-xs"
+              title={isDarkMode ? "Light Mode" : "Dark Mode"}
+            >
+              <span>{isDarkMode ? '☀️' : '🌙'}</span>
+            </button>
             <button 
               onClick={onLogout} 
               className="w-9 h-9 bg-rose-50 hover:bg-rose-100 border border-rose-100 text-rose-600 rounded-xl flex items-center justify-center transition cursor-pointer text-xs"
