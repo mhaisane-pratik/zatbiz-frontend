@@ -425,7 +425,7 @@ export default function ProjectsGrid({ projects, onDeleteProject, onNavigateToTe
                       {w.title}
                     </p>
                     <a 
-                      href={`https://${w.domain}`}
+                      href={w.isMock ? `https://${w.domain}` : `/preview/${w.id}`}
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-700 mt-2 hover:underline"

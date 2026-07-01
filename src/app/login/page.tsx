@@ -35,6 +35,19 @@ export default function LoginPage() {
       }
     }
   }, []);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const paramToken = params.get('token');
+      const paramEmail = params.get('email');
+      if (paramToken && paramEmail) {
+        localStorage.setItem('authToken', paramToken);
+        localStorage.setItem('userEmail', paramEmail);
+        localStorage.setItem('userName', paramEmail.split('@')[0] || 'Demo User');
+        router.push('/dashboard');
+      }
+    }
+  }, [router]);
 
   const getApiBaseUrl = () => {
     if (apiUrlInput) {

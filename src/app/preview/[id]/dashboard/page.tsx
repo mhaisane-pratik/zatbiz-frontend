@@ -327,54 +327,62 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
     selectedDashboardOption
   };
 
-  switch (templateId) {
-    case 'restaurant':
-      return isAdmin ? (
-        <RestaurantAdminDashboard {...dashboardProps} />
-      ) : (
-        <RestaurantUserDashboard {...dashboardProps} />
-      );
-    case 'medical-shop':
-      return isAdmin ? (
-        <MedicalShopAdminDashboard {...dashboardProps} />
-      ) : (
-        <MedicalShopUserDashboard {...dashboardProps} />
-      );
-    case 'clinic':
-      return isAdmin ? (
-        <HospitalAdminDashboard {...dashboardProps} />
-      ) : (
-        <HospitalUserDashboard {...dashboardProps} />
-      );
-    case 'school':
-      return isAdmin ? (
-        <SchoolAdminDashboard {...dashboardProps} />
-      ) : (
-        <SchoolUserDashboard {...dashboardProps} />
-      );
-    case 'realestate':
-      return isAdmin ? (
-        <RealEstateAdminDashboard {...dashboardProps} />
-      ) : (
-        <RealEstateUserDashboard {...dashboardProps} />
-      );
-    case 'wedding':
-      return isAdmin ? (
-        <WeddingAdminDashboard {...dashboardProps} />
-      ) : (
-        <WeddingUserDashboard {...dashboardProps} />
-      );
-    case 'gym':
-      return isAdmin ? (
-        <GymAdminDashboard {...dashboardProps} />
-      ) : (
-        <GymUserDashboard {...dashboardProps} />
-      );
-    default:
-      return isAdmin ? (
-        <StorefrontAdminDashboard {...dashboardProps} />
-      ) : (
-        <StorefrontUserDashboard {...dashboardProps} />
-      );
-  }
+  const renderDashboardContent = () => {
+    switch (templateId) {
+      case 'restaurant':
+        return isAdmin ? (
+          <RestaurantAdminDashboard {...dashboardProps} />
+        ) : (
+          <RestaurantUserDashboard {...dashboardProps} />
+        );
+      case 'medical-shop':
+        return isAdmin ? (
+          <MedicalShopAdminDashboard {...dashboardProps} />
+        ) : (
+          <MedicalShopUserDashboard {...dashboardProps} />
+        );
+      case 'clinic':
+        return isAdmin ? (
+          <HospitalAdminDashboard {...dashboardProps} />
+        ) : (
+          <HospitalUserDashboard {...dashboardProps} />
+        );
+      case 'school':
+        return isAdmin ? (
+          <SchoolAdminDashboard {...dashboardProps} />
+        ) : (
+          <SchoolUserDashboard {...dashboardProps} />
+        );
+      case 'realestate':
+        return isAdmin ? (
+          <RealEstateAdminDashboard {...dashboardProps} />
+        ) : (
+          <RealEstateUserDashboard {...dashboardProps} />
+        );
+      case 'wedding':
+        return isAdmin ? (
+          <WeddingAdminDashboard {...dashboardProps} />
+        ) : (
+          <WeddingUserDashboard {...dashboardProps} />
+        );
+      case 'gym':
+        return isAdmin ? (
+          <GymAdminDashboard {...dashboardProps} />
+        ) : (
+          <GymUserDashboard {...dashboardProps} />
+        );
+      default:
+        return isAdmin ? (
+          <StorefrontAdminDashboard {...dashboardProps} />
+        ) : (
+          <StorefrontUserDashboard {...dashboardProps} />
+        );
+    }
+  };
+
+  return (
+    <div className="dashboard-portal-override min-h-screen">
+      {renderDashboardContent()}
+    </div>
+  );
 }

@@ -23,6 +23,7 @@ interface RestaurantLoginProps {
   successMessage: string;
   handleLoginSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   shopNiche: string | null;
+  restaurantInfo?: any;
 }
 
 export default function RestaurantLogin(props: RestaurantLoginProps) {
@@ -38,6 +39,7 @@ export default function RestaurantLogin(props: RestaurantLoginProps) {
     errorMessage: props.errorMessage,
     successMessage: props.successMessage,
     handleLoginSubmit: props.handleLoginSubmit,
+    restaurantInfo: props.restaurantInfo,
   };
 
   if (catLower.includes('fine dining') || catLower.includes('dining')) {

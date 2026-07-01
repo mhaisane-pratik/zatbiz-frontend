@@ -811,9 +811,20 @@ export function AdminCategoriesBrandsPanel({
 interface AdminOrdersPanelProps {
   orders: any[];
   fetchOrders: () => void;
+  primaryColor?: string;
+  theme?: any;
+  shopNiche?: string | null;
 }
 
-export function AdminOrdersPanel({ orders, fetchOrders }: AdminOrdersPanelProps) {
+export function AdminOrdersPanel({
+  orders,
+  fetchOrders,
+  primaryColor = '#4f46e5',
+  theme,
+  shopNiche
+}: AdminOrdersPanelProps) {
+  const currencySymbol = shopNiche === 'cloth' || (shopNiche && (shopNiche.startsWith('fashion') || shopNiche.startsWith('electronics') || shopNiche.startsWith('grocery'))) ? '₹' : '$';
+
   const handleUpdateOrderStatus = async (orderId: number, status: string) => {
     try {
       await api.orders.updateStatus(orderId, status);
@@ -829,7 +840,7 @@ export function AdminOrdersPanel({ orders, fetchOrders }: AdminOrdersPanelProps)
       <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm">
         <div className="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
           <h3 className="text-xs font-bold text-slate-900 uppercase">Incoming Customer Orders</h3>
-          <span className="text-[10px] bg-indigo-555 px-2.5 py-1 text-indigo-700 font-extrabold rounded-lg">
+          <span className="text-[10px] bg-slate-100 px-2.5 py-1 text-slate-700 font-extrabold rounded-lg">
             {orders.length} total orders
           </span>
         </div>
@@ -841,17 +852,20 @@ export function AdminOrdersPanel({ orders, fetchOrders }: AdminOrdersPanelProps)
             orders.map((o) => {
               let itemsList = [];
               try {
-                itemsList = JSON.parse(o.itemsJson || '[]');
+                itemsList = o.itemsJson ? JSON.parse(o.itemsJson) : [];
               } catch (e) {
                 console.error(e);
               }
+
+              const displayAmount = o.total !== undefined ? `${currencySymbol}${o.total.toFixed(2)}` : (o.amount || '0.00');
+              const displayDate = o.createdAt ? new Date(o.createdAt).toLocaleDateString() : (o.date || '');
 
               return (
                 <div key={o.id} className="pt-4 first:pt-0 flex flex-col md:flex-row gap-6 justify-between">
                   <div className="space-y-3 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-mono font-black text-slate-900 text-sm">Order #{o.id}</span>
-                      <span className="text-[10px] text-slate-400">({o.date})</span>
+                      <span className="text-[10px] text-slate-400">({displayDate})</span>
                       <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${
                         o.status === 'Delivered'
                           ? 'bg-emerald-50 text-emerald-700'
@@ -870,7 +884,7 @@ export function AdminOrdersPanel({ orders, fetchOrders }: AdminOrdersPanelProps)
                         <p className="text-[9px] font-extrabold text-slate-400 uppercase">Customer Information</p>
                         <p className="font-bold text-slate-905 mt-0.5">{o.customerName || 'Guest Customer'}</p>
                         <p className="text-slate-500">{o.customerEmail}</p>
-                        <p className="text-slate-505 font-mono">{o.customerPhone || 'No phone'}</p>
+                        <p className="text-slate-550 font-mono">{o.customerPhone || 'No phone'}</p>
                       </div>
                       <div>
                         <p className="text-[9px] font-extrabold text-slate-400 uppercase">Shipping Address</p>
@@ -889,7 +903,7 @@ export function AdminOrdersPanel({ orders, fetchOrders }: AdminOrdersPanelProps)
                           <span className="font-semibold text-slate-805">
                             {item.name} <span className="text-slate-400 font-normal">x {item.quantity}</span>
                           </span>
-                          <span className="font-mono text-slate-900 font-black">₹{item.price * item.quantity}</span>
+                          <span className="font-mono text-slate-900 font-black">{currencySymbol}{(item.price * item.quantity).toFixed(2)}</span>
                         </div>
                       ))}
                     </div>
@@ -899,15 +913,17 @@ export function AdminOrdersPanel({ orders, fetchOrders }: AdminOrdersPanelProps)
                     <div className="space-y-1 w-full text-xs text-right">
                       <div className="flex justify-between md:justify-end gap-4 text-[10px] text-slate-500 font-medium">
                         <span>Subtotal:</span>
-                        <span className="font-mono">₹{o.subtotal}</span>
+                        <span className="font-mono">{currencySymbol}{(o.subtotal || 0).toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between md:justify-end gap-4 text-[10px] text-slate-500 font-medium">
-                        <span>GST (5%):</span>
-                        <span className="font-mono">₹{o.tax}</span>
-                      </div>
+                      {o.tax !== undefined && (
+                        <div className="flex justify-between md:justify-end gap-4 text-[10px] text-slate-500 font-medium">
+                          <span>GST (5%):</span>
+                          <span className="font-mono">{currencySymbol}{o.tax.toFixed(2)}</span>
+                        </div>
+                      )}
                       <div className="flex justify-between md:justify-end gap-4 font-black text-slate-900 border-t border-slate-100 pt-1">
                         <span>Total Amount:</span>
-                        <span className="font-mono text-sm text-indigo-650">₹{o.total}</span>
+                        <span className="font-mono text-sm text-indigo-655" style={{ color: primaryColor }}>{displayAmount}</span>
                       </div>
                     </div>
 
@@ -917,6 +933,7 @@ export function AdminOrdersPanel({ orders, fetchOrders }: AdminOrdersPanelProps)
                           <button
                             onClick={() => handleUpdateOrderStatus(parseInt(o.id), 'Shipped')}
                             className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-black text-[9px] uppercase rounded-xl transition cursor-pointer border-none"
+                            style={{ backgroundColor: primaryColor }}
                           >
                             Accept & Ship
                           </button>

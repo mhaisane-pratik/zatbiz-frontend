@@ -322,6 +322,7 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [gymInfo, setGymInfo] = useState<any>(null);
+  const [restaurantInfo, setRestaurantInfo] = useState<any>(null);
 
   useEffect(() => {
     if (isNaN(projectId)) return;
@@ -334,6 +335,15 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
         }
       })
       .catch((e) => console.log('Not gym or offline:', e));
+
+    // Fetch restaurant custom layouts
+    api.restaurant.get(projectId)
+      .then((restData) => {
+        if (restData) {
+          setRestaurantInfo(restData);
+        }
+      })
+      .catch((e) => console.log('Not restaurant or offline:', e));
 
     api.projects
       .get(projectId)
@@ -712,7 +722,7 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
 
   switch (templateId) {
     case 'restaurant':
-      return <RestaurantLogin {...loginProps} shopNiche={shopNiche} themePreset={theme} />;
+      return <RestaurantLogin {...loginProps} shopNiche={shopNiche} themePreset={theme} restaurantInfo={restaurantInfo} />;
     case 'clinic':
       return <HospitalLogin {...loginProps} />;
     case 'school':

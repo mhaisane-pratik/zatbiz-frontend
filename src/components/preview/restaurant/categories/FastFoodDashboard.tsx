@@ -16,6 +16,7 @@ import {
   AdminOverviewPanel,
   AdminProductsPanel,
   AdminSettingsPanel,
+  AdminOrdersPanel,
 } from '../../dashboard/AdminPanels';
 
 export function FastFoodDashboard({
@@ -38,11 +39,32 @@ export function FastFoodDashboard({
     orders, fetchOrders,
     reservations, fetchReservationsList, reservationLoading,
     walletBalance, setWalletBalance,
+    cartItems, addToCart, removeFromCart, clearCart, placeDinerOrder,
     storeSettings, setStoreSettings,
     userName, setUserName,
     userPhone, setUserPhone,
     userAddressHome, setUserAddressHome
   } = useCategoryDashboardState(projectId, clientEmail, companyName, logoUrl);
+
+  const [checkoutCity, setCheckoutCity] = useState('Local City');
+  const [checkoutState, setCheckoutState] = useState('Local State');
+  const [checkoutPincode, setCheckoutPincode] = useState('110001');
+  const [checkoutPaymentMethod, setCheckoutPaymentMethod] = useState('COD');
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  const handleCheckoutSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCheckoutLoading(true);
+    try {
+      await placeDinerOrder(checkoutPaymentMethod, checkoutCity, checkoutState, checkoutPincode);
+      alert('Order placed successfully!');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to place order.');
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
 
   const [resFormDate, setResFormDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [resFormTime, setResFormTime] = useState('18:00');
@@ -311,15 +333,177 @@ export function FastFoodDashboard({
             <FastFoodItemsView
               products={products}
               colors={colors}
+              onAddToCart={addToCart}
             />
           )}
 
           {/* Orders Log (Diner) */}
           {activeTab === 'orders' && isDiner && (
-            <div className="bg-[#14151b] border border-orange-500/10 rounded-3xl p-6 text-left">
-              <h3 className="text-xs font-black text-white uppercase tracking-widest mb-6">Delivery Rider Track Logs</h3>
-              <UserOrdersPanel orders={orders} clientEmail={clientEmail} shopNiche={shopNiche} theme={theme} />
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start text-left animate-fade-in">
+              {/* Cart / Draft Column */}
+              <div className="lg:col-span-7 bg-[#14151b] border border-orange-500/10 rounded-3xl p-6 space-y-6">
+                <div className="flex justify-between items-center pb-3 border-b border-slate-800">
+                  <h3 className="text-xs font-black text-white uppercase tracking-widest">Active Order Draft</h3>
+                  <span className={`text-[10px] ${colors.textAccent} font-black uppercase tracking-wider`}>
+                    {cartItems.reduce((acc, item) => acc + item.quantity, 0)} items
+                  </span>
+                </div>
+
+                {cartItems.length === 0 ? (
+                  <div className="text-center py-12 space-y-2">
+                    <span className="text-3xl block">🛒</span>
+                    <p className="text-xs text-slate-400 font-bold">Your order draft is empty</p>
+                    <p className="text-[10px] text-slate-500">Browse the Fast Menu tab to add items to your queue.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    <div className="divide-y divide-slate-800 max-h-80 overflow-y-auto pr-1">
+                      {cartItems.map((item) => (
+                        <div key={item.product.id} className="py-3 first:pt-0 last:pb-0 flex justify-between items-center gap-4">
+                          <div className="flex items-center gap-3">
+                            <span className="text-lg">🍔</span>
+                            <div className="text-left">
+                              <h4 className="font-extrabold text-white text-xs uppercase leading-tight">{item.product.name}</h4>
+                              <span className="text-[10px] font-bold text-slate-500 font-mono">₹{item.product.price} each</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center border border-slate-800 rounded-xl overflow-hidden shadow-sm bg-[#0f0f12]">
+                              <button
+                                onClick={() => removeFromCart(item.product.id)}
+                                className="px-2.5 py-1 hover:bg-slate-805 text-slate-300 font-black cursor-pointer border-none bg-transparent text-xs"
+                              >
+                                -
+                              </button>
+                              <span className="px-2.5 text-[10px] font-mono font-black text-white">{item.quantity}</span>
+                              <button
+                                onClick={() => addToCart(item.product)}
+                                className="px-2.5 py-1 hover:bg-slate-805 text-slate-300 font-black cursor-pointer border-none bg-transparent text-xs"
+                              >
+                                +
+                              </button>
+                            </div>
+                            <span className={`text-xs font-black ${colors.textAccent} font-mono min-w-[50px] text-right`}>
+                              ₹{(item.product.price * item.quantity).toFixed(2)}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="border-t border-slate-800 pt-4 space-y-2 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                      <div className="flex justify-between">
+                        <span>Subtotal</span>
+                        <span className="font-mono text-white">₹{cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>GST Tax ({storeSettings.taxRate}%)</span>
+                        <span className="font-mono text-white">₹{(cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0) * (storeSettings.taxRate / 100)).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Packaging & Fast Dispatch</span>
+                        <span className="font-mono text-white">₹{(storeSettings.shippingFee || 0).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between border-t border-slate-808 pt-2 text-xs font-black text-white">
+                        <span>Total Payable</span>
+                        <span className="font-mono" style={{ color: '#f97316' }}>
+                          ₹{(
+                            cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0) * (1 + storeSettings.taxRate / 100) +
+                            (storeSettings.shippingFee || 0)
+                          ).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Checkout Details Form */}
+                    <form onSubmit={handleCheckoutSubmit} className="border-t border-slate-800 pt-4 space-y-4 text-left">
+                      <h4 className="text-[10px] font-black text-white uppercase tracking-widest">Delivery & Payment details</h4>
+                      <div className="grid grid-cols-3 gap-2">
+                        <div>
+                          <label className="block text-[8px] text-slate-450 font-bold uppercase mb-1">City</label>
+                          <input
+                            type="text"
+                            required
+                            value={checkoutCity}
+                            onChange={(e) => setCheckoutCity(e.target.value)}
+                            className="w-full bg-[#0f0f12] border border-slate-800 rounded-lg px-2 py-1.5 text-[10px] text-white outline-none focus:border-orange-500 transition"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[8px] text-slate-450 font-bold uppercase mb-1">State</label>
+                          <input
+                            type="text"
+                            required
+                            value={checkoutState}
+                            onChange={(e) => setCheckoutState(e.target.value)}
+                            className="w-full bg-[#0f0f12] border border-slate-800 rounded-lg px-2 py-1.5 text-[10px] text-white outline-none focus:border-orange-500 transition"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[8px] text-slate-455 font-bold uppercase mb-1">Pincode</label>
+                          <input
+                            type="text"
+                            required
+                            value={checkoutPincode}
+                            onChange={(e) => setCheckoutPincode(e.target.value)}
+                            className="w-full bg-[#0f0f12] border border-slate-800 rounded-lg px-2 py-1.5 text-[10px] text-white outline-none focus:border-orange-500 transition"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[8px] text-slate-450 font-bold uppercase mb-1">Payment Option</label>
+                        <select
+                          value={checkoutPaymentMethod}
+                          onChange={(e) => setCheckoutPaymentMethod(e.target.value)}
+                          className="w-full bg-[#0f0f12] border border-slate-800 rounded-lg px-2 py-1.5 text-[10px] text-white font-bold outline-none focus:border-orange-500 transition cursor-pointer"
+                        >
+                          <option value="COD">Cash on Delivery (COD)</option>
+                          <option value="UPI">UPI Instant Payment</option>
+                          <option value="Card">Visa / MasterCard / Rupay</option>
+                        </select>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={clearCart}
+                          className="px-4 py-2.5 border border-slate-800 hover:bg-rose-955/20 text-rose-500 font-bold rounded-xl text-[10px] transition cursor-pointer bg-transparent uppercase tracking-wider"
+                        >
+                          Clear Draft
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={checkoutLoading}
+                          className={`flex-1 py-2.5 ${colors.bgAccent} ${colors.hoverBgAccent} text-white font-black rounded-xl text-[10px] transition shadow cursor-pointer border-none uppercase tracking-wider disabled:opacity-50`}
+                        >
+                          {checkoutLoading ? 'Dispatching...' : 'Place Diner Order'}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+              </div>
+
+              {/* Order History Column */}
+              <div className="lg:col-span-5 space-y-6">
+                <div className="bg-[#14151b] border border-orange-500/10 rounded-3xl p-6 text-left font-sans">
+                  <h3 className="text-xs font-black text-white uppercase tracking-widest mb-4">Past Order History</h3>
+                  <UserOrdersPanel orders={orders} clientEmail={clientEmail} shopNiche={shopNiche} theme={theme} />
+                </div>
+              </div>
             </div>
+          )}
+
+          {/* Admin Diner Orders pipeline view */}
+          {activeTab === 'orders' && !isDiner && (
+            <AdminOrdersPanel
+              orders={orders}
+              fetchOrders={fetchOrders}
+              primaryColor={colors.bgAccent.replace('bg-', '')}
+              theme={theme}
+              shopNiche={shopNiche}
+            />
           )}
 
           {/* Settings Console (Admin) */}

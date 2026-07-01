@@ -129,6 +129,7 @@ interface BusinessWizardProps {
   initialMedicalShopConfig?: any;
   initialRestaurantConfig?: any;
   initialGymConfig?: any;
+  initialScratchConfig?: any;
   onSelectThemeTemplates?: () => void;
   projects?: Project[];
 }
@@ -153,6 +154,7 @@ export default function BusinessWizard({
   initialMedicalShopConfig,
   initialRestaurantConfig,
   initialGymConfig,
+  initialScratchConfig,
   onSelectThemeTemplates,
   projects = []
 }: BusinessWizardProps) {
@@ -302,6 +304,18 @@ export default function BusinessWizard({
       } else if (initialTemplateId === 'storefront') {
         setBusinessType('shop');
         setStep(10); // Start at E-commerce Niche selection grid first!
+      } else if (initialTemplateId === 'scratch') {
+        setBusinessType('shop');
+        if (initialScratchConfig) {
+          setCompanyName(initialScratchConfig.businessType);
+          setSlogan(initialScratchConfig.description || 'Custom scratch website.');
+          setContactPhone(initialScratchConfig.mobileNo);
+          setContactEmail(initialScratchConfig.email);
+          setOwnerName(initialScratchConfig.ownerName);
+          setAddress(initialScratchConfig.address || '');
+          setShopNiche(initialScratchConfig.businessType);
+        }
+        setStep(1);
       } else if (initialTemplateId === 'restaurant') {
         setBusinessType('restaurant');
         if (initialRestaurantConfig) {
@@ -1526,6 +1540,14 @@ export default function BusinessWizard({
         }
       }
 
+      if (initialTemplateId === 'scratch' && initialScratchConfig) {
+        try {
+          await api.scratch.create(projectId, initialScratchConfig);
+        } catch (scratchErr) {
+          console.error('Failed to save scratch info:', scratchErr);
+        }
+      }
+
       if (businessType === 'hospital') {
         try {
           await api.hospital.create(projectId, {
@@ -1562,19 +1584,23 @@ export default function BusinessWizard({
       if (businessType === 'restaurant') {
         try {
           await api.restaurant.create(projectId, {
-            subcategory: initialRestaurantCategory || 'General Restaurant',
+            subcategory: initialRestaurantCategory || initialRestaurantConfig?.subcategory || 'General Restaurant',
             restaurantName: companyName,
             businessName: companyName,
             description: slogan,
-            ownerName: '',
-            mobileNo: contactPhone || '',
-            email: contactEmail || '',
-            city: city || '',
-            state: stateVal || '',
-            country: country || '',
-            pincode: pincode || '',
-            logoUrl: customLogoUrl || '',
-            themeColor: themePreset || 'slate'
+            ownerName: initialRestaurantConfig?.ownerName || '',
+            mobileNo: contactPhone || initialRestaurantConfig?.mobileNo || '',
+            email: contactEmail || initialRestaurantConfig?.email || '',
+            city: city || initialRestaurantConfig?.city || '',
+            state: stateVal || initialRestaurantConfig?.state || '',
+            country: country || 'India',
+            pincode: pincode || initialRestaurantConfig?.pincode || '',
+            logoUrl: customLogoUrl || initialRestaurantConfig?.logoUrl || '',
+            themeColor: initialRestaurantConfig?.themeColor || themePreset || 'slate',
+            selectedTheme: initialRestaurantConfig?.selectedTheme,
+            selectedHomepageLayout: initialRestaurantConfig?.selectedHomepageLayout,
+            selectedLoginLayout: initialRestaurantConfig?.selectedLoginLayout,
+            selectedDashboardLayout: initialRestaurantConfig?.selectedDashboardLayout
           });
         } catch (restErr) {
           console.error('Failed to save restaurant info:', restErr);

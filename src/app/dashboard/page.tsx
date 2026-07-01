@@ -22,6 +22,7 @@ import DashboardHome from '@/components/dashboard/DashboardHome';
 import DynamicCategorySelectorModal from '@/components/dashboard/DynamicCategorySelectorModal';
 import WeddingSelectorModal from '@/components/dashboard/WeddingSelectorModal';
 import MedicalShopSelectorModal from '@/components/dashboard/MedicalShopSelectorModal';
+import ScratchSelectorModal from '@/components/dashboard/ScratchSelectorModal';
 type TabType = 'home' | 'projects' | 'templates' | 'analytics' | 'products' | 'orders' | 'customers' | 'marketing' | 'discounts' | 'integrations' | 'automation' | 'settings' | 'superadmin' | 'themes' | 'browse_products' | 'categories' | 'wishlist' | 'reviews' | 'messages' | 'downloads';
 
 const COLOR_THEMES = [
@@ -43,6 +44,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
   const [wishlistCount, setWishlistCount] = useState(12);
 
   // Theme state for light/dark mode
@@ -126,6 +128,8 @@ export default function DashboardPage() {
   const [isMedicalShopSelectorOpen, setIsMedicalShopSelectorOpen] = useState(false);
   const [selectedMedicalShopConfig, setSelectedMedicalShopConfig] = useState<any>(null);
   const [selectedRestaurantConfig, setSelectedRestaurantConfig] = useState<any>(null);
+  const [isScratchSelectorOpen, setIsScratchSelectorOpen] = useState(false);
+  const [selectedScratchConfig, setSelectedScratchConfig] = useState<any>(null);
 
   // Theme selection modal states
   const [isThemeSelectorOpen, setIsThemeSelectorOpen] = useState(false);
@@ -158,6 +162,7 @@ export default function DashboardPage() {
       router.push('/login');
     } else {
       setUserEmail(email);
+      setAuthToken(token);
       if (email === 'admin@gmail.com') {
         setActiveTab('superadmin');
       } else {
@@ -339,6 +344,8 @@ export default function DashboardPage() {
       setIsCorporateSelectorOpen(true);
     } else if (templateId === 'medical-shop') {
       setIsMedicalShopSelectorOpen(true);
+    } else if (templateId === 'scratch') {
+      setIsScratchSelectorOpen(true);
     } else {
       setSelectedTemplateId(templateId);
       setIsWizardOpen(true);
@@ -2515,6 +2522,44 @@ export default function DashboardPage() {
         />
       )}
 
+      {/* Scratch Category Selector Modal */}
+      {isScratchSelectorOpen && (
+        <ScratchSelectorModal
+          isOpen={isScratchSelectorOpen}
+          onClose={() => setIsScratchSelectorOpen(false)}
+          onSelectCategory={async (category, configData) => {
+            setIsScratchSelectorOpen(false);
+            
+            const payload = {
+              name: `${configData.businessType} Site`,
+              description: `Custom visual scratch website for ${configData.businessType}`,
+              blocksJson: JSON.stringify({
+                pages: {
+                  home: []
+                },
+                activePages: ['home'],
+                businessConfig: {
+                  businessType: 'scratch'
+                }
+              }),
+              status: 'Published'
+            };
+
+            try {
+              const newProj = await api.projects.create(payload);
+              await api.scratch.create(newProj.id, configData);
+              
+              setProjects((prev) => [newProj, ...prev]);
+              showToast('Website built from scratch successfully!');
+              setActiveTab('projects');
+            } catch (err) {
+              console.error('Failed to create scratch project:', err);
+              showToast('Failed to build website from scratch.', true);
+            }
+          }}
+        />
+      )}
+
       {/* Hospital Category Selector Modal */}
       {isHospitalSelectorOpen && (
         <HospitalSelectorModal
@@ -2708,6 +2753,7 @@ export default function DashboardPage() {
           initialMedicalShopConfig={selectedMedicalShopConfig}
           initialRestaurantConfig={selectedRestaurantConfig}
           initialGymConfig={selectedGymConfig}
+          initialScratchConfig={selectedScratchConfig}
           projects={projects}
           onClose={() => {
             setIsWizardOpen(false);
@@ -2726,6 +2772,7 @@ export default function DashboardPage() {
             setSelectedCorporateCategory(null);
             setSelectedMedicalShopConfig(null);
             setSelectedRestaurantConfig(null);
+            setSelectedScratchConfig(null);
           }}
           onComplete={(newProj) => {
             setProjects((prev) => [newProj, ...prev]);
@@ -2733,6 +2780,7 @@ export default function DashboardPage() {
             setSelectedMedicalShopConfig(null);
             setSelectedRestaurantConfig(null);
             setSelectedGymConfig(null);
+            setSelectedScratchConfig(null);
             setActiveTab('downloads');
           }}
           showToast={showToast}
@@ -3242,7 +3290,7 @@ export default function DashboardPage() {
 
       {/* Floating Parent Login / Chat Link */}
       <a
-        href="https://jdk-pi.vercel.app/login"
+        href={authToken && userEmail ? `https://jdk-pi.vercel.app/login?token=${encodeURIComponent(authToken)}&email=${encodeURIComponent(userEmail)}` : "https://jdk-pi.vercel.app/login"}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-24 right-6 z-40 flex items-center gap-2 px-5 py-3 bg-white border border-slate-250 text-slate-800 hover:text-indigo-600 font-bold rounded-full shadow-lg transition hover:scale-105 hover:bg-slate-50 active:scale-95 cursor-pointer text-xs"

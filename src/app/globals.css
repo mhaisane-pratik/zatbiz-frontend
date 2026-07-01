@@ -936,55 +936,56 @@ body {
   color: var(--theme-primary-text) !important;
 }
 
-/* --- Global Light Mode Overrides for Hardcoded Dark Dashboards --- */
-body:not(.dark-mode) aside,
-body:not(.dark-mode) .bg-zinc-900,
-body:not(.dark-mode) .bg-slate-950,
-body:not(.dark-mode) .bg-stone-900,
-body:not(.dark-mode) .bg-zinc-950,
-body:not(.dark-mode) .bg-\[\#09090b\],
-body:not(.dark-mode) .bg-\[\#0a0a0c\],
-body:not(.dark-mode) main.bg-zinc-950,
-body:not(.dark-mode) main.bg-slate-950,
-body:not(.dark-mode) main.bg-stone-900,
-body:not(.dark-mode) main.bg-zinc-900,
-body:not(.dark-mode) main.bg-\[\#09090b\],
-body:not(.dark-mode) main.bg-\[\#0a0a0c\] {
+/* --- Global Light Mode Overrides for Hardcoded Dark Dashboards (Scoped) --- */
+.dashboard-portal-override body:not(.dark-mode) aside,
+body:not(.dark-mode) .dashboard-portal-override aside,
+body:not(.dark-mode) .dashboard-portal-override .bg-zinc-900,
+body:not(.dark-mode) .dashboard-portal-override .bg-slate-950,
+body:not(.dark-mode) .dashboard-portal-override .bg-stone-900,
+body:not(.dark-mode) .dashboard-portal-override .bg-zinc-950,
+body:not(.dark-mode) .dashboard-portal-override .bg-\[\#09090b\],
+body:not(.dark-mode) .dashboard-portal-override .bg-\[\#0a0a0c\],
+body:not(.dark-mode) .dashboard-portal-override main.bg-zinc-950,
+body:not(.dark-mode) .dashboard-portal-override main.bg-slate-950,
+body:not(.dark-mode) .dashboard-portal-override main.bg-stone-900,
+body:not(.dark-mode) .dashboard-portal-override main.bg-zinc-900,
+body:not(.dark-mode) .dashboard-portal-override main.bg-\[\#09090b\],
+body:not(.dark-mode) .dashboard-portal-override main.bg-\[\#0a0a0c\] {
   background-color: #fafaf9 !important;
   color: #1c1917 !important;
   border-color: #e7e5e4 !important;
 }
 
-body:not(.dark-mode) .bg-zinc-850,
-body:not(.dark-mode) .bg-zinc-900\/50,
-body:not(.dark-mode) .bg-zinc-750,
-body:not(.dark-mode) .bg-slate-900\/25,
-body:not(.dark-mode) .bg-slate-900,
-body:not(.dark-mode) .bg-stone-800 {
+body:not(.dark-mode) .dashboard-portal-override .bg-zinc-850,
+body:not(.dark-mode) .dashboard-portal-override .bg-zinc-900\/50,
+body:not(.dark-mode) .dashboard-portal-override .bg-zinc-750,
+body:not(.dark-mode) .dashboard-portal-override .bg-slate-900\/25,
+body:not(.dark-mode) .dashboard-portal-override .bg-slate-900,
+body:not(.dark-mode) .dashboard-portal-override .bg-stone-800 {
   background-color: #f5f5f4 !important;
 }
 
-body:not(.dark-mode) .text-white,
-body:not(.dark-mode) .text-zinc-100,
-body:not(.dark-mode) .text-stone-100,
-body:not(.dark-mode) .text-slate-100,
-body:not(.dark-mode) .text-zinc-300 {
+body:not(.dark-mode) .dashboard-portal-override .text-white,
+body:not(.dark-mode) .dashboard-portal-override .text-zinc-100,
+body:not(.dark-mode) .dashboard-portal-override .text-stone-100,
+body:not(.dark-mode) .dashboard-portal-override .text-slate-100,
+body:not(.dark-mode) .dashboard-portal-override .text-zinc-300 {
   color: #1c1917 !important;
 }
 
-body:not(.dark-mode) .text-zinc-400,
-body:not(.dark-mode) .text-stone-400,
-body:not(.dark-mode) .text-slate-400,
-body:not(.dark-mode) .text-zinc-500,
-body:not(.dark-mode) .text-zinc-550 {
+body:not(.dark-mode) .dashboard-portal-override .text-zinc-400,
+body:not(.dark-mode) .dashboard-portal-override .text-stone-400,
+body:not(.dark-mode) .dashboard-portal-override .text-slate-400,
+body:not(.dark-mode) .dashboard-portal-override .text-zinc-500,
+body:not(.dark-mode) .dashboard-portal-override .text-zinc-550 {
   color: #78716c !important;
 }
 
-body:not(.dark-mode) .border-zinc-800,
-body:not(.dark-mode) .border-zinc-700,
-body:not(.dark-mode) .border-slate-800,
-body:not(.dark-mode) .border-slate-900,
-body:not(.dark-mode) .border-stone-850,
-body:not(.dark-mode) .border-\[\#2a2c35\]\/20 {
+body:not(.dark-mode) .dashboard-portal-override .border-zinc-800,
+body:not(.dark-mode) .dashboard-portal-override .border-zinc-700,
+body:not(.dark-mode) .dashboard-portal-override .border-slate-800,
+body:not(.dark-mode) .dashboard-portal-override .border-slate-900,
+body:not(.dark-mode) .dashboard-portal-override .border-stone-850,
+body:not(.dark-mode) .dashboard-portal-override .border-\[\#2a2c35\]\/20 {
   border-color: #e7e5e4 !important;
 }
