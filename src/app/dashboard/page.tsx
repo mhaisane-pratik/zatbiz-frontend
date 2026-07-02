@@ -38,6 +38,16 @@ const COLOR_THEMES = [
   { id: 'theme-sunset', name: 'Sunset', color: '#ea580c' },
 ];
 
+const BACKGROUND_STYLES = [
+  { id: 'classic', name: 'Solid Classic' },
+  { id: 'bg-aurora', name: 'Animated Aura' },
+  { id: 'bg-sunset', name: 'Sunset Breeze' },
+  { id: 'bg-ocean', name: 'Ocean Wave' },
+  { id: 'bg-neon', name: 'Neo Cyber' },
+  { id: 'bg-silk', name: 'Glassy Silk' },
+  { id: 'bg-tech', name: 'Tech Network' },
+];
+
 export default function DashboardPage() {
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
@@ -50,12 +60,15 @@ export default function DashboardPage() {
   // Theme state for light/dark mode
   const [themeMode, setThemeMode] = useState<'light' | 'dark'>('light');
   const [colorTheme, setColorTheme] = useState<string>('theme-indigo');
+  const [bgStyle, setBgStyle] = useState<string>('classic');
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('zatbiz_dashboard_theme') || 'light';
     setThemeMode(savedTheme as 'light' | 'dark');
     const savedColorTheme = localStorage.getItem('zatbiz_dashboard_color_theme') || 'theme-indigo';
     setColorTheme(savedColorTheme);
+    const savedBgStyle = localStorage.getItem('zatbiz_dashboard_bg_style') || 'classic';
+    setBgStyle(savedBgStyle);
   }, []);
 
   const toggleTheme = () => {
@@ -68,6 +81,92 @@ export default function DashboardPage() {
     setColorTheme(themeName);
     localStorage.setItem('zatbiz_dashboard_color_theme', themeName);
   };
+
+  const changeBgStyle = (styleName: string) => {
+    setBgStyle(styleName);
+    localStorage.setItem('zatbiz_dashboard_bg_style', styleName);
+  };
+
+  // Animated Aura Canvas background animation effect
+  useEffect(() => {
+    if (bgStyle !== 'bg-aurora') return;
+    const canvas = document.getElementById('dashboard-aurora-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', handleResize);
+
+    // 3 moving gradient blobs
+    const blobs = [
+      {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.min(width, height) * 0.45,
+        vx: 0.5,
+        vy: 0.4,
+        color: themeMode === 'dark' ? 'rgba(99, 102, 241, 0.08)' : 'rgba(99, 102, 241, 0.12)'
+      },
+      {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.min(width, height) * 0.55,
+        vx: -0.4,
+        vy: 0.5,
+        color: themeMode === 'dark' ? 'rgba(236, 72, 153, 0.06)' : 'rgba(236, 72, 153, 0.1)'
+      },
+      {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.min(width, height) * 0.4,
+        vx: 0.3,
+        vy: -0.3,
+        color: themeMode === 'dark' ? 'rgba(253, 186, 116, 0.05)' : 'rgba(253, 186, 116, 0.08)'
+      },
+    ];
+
+    const animate = () => {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = themeMode === 'dark' ? '#06050b' : '#faf8f5';
+      ctx.fillRect(0, 0, width, height);
+
+      blobs.forEach((blob) => {
+        blob.x += blob.vx;
+        blob.y += blob.vy;
+
+        if (blob.x < -blob.r) blob.x = width + blob.r;
+        if (blob.x > width + blob.r) blob.x = -blob.r;
+        if (blob.y < -blob.r) blob.y = height + blob.r;
+        if (blob.y > height + blob.r) blob.y = -blob.r;
+
+        const grad = ctx.createRadialGradient(blob.x, blob.y, 0, blob.x, blob.y, blob.r);
+        grad.addColorStop(0, blob.color);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(blob.x, blob.y, blob.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [bgStyle, themeMode]);
 
   // Search input state
   const [searchQuery, setSearchQuery] = useState('');
@@ -1292,17 +1391,17 @@ export default function DashboardPage() {
   ];
 
   const renderSidebarContent = () => (
-    <div className="flex flex-col h-full bg-[#fcfcfd] text-slate-655 border-r border-slate-150 select-none">
+    <div className="flex flex-col h-full bg-[#f4f1ea] text-[#5c5446] border-r border-[#e0dbcd] select-none">
       {/* Branding Logo Area */}
-      <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-100 bg-[#fcfcfd]">
-        <div className="w-8.5 h-8.5 flex items-center justify-center bg-gradient-to-tr from-[#6366f1] via-[#5c3bee] to-[#a855f7] rounded-xl shadow-md">
+      <div className="h-16 flex items-center gap-3 px-6 border-b border-[#e0dbcd] bg-[#f4f1ea]">
+        <div className="w-8.5 h-8.5 flex items-center justify-center bg-[#2b2a27] rounded-xl shadow-md">
           <span className="text-white text-base font-extrabold italic">Z</span>
         </div>
-        <span className="text-slate-900 font-extrabold text-lg tracking-tight">ZatBiz</span>
+        <span className="text-[#2b2a27] font-extrabold text-lg tracking-tight">ZatBiz</span>
       </div>
 
       {/* Navigation list */}
-      <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto bg-[#f4f1ea]">
         {coreLinks.map((link) => {
           const isActive = activeTab === link.id || 
             (link.id === 'browse_products' && activeTab === 'templates') ||
@@ -1323,17 +1422,17 @@ export default function DashboardPage() {
               }}
               className={`w-full flex items-center justify-between px-4 py-2.5 rounded-2xl text-xs font-bold transition-all duration-300 hover:scale-[1.01] cursor-pointer border ${
                 isActive
-                  ? 'bg-[#f0eaff] text-[#5c3bee] border-transparent shadow-sm'
-                  : 'hover:bg-slate-50 hover:text-slate-900 text-slate-500 border-transparent'
+                  ? 'bg-[#e7e2d4] text-[#5e3b2e] border-transparent shadow-sm'
+                  : 'hover:bg-[#e7e2d4]/50 hover:text-[#2b2a27] text-[#5c5446] border-transparent'
               }`}
             >
               <div className="flex items-center gap-3.5">
-                <i className={`fa-solid ${link.icon} text-sm w-4 text-center ${isActive ? 'text-[#5c3bee]' : 'text-slate-400'}`} />
+                <i className={`fa-solid ${link.icon} text-sm w-4 text-center ${isActive ? 'text-[#a8563c]' : 'text-[#7d7465]'}`} />
                 <span className="tracking-wide">{link.label}</span>
               </div>
               {link.count !== undefined && (
                 <span className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold ${
-                  isActive ? 'bg-white text-[#5c3bee]' : 'bg-slate-100 text-slate-400'
+                  isActive ? 'bg-[#5e3b2e] text-[#f4f1ea]' : 'bg-[#e7e2d4] text-[#5c5446]'
                 }`}>
                   {link.count}
                 </span>
@@ -1343,7 +1442,7 @@ export default function DashboardPage() {
         })}
 
         {userEmail === 'admin@gmail.com' && (
-          <div className="pt-5 border-t border-slate-100 mt-5">
+          <div className="pt-5 border-t border-[#e0dbcd] mt-5">
             <p className="px-3 text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">
               System Control
             </p>
@@ -1354,11 +1453,11 @@ export default function DashboardPage() {
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-300 hover:scale-[1.01] cursor-pointer border ${
                 activeTab === 'superadmin'
-                  ? 'bg-amber-50 text-amber-700 border border-amber-200 shadow-sm'
-                  : 'hover:bg-slate-50 hover:text-slate-900 text-slate-500 border-transparent'
+                  ? 'bg-amber-50/20 text-amber-800 border border-amber-200 shadow-sm'
+                  : 'hover:bg-[#e7e2d4]/50 hover:text-[#2b2a27] text-[#5c5446] border-transparent'
               }`}
             >
-              <i className={`fa-solid fa-user-shield text-sm w-4 text-center ${activeTab === 'superadmin' ? 'text-amber-600' : 'text-slate-455'}`} />
+              <i className={`fa-solid fa-user-shield text-sm w-4 text-center ${activeTab === 'superadmin' ? 'text-amber-700' : 'text-[#7d7465]'}`} />
               <span className="tracking-wide">Admin Console</span>
             </button>
           </div>
@@ -1366,18 +1465,18 @@ export default function DashboardPage() {
       </nav>
 
       {/* Upgrade to Premium Widget */}
-      <div className="px-4 py-4 border-t border-slate-100 bg-[#fcfcfd] space-y-3">
-        <div className="bg-[#fcfaff] rounded-2xl p-4 border border-[#f3ebff] relative overflow-hidden shadow-sm">
+      <div className="px-4 py-4 border-t border-[#e0dbcd] bg-[#f4f1ea] space-y-3">
+        <div className="bg-[#faf8f5] rounded-2xl p-4 border border-[#e0dbcd] relative overflow-hidden shadow-sm">
           <div className="flex items-center gap-2">
-            <span className="text-purple-650">💎</span>
-            <span className="text-xs font-extrabold text-[#5c3bee] tracking-wide">Upgrade to Premium</span>
+            <span className="text-slate-800 text-xs">💎</span>
+            <span className="text-xs font-extrabold text-[#2b2a27] tracking-wide">Upgrade to Premium</span>
           </div>
-          <p className="text-[10px] text-slate-500 font-semibold leading-normal mt-2">
-            Unlock exclusive products, amazing discounts and priority support.
+          <p className="text-[10px] text-[#5c5446] font-semibold leading-normal mt-2">
+            Lock exclusive products, amazing discounts and priority support.
           </p>
           <button
             onClick={() => showToast("Premium plans checkout process initialized.")}
-            className="w-full mt-3 bg-[#5c3bee] hover:bg-[#4f46e5] text-white text-[10px] font-black py-2 px-3 rounded-xl shadow-md transition duration-300 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-1 cursor-pointer border-0"
+            className="w-full mt-3 bg-[#f4f1ea] hover:bg-[#e7e2d4] text-[#2b2a27] border border-[#dcd8cc] text-[10px] font-black py-2 px-3 rounded-xl shadow-sm transition duration-300 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-1 cursor-pointer"
           >
             <span>Upgrade Now</span>
             <span>➔</span>
@@ -1386,26 +1485,26 @@ export default function DashboardPage() {
       </div>
 
       {/* User Info & Footer */}
-      <div className="p-4 border-t border-slate-100 bg-[#fcfcfd]">
-        <div className="flex items-center justify-between gap-3 p-1.5 bg-[#fcfcfd] rounded-2xl border border-slate-100">
+      <div className="p-4 border-t border-[#e0dbcd] bg-[#f4f1ea]">
+        <div className="flex items-center justify-between gap-3 p-1.5 bg-[#f4f1ea] rounded-2xl border border-[#e0dbcd]">
           <div className="flex items-center gap-2.5 truncate">
-            <span className="w-8 h-8 rounded-full bg-[#2563eb] flex items-center justify-center font-black text-xs text-white uppercase select-none shadow-sm">
+            <span className="w-8 h-8 rounded-full bg-[#7d7465] flex items-center justify-center font-black text-xs text-white uppercase select-none shadow-sm">
               {userEmail ? userEmail[0] : 'D'}
             </span>
             <div className="truncate leading-tight text-left">
-              <p className="text-xs font-extrabold text-slate-805 truncate">{userEmail ? userEmail.split('@')[0] : 'demo'}</p>
-              <span className="text-[9px] text-slate-400 font-semibold truncate">{userEmail || 'demo@zatbiz.com'}</span>
+              <p className="text-xs font-extrabold text-[#2b2a27] truncate">{userEmail ? userEmail.split('@')[0] : 'demo'}</p>
+              <span className="text-[9px] text-[#7d7465] font-semibold truncate">{userEmail || 'demo@zatbiz.com'}</span>
             </div>
           </div>
           <div className="flex items-center">
             <button
               onClick={handleLogout}
               title="Sign Out"
-              className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-rose-600 rounded-xl hover:bg-[#eae8ff] transition-all duration-200 cursor-pointer border-0 bg-transparent"
+              className="w-8 h-8 flex items-center justify-center text-[#7d7465] hover:text-rose-600 rounded-xl hover:bg-[#e7e2d4] transition-all duration-200 cursor-pointer border-0 bg-transparent"
             >
               <i className="fa-solid fa-right-from-bracket text-xs" />
             </button>
-            <i className="fa-solid fa-chevron-down text-[9px] text-slate-400 ml-1 pr-1.5" />
+            <i className="fa-solid fa-chevron-down text-[9px] text-[#7d7465] ml-1 pr-1.5" />
           </div>
         </div>
       </div>
@@ -1413,7 +1512,48 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className={`h-screen flex overflow-hidden antialiased font-sans transition-colors duration-300 ${colorTheme} ${themeMode === 'dark' ? 'dark-mode bg-[#0c0a09]' : 'bg-slate-50 text-slate-800'}`}>
+    <div className={`h-screen flex overflow-hidden antialiased font-sans transition-colors duration-300 ${colorTheme} ${themeMode === 'dark' ? 'dark dark-mode bg-[#0c0a09]' : 'light-mode bg-[#faf8f5] text-[#2b2a27]'} ${bgStyle !== 'classic' ? 'bg-glassy' : ''}`}>
+      {/* Dynamic Background Layout */}
+      {bgStyle !== 'classic' && (
+        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none transition-all duration-500">
+          {/* Sunset Breeze (mesh blobs) */}
+          {bgStyle === 'bg-sunset' && (
+            <div className="absolute inset-0 bg-[#faf8f5] dark:bg-[#06050b] overflow-hidden">
+              <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-amber-400/20 dark:bg-amber-500/10 blur-[120px]" />
+              <div className="absolute bottom-[-10%] right-[-10%] w-[65%] h-[65%] rounded-full bg-rose-400/20 dark:bg-rose-500/15 blur-[130px]" />
+              <div className="absolute top-[30%] right-[20%] w-[45%] h-[45%] rounded-full bg-indigo-400/15 dark:bg-indigo-500/10 blur-[100px]" />
+            </div>
+          )}
+          {/* Ocean Wave (mesh blobs) */}
+          {bgStyle === 'bg-ocean' && (
+            <div className="absolute inset-0 bg-[#faf8f5] dark:bg-[#06050b] overflow-hidden">
+              <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-teal-400/25 dark:bg-teal-500/15 blur-[120px]" />
+              <div className="absolute bottom-[-20%] right-[-15%] w-[70%] h-[70%] rounded-full bg-blue-400/20 dark:bg-blue-500/15 blur-[140px]" />
+              <div className="absolute top-[40%] left-[30%] w-[40%] h-[40%] rounded-full bg-emerald-400/15 dark:bg-emerald-500/10 blur-[90px]" />
+            </div>
+          )}
+          {/* Neo Cyber (mesh blobs) */}
+          {bgStyle === 'bg-neon' && (
+            <div className="absolute inset-0 bg-[#faf8f5] dark:bg-[#06050b] overflow-hidden">
+              <div className="absolute top-[-20%] right-[-10%] w-[65%] h-[65%] rounded-full bg-purple-400/20 dark:bg-purple-500/15 blur-[130px]" />
+              <div className="absolute bottom-[-10%] left-[-10%] w-[55%] h-[55%] rounded-full bg-pink-400/20 dark:bg-pink-500/15 blur-[110px]" />
+              <div className="absolute top-[30%] left-[20%] w-[50%] h-[50%] rounded-full bg-cyan-400/15 dark:bg-cyan-500/10 blur-[100px]" />
+            </div>
+          )}
+          {/* Glassy Silk Image background */}
+          {bgStyle === 'bg-silk' && (
+            <div className="absolute inset-0 bg-cover bg-center opacity-[0.25] dark:opacity-[0.35]" style={{ backgroundImage: "url('/images/bg_silk.png')" }} />
+          )}
+          {/* Tech Network Image background */}
+          {bgStyle === 'bg-tech' && (
+            <div className="absolute inset-0 bg-cover bg-center opacity-[0.2] dark:opacity-[0.3]" style={{ backgroundImage: "url('/images/bg_tech.png')" }} />
+          )}
+          {/* Animated Canvas */}
+          {bgStyle === 'bg-aurora' && (
+            <canvas id="dashboard-aurora-canvas" className="absolute inset-0 w-full h-full" />
+          )}
+        </div>
+      )}
       <style>{`
         @keyframes statusPulse {
           0%, 100% { box-shadow: 0 0 4px rgba(16, 185, 129, 0.4); opacity: 0.8; }
@@ -1428,6 +1568,314 @@ export default function DashboardPage() {
         }
         .status-glow-red {
           animation: statusPulseRed 2s infinite ease-in-out;
+        }
+        
+        /* --- LIGHT MODE RULES (using .light-mode wrapper context) --- */
+        .light-mode {
+          background-color: #faf8f5 !important;
+          color: #2b2a27 !important;
+        }
+        
+        .light-mode .bg-slate-50, 
+        .light-mode .bg-\\[\\#f8fafc\\], 
+        .light-mode .bg-\\[\\#faf8f5\\] {
+          background-color: #faf8f5 !important;
+        }
+        
+        .light-mode .bg-white, 
+        .light-mode .bg-card, 
+        .light-mode .bg-slate-100\\/50,
+        .light-mode .bg-slate-50\\/50 {
+          background-color: #fdfcfb !important;
+        }
+        
+        .light-mode .bg-slate-100, 
+        .light-mode .bg-slate-200\\/50, 
+        .light-mode .bg-\\[\\#f4f4f5\\],
+        .light-mode .bg-slate-50 {
+          background-color: #f4f1ea !important;
+        }
+        
+        .light-mode .border-slate-100, 
+        .light-mode .border-slate-200, 
+        .light-mode .border-slate-200\\/40, 
+        .light-mode .border-slate-200\\/60, 
+        .light-mode .border-slate-200\\/35, 
+        .light-mode .border-slate-200\\/50, 
+        .light-mode .border-slate-300 {
+          border-color: #e0dbcd !important;
+        }
+        
+        .light-mode .text-\\[\\#5c3bee\\], 
+        .light-mode .text-indigo-600 {
+          color: var(--theme-primary) !important;
+        }
+        
+        .light-mode .text-indigo-700, 
+        .light-mode .text-indigo-805, 
+        .light-mode .text-slate-900, 
+        .light-mode .text-slate-800 {
+          color: #2b2a27 !important;
+        }
+        
+        .light-mode .text-slate-500, 
+        .light-mode .text-slate-400, 
+        .light-mode .text-slate-455 {
+          color: #7d7465 !important;
+        }
+        
+        .light-mode .bg-\\[\\#5c3bee\\], 
+        .light-mode .bg-indigo-600 {
+          background-color: var(--theme-primary) !important;
+        }
+        
+        .light-mode .bg-\\[\\#5c3bee\\]:hover, 
+        .light-mode .bg-indigo-600:hover, 
+        .light-mode .hover\\:bg-indigo-700:hover,
+        .light-mode .hover\\:bg-indigo-600:hover {
+          background-color: var(--theme-primary-hover) !important;
+        }
+        
+        .light-mode .bg-\\[\\#f5f3ff\\],
+        .light-mode .bg-indigo-50 {
+          background-color: var(--theme-primary-light) !important;
+        }
+        
+        .light-mode .border-\\[\\#eae8ff\\] {
+          border-color: #e0dbcd !important;
+        }
+        
+        .light-mode .shadow-indigo-100,
+        .light-mode .shadow-sm {
+          box-shadow: 0 4px 6px -1px rgba(125, 116, 101, 0.08), 0 2px 4px -1px rgba(125, 116, 101, 0.08) !important;
+        }
+        
+        .light-mode .bg-\\[\\#f0eaff\\] {
+          background-color: #e7e2d4 !important;
+        }
+
+        /* Active Sidebar item in light mode matching the theme */
+        .light-mode aside button.bg-\\[\\#e7e2d4\\] {
+          background-color: var(--theme-primary-light) !important;
+          color: var(--theme-primary-text) !important;
+        }
+        .light-mode aside i.text-\\[\\#a8563c\\] {
+          color: var(--theme-primary) !important;
+        }
+        .light-mode aside span.bg-\\[\\#5e3b2e\\] {
+          background-color: var(--theme-primary) !important;
+          color: #ffffff !important;
+        }
+        .light-mode input:focus {
+          border-color: var(--theme-primary) !important;
+        }
+        
+        /* --- PREMIUM DARK MODE SYSTEM OVERRIDES --- */
+        .dark-mode {
+          background-color: #06050b !important;
+          color: #e2e8f0 !important;
+        }
+        
+        /* Sidebar Dark Theme Styling */
+        .dark-mode aside, 
+        .dark-mode aside > div,
+        .dark-mode .bg-\\[\\#f4f1ea\\],
+        .dark-mode .border-r {
+          background-color: #0c0a12 !important; /* deep purple-charcoal */
+          border-color: #171520 !important;
+        }
+        
+        /* Sidebar navigation buttons */
+        .dark-mode aside button {
+          color: #94a3b8 !important;
+        }
+        .dark-mode aside button:hover {
+          background-color: rgba(255, 255, 255, 0.04) !important;
+          color: #ffffff !important;
+        }
+        
+        /* Active Sidebar item in dark mode */
+        .dark-mode aside button.bg-\\[\\#e7e2d4\\] {
+          background-color: var(--theme-primary-light) !important; /* light container */
+          color: var(--theme-primary) !important; /* theme text */
+        }
+        .dark-mode aside i.text-\\[\\#a8563c\\] {
+          color: var(--theme-primary) !important; /* theme active icon */
+        }
+        .dark-mode aside i.text-\\[\\#7d7465\\] {
+          color: #94a3b8 !important; /* slate non-active icon */
+        }
+        .dark-mode aside span.bg-\\[\\#5e3b2e\\] {
+          background-color: var(--theme-primary) !important;
+          color: #110e19 !important;
+        }
+        
+        /* Sidebar Upgrade Widget */
+        .dark-mode .bg-\\[\\#faf8f5\\] {
+          background-color: #130f1e !important;
+          border-color: #221a30 !important;
+        }
+        .dark-mode .text-\\[\\#2b2a27\\] {
+          color: #ffffff !important;
+        }
+        .dark-mode .text-\\[\\#5c5446\\] {
+          color: #94a3b8 !important;
+        }
+        .dark-mode .bg-\\[\\#f4f1ea\\] button {
+          background-color: #0c0a12 !important;
+          border-color: #221a30 !important;
+          color: #ffffff !important;
+        }
+        .dark-mode .bg-\\[\\#f4f1ea\\] button:hover {
+          background-color: #211933 !important;
+        }
+        
+        /* Sidebar User Profile */
+        .dark-mode .bg-\\[\\#f4f1ea\\] .border-\\[\\#e0dbcd\\] {
+          background-color: #0c0a12 !important;
+          border-color: #171520 !important;
+        }
+        .dark-mode .bg-\\[\\#7d7465\\] {
+          background-color: #3b3054 !important;
+        }
+        .dark-mode .text-\\[\\#2b2a27\\] {
+          color: #ffffff !important;
+        }
+        .dark-mode .text-\\[\\#7d7465\\] {
+          color: #94a3b8 !important;
+        }
+        .dark-mode button.text-\\[\\#7d7465\\]:hover {
+          background-color: rgba(255, 255, 255, 0.05) !important;
+          color: #f87171 !important;
+        }
+        
+        /* Global Main Content & Header */
+        .dark-mode header {
+          background-color: #0c0a12 !important;
+          border-bottom-color: #171520 !important;
+        }
+        .dark-mode .bg-white,
+        .dark-mode .bg-card,
+        .dark-mode .bg-\\[\\#fdfcfb\\] {
+          background-color: #110e19 !important;
+          border-color: #1c182a !important;
+        }
+        
+        .dark-mode .bg-slate-50,
+        .dark-mode .bg-\\[\\#f8fafc\\],
+        .dark-mode .bg-\\[\\#faf8f5\\] {
+          background-color: #06050b !important;
+        }
+        
+        /* Borders & Dividers */
+        .dark-mode .border-slate-100,
+        .dark-mode .border-slate-200,
+        .dark-mode .border-slate-200\\/40,
+        .dark-mode .border-slate-200\\/60,
+        .dark-mode .border-slate-200\\/35,
+        .dark-mode .border-slate-200\\/50,
+        .dark-mode .border-slate-300,
+        .dark-mode .border-\\[\\#e0dbcd\\] {
+          border-color: #1c182a !important;
+        }
+        
+        /* Global Text styles */
+        .dark-mode .text-slate-900,
+        .dark-mode .text-slate-800,
+        .dark-mode .text-\\[\\#2b2a27\\],
+        .dark-mode h1,
+        .dark-mode h2,
+        .dark-mode h3,
+        .dark-mode h4 {
+          color: #ffffff !important;
+        }
+        .dark-mode .text-slate-500,
+        .dark-mode .text-slate-400,
+        .dark-mode .text-slate-455,
+        .dark-mode .text-\\[\\#7d7465\\],
+        .dark-mode p {
+          color: #94a3b8 !important;
+        }
+        
+        /* Input & Search Fields */
+        .dark-mode input {
+          background-color: #110e19 !important;
+          border-color: #221a30 !important;
+          color: #ffffff !important;
+        }
+        .dark-mode input:focus {
+          border-color: var(--theme-primary) !important;
+        }
+        
+        /* Primary CTA Overrides in Dark Mode */
+        .dark-mode .bg-\\[\\#a8563c\\],
+        .dark-mode .bg-indigo-600 {
+          background-color: var(--theme-primary) !important;
+          color: #ffffff !important;
+        }
+        .dark-mode .bg-\\[\\#a8563c\\]:hover,
+        .dark-mode .bg-indigo-600:hover {
+          background-color: var(--theme-primary-hover) !important;
+        }
+        .dark-mode .text-\\[\\#a8563c\\],
+        .dark-mode .text-indigo-600 {
+          color: var(--theme-primary) !important;
+        }
+
+        /* --- GLASSMORPHISM BACKGROUND THEMING RULES --- */
+        .bg-glassy.light-mode {
+          background-color: transparent !important;
+        }
+        .bg-glassy.dark-mode {
+          background-color: transparent !important;
+        }
+        
+        .bg-glassy.light-mode aside, 
+        .bg-glassy.light-mode aside > div {
+          background-color: rgba(244, 241, 234, 0.7) !important;
+          backdrop-filter: blur(16px);
+        }
+        .bg-glassy.dark-mode aside, 
+        .bg-glassy.dark-mode aside > div {
+          background-color: rgba(12, 10, 18, 0.7) !important;
+          backdrop-filter: blur(16px);
+        }
+        
+        .bg-glassy.light-mode header {
+          background-color: rgba(244, 241, 234, 0.7) !important;
+          backdrop-filter: blur(16px);
+        }
+        .bg-glassy.dark-mode header {
+          background-color: rgba(12, 10, 18, 0.7) !important;
+          backdrop-filter: blur(16px);
+        }
+        
+        .bg-glassy.light-mode .bg-white,
+        .bg-glassy.light-mode .bg-card,
+        .bg-glassy.light-mode .bg-slate-50,
+        .bg-glassy.light-mode .bg-\\[\\#fdfcfb\\] {
+          background-color: rgba(253, 252, 251, 0.75) !important;
+          backdrop-filter: blur(8px);
+          border-color: rgba(224, 219, 205, 0.5) !important;
+        }
+        .bg-glassy.dark-mode .bg-white,
+        .bg-glassy.dark-mode .bg-card,
+        .bg-glassy.dark-mode .bg-slate-50,
+        .bg-glassy.dark-mode .bg-\\[\\#fdfcfb\\] {
+          background-color: rgba(17, 14, 25, 0.75) !important;
+          backdrop-filter: blur(8px);
+          border-color: rgba(28, 24, 42, 0.5) !important;
+        }
+        
+        .bg-glassy.light-mode .bg-slate-50,
+        .bg-glassy.light-mode .bg-\\[\\#f8fafc\\],
+        .bg-glassy.light-mode .bg-\\[\\#faf8f5\\] {
+          background-color: rgba(250, 248, 245, 0.4) !important;
+        }
+        .bg-glassy.dark-mode .bg-slate-50,
+        .bg-glassy.dark-mode .bg-\\[\\#f8fafc\\],
+        .bg-glassy.dark-mode .bg-\\[\\#faf8f5\\] {
+          background-color: rgba(6, 5, 11, 0.4) !important;
         }
       `}</style>
 
@@ -1446,7 +1894,7 @@ export default function DashboardPage() {
           <aside className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
             <button
               onClick={() => setIsMobileMenuOpen(false)}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-450 hover:text-slate-800"
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-455 hover:text-slate-800"
             >
               <i className="fa-solid fa-xmark text-sm" />
             </button>
@@ -1458,7 +1906,7 @@ export default function DashboardPage() {
       {/* Main View Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Global Top Bar */}
-        <header className="h-16 bg-white border-b border-slate-200/40 flex items-center justify-between px-6 z-10 flex-shrink-0">
+        <header className="h-16 bg-[#f4f1ea] border-b border-[#e0dbcd] flex items-center justify-between px-6 z-10 flex-shrink-0">
           <div className="flex items-center gap-4 flex-1">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
@@ -1469,7 +1917,7 @@ export default function DashboardPage() {
 
             {/* Global search */}
             <div className="relative max-w-lg w-full hidden sm:flex items-center mx-auto">
-              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-455">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#7d7465]">
                 <i className="fa-solid fa-magnifying-glass text-xs" />
               </span>
               <input
@@ -1477,7 +1925,7 @@ export default function DashboardPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for products, templates, categories..."
-                className="w-full bg-[#f4f4f5] focus:bg-white border border-slate-200/35 focus:border-[#5c3bee] rounded-full pl-10 pr-16 py-2 text-xs text-slate-805 placeholder-slate-400 font-bold outline-none transition duration-300 shadow-sm focus:shadow-md"
+                className="w-full bg-[#faf8f5] focus:bg-white border border-[#e0dbcd] focus:border-[#5e3b2e] rounded-full pl-10 pr-16 py-2 text-xs text-[#2b2a27] placeholder-slate-400 font-bold outline-none transition duration-300 shadow-sm focus:shadow-md"
               />
               <div className="absolute right-3.5 flex items-center gap-0.5 pointer-events-none bg-white border border-slate-200 px-1.5 py-0.5 rounded-md text-[10px] text-slate-400 font-black shadow-sm select-none">
                 <span>⌘</span>
@@ -2160,6 +2608,60 @@ export default function DashboardPage() {
                         />
                         <span className="text-[11px] font-black text-slate-800 tracking-tight">
                           {theme.name}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-3 pb-6 border-b border-slate-100">
+                  <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider">
+                    Dashboard Background Experience
+                  </span>
+                  <p className="text-[10px] text-slate-455 font-medium mt-1">
+                    Choose a premium, responsive background styling layout to apply behind your dashboard panels.
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+                    {BACKGROUND_STYLES.map((style) => (
+                      <button
+                        key={style.id}
+                        type="button"
+                        onClick={() => changeBgStyle(style.id)}
+                        className={`flex flex-col items-stretch gap-2.5 p-3 rounded-2xl border text-left cursor-pointer transition-all duration-300 hover:scale-[1.03] select-none ${
+                          bgStyle === style.id
+                            ? 'border-indigo-600 bg-indigo-50/50 shadow-sm ring-1 ring-indigo-500/25'
+                            : 'border-slate-200 bg-white hover:border-slate-350'
+                        }`}
+                      >
+                        {/* Miniature Preview Card */}
+                        <div 
+                          className="h-10 rounded-xl border border-black/5 shadow-inner overflow-hidden relative flex items-center justify-center"
+                        >
+                          {style.id === 'classic' && (
+                            <div className="absolute inset-0 bg-[#faf8f5] dark:bg-[#06050b]" />
+                          )}
+                          {style.id === 'bg-aurora' && (
+                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/25 via-pink-500/15 to-amber-500/20 animate-pulse" />
+                          )}
+                          {style.id === 'bg-sunset' && (
+                            <div className="absolute inset-0 bg-gradient-to-tr from-amber-400/35 via-rose-400/25 to-indigo-400/25" />
+                          )}
+                          {style.id === 'bg-ocean' && (
+                            <div className="absolute inset-0 bg-gradient-to-tr from-teal-400/35 via-emerald-400/25 to-blue-400/25" />
+                          )}
+                          {style.id === 'bg-neon' && (
+                            <div className="absolute inset-0 bg-gradient-to-tr from-purple-400/35 via-pink-400/25 to-cyan-400/25" />
+                          )}
+                          {style.id === 'bg-silk' && (
+                            <div className="absolute inset-0 bg-cover bg-center opacity-70" style={{ backgroundImage: "url('/images/bg_silk.png')" }} />
+                          )}
+                          {style.id === 'bg-tech' && (
+                            <div className="absolute inset-0 bg-cover bg-center opacity-70" style={{ backgroundImage: "url('/images/bg_tech.png')" }} />
+                          )}
+                          <span className="text-[8px] font-black tracking-widest text-slate-800 uppercase bg-white/75 px-1.5 py-0.5 rounded shadow-sm border border-slate-100 z-10">Preview</span>
+                        </div>
+                        <span className="text-[11px] font-black text-slate-800 tracking-tight text-center truncate">
+                          {style.name}
                         </span>
                       </button>
                     ))}

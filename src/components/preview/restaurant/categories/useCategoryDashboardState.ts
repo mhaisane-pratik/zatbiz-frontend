@@ -14,7 +14,7 @@ export function useCategoryDashboardState(projectId: number, clientEmail: string
         try { return parseFloat(stored); } catch {}
       }
     }
-    return 850.00;
+    return 10000.00;
   });
 
   const [cartItems, setCartItems] = useState<Array<{ product: Product, quantity: number }>>([]);

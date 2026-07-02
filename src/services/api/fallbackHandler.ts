@@ -1554,9 +1554,21 @@ export async function request<T>(path: string, options?: RequestInit): Promise<T
       // 18. Restaurant Custom Data API fallbacks
       if (path.includes('/restaurant-data')) {
         const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
-        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        const urlProjectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
         const dataTypeMatch = path.match(/[?&]dataType=([^&]+)/);
-        const dataType = dataTypeMatch ? decodeURIComponent(dataTypeMatch[1]) : 'general';
+        let dataType = dataTypeMatch ? decodeURIComponent(dataTypeMatch[1]) : 'general';
+
+        let bodyData: any = {};
+        if (options?.body) {
+          try {
+            bodyData = JSON.parse(options.body as string);
+          } catch {}
+        }
+
+        const projectId = bodyData.projectId || urlProjectId;
+        if (bodyData.dataType) {
+          dataType = bodyData.dataType;
+        }
 
         const storageKey = `zatbiz_offline_restaurant_data_${projectId}_${dataType}`;
         let localList: any[] = [];

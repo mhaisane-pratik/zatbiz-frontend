@@ -109,11 +109,11 @@ export default function DashboardHome({
 
   // Popular Categories data
   const popularCategories = [
-    { name: 'Digital Planners', count: 125, icon: '📅', color: 'bg-indigo-50 border border-indigo-100/50 text-indigo-650' },
-    { name: 'Notion Templates', count: 98, icon: '📓', color: 'bg-slate-50 border border-slate-200/50 text-slate-700' },
-    { name: 'E-Books', count: 76, icon: '📚', color: 'bg-emerald-50 border border-emerald-100/50 text-emerald-650' },
-    { name: 'Design Assets', count: 64, icon: '🎨', color: 'bg-amber-50 border border-amber-100/50 text-amber-650' },
-    { name: 'Courses', count: 42, icon: '🎓', color: 'bg-blue-50 border border-blue-100/50 text-blue-650' }
+    { name: 'Digital Planners', count: 125, icon: '📅', color: 'bg-indigo-50 border border-indigo-100/50 text-indigo-650 dark:bg-indigo-950/40 dark:border-indigo-900/40 dark:text-indigo-300' },
+    { name: 'Notion Templates', count: 98, icon: '📓', color: 'bg-slate-50 border border-slate-200/50 text-slate-700 dark:bg-slate-900/40 dark:border-slate-800/40 dark:text-slate-350' },
+    { name: 'E-Books', count: 76, icon: '📚', color: 'bg-emerald-50 border border-emerald-100/50 text-emerald-650 dark:bg-emerald-950/40 dark:border-emerald-900/40 dark:text-emerald-300' },
+    { name: 'Design Assets', count: 64, icon: '🎨', color: 'bg-amber-50 border border-amber-100/50 text-amber-650 dark:bg-amber-950/40 dark:border-amber-900/40 dark:text-amber-300' },
+    { name: 'Courses', count: 42, icon: '🎓', color: 'bg-blue-50 border border-blue-100/50 text-blue-650 dark:bg-blue-950/40 dark:border-blue-900/40 dark:text-blue-300' }
   ];
 
   const handleDeposit = (e: React.FormEvent) => {
@@ -236,12 +236,12 @@ export default function DashboardHome({
                 onClick={() => onNavigateTab('categories')}
                 className={`p-4 rounded-2xl ${cat.color} hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-left space-y-3 cursor-pointer w-full`}
               >
-                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-lg shadow-sm border border-slate-100/50">
+                <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-900/60 flex items-center justify-center text-lg shadow-sm border border-slate-100/50 dark:border-slate-800/60">
                   {cat.icon}
                 </div>
                 <div className="leading-tight">
-                  <h4 className="text-xs font-extrabold truncate">{cat.name}</h4>
-                  <p className="text-[10px] opacity-75 mt-0.5 font-bold">{cat.count} products</p>
+                  <h4 className="text-xs font-extrabold truncate dark:text-slate-200">{cat.name}</h4>
+                  <p className="text-[10px] opacity-75 mt-0.5 font-bold dark:text-slate-400">{cat.count} products</p>
                 </div>
               </button>
             ))}
@@ -266,10 +266,10 @@ export default function DashboardHome({
               return (
                 <div 
                   key={product.id} 
-                  className="group bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.015)] hover:shadow-md hover:border-slate-300 transition duration-300 flex flex-col justify-between"
+                  className="group bg-white dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.015)] hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition duration-300 flex flex-col justify-between"
                 >
                   {/* Thumbnail / Image with overlay button */}
-                  <div className="relative h-32 bg-slate-50 flex items-center justify-center overflow-hidden border-b border-slate-100">
+                  <div className="relative h-32 bg-slate-50 dark:bg-slate-950 flex items-center justify-center overflow-hidden border-b border-slate-100 dark:border-slate-900">
                     <Image 
                       src={product.imageUrl}
                       alt={product.name}
@@ -281,7 +281,7 @@ export default function DashboardHome({
                     {/* Favorite Heart Button */}
                     <button 
                       onClick={() => toggleWishlist(product.id, product.name)}
-                      className="absolute top-2.5 right-2.5 w-7.5 h-7.5 rounded-full bg-white flex items-center justify-center text-slate-400 hover:text-rose-500 shadow-sm border border-slate-100 transition active:scale-90 cursor-pointer"
+                      className="absolute top-2.5 right-2.5 w-7.5 h-7.5 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-rose-500 shadow-sm border border-slate-100 dark:border-slate-700 transition active:scale-90 cursor-pointer"
                     >
                       <i className={`fa-${isWishlisted ? 'solid text-rose-500' : 'regular'} fa-heart text-xs`} />
                     </button>
@@ -290,24 +290,24 @@ export default function DashboardHome({
                   {/* Info details */}
                   <div className="p-3.5 space-y-2 flex-1 flex flex-col justify-between">
                     <div>
-                      <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 block truncate">{product.category}</span>
-                      <h4 className="text-xs font-extrabold text-slate-800 line-clamp-2 mt-0.5 leading-snug">{product.name}</h4>
+                      <span className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 block truncate">{product.category}</span>
+                      <h4 className="text-xs font-extrabold text-slate-800 dark:text-slate-200 line-clamp-2 mt-0.5 leading-snug">{product.name}</h4>
                     </div>
 
-                    <div className="space-y-1.5 pt-1.5 border-t border-slate-50">
+                    <div className="space-y-1.5 pt-1.5 border-t border-slate-50 dark:border-slate-800/50">
                       {/* Rating details */}
                       <div className="flex items-center gap-1">
                         <div className="flex text-amber-400 text-[10px]">
                           {'★'.repeat(5)}
                         </div>
-                        <span className="text-[9px] text-slate-500 font-bold">
+                        <span className="text-[9px] text-slate-500 dark:text-slate-400 font-bold">
                           {product.rating}
                         </span>
                       </div>
 
                       {/* Price & Buy Button */}
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-black text-indigo-650">
+                        <span className="text-xs font-black text-indigo-650 dark:text-indigo-400">
                           ${product.price.toFixed(2)}
                         </span>
                         
@@ -315,7 +315,7 @@ export default function DashboardHome({
                           onClick={() => {
                             showToast(`"${product.name}" added to cart!`);
                           }}
-                          className="w-6 h-6 rounded-lg bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white flex items-center justify-center transition active:scale-95 cursor-pointer border-0"
+                          className="w-6 h-6 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-600 dark:hover:bg-indigo-600 text-indigo-600 dark:text-indigo-400 hover:text-white flex items-center justify-center transition active:scale-95 cursor-pointer border-0"
                           title="Add to Cart"
                         >
                           <i className="fa-solid fa-plus text-[9px]" />
@@ -334,21 +334,21 @@ export default function DashboardHome({
       {/* 1. Wallet Add Funds Modal */}
       {isWalletModalOpen && (
         <div className="fixed inset-0 z-55 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full border border-slate-150 shadow-2xl relative">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-8 max-w-sm w-full border border-slate-150 dark:border-slate-800 shadow-2xl relative">
             <button 
               onClick={() => setIsWalletModalOpen(false)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 flex items-center justify-center cursor-pointer transition border-0 bg-transparent"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-800 flex items-center justify-center cursor-pointer transition border-0 bg-transparent"
             >
               <i className="fa-solid fa-xmark text-sm" />
             </button>
 
             <div className="text-center space-y-5">
-              <div className="w-12 h-12 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-650 mx-auto text-xl">
+              <div className="w-12 h-12 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 flex items-center justify-center text-indigo-650 dark:text-indigo-300 mx-auto text-xl">
                 💳
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-black text-slate-900">Add Funds to Wallet</h3>
-                <p className="text-xs text-slate-455 font-semibold">Load currency to purchase premium templates instantly.</p>
+                <h3 className="text-base font-black text-slate-900 dark:text-white">Add Funds to Wallet</h3>
+                <p className="text-xs text-slate-455 dark:text-slate-400 font-semibold">Load currency to purchase premium templates instantly.</p>
               </div>
 
               <form onSubmit={handleDeposit} className="space-y-4">
@@ -360,7 +360,7 @@ export default function DashboardHome({
                     min="1"
                     value={depositAmount}
                     onChange={(e) => setDepositAmount(e.target.value)}
-                    className="w-full bg-slate-50 focus:bg-white border border-slate-200 focus:border-indigo-600 rounded-xl py-3 pl-8 pr-4 text-slate-800 font-black text-sm outline-none transition"
+                    className="w-full bg-slate-50 dark:bg-slate-950 focus:bg-white dark:focus:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-indigo-600 rounded-xl py-3 pl-8 pr-4 text-slate-800 dark:text-slate-200 font-black text-sm outline-none transition"
                     placeholder="20.00"
                     autoFocus
                   />
@@ -374,8 +374,8 @@ export default function DashboardHome({
                       onClick={() => setDepositAmount(`${amt}.00`)}
                       className={`flex-1 py-1.5 border rounded-lg text-xs font-bold transition cursor-pointer ${
                         depositAmount === `${amt}.00` 
-                          ? 'bg-indigo-50 border-indigo-500 text-indigo-655'
-                          : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                          ? 'bg-indigo-50 border-indigo-500 text-indigo-655 dark:bg-indigo-950/50 dark:border-indigo-800 dark:text-indigo-400'
+                          : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-455 dark:hover:bg-slate-800'
                       }`}
                     >
                       +${amt}
@@ -398,26 +398,26 @@ export default function DashboardHome({
       {/* 2. Refer & Earn Modal */}
       {isInviteModalOpen && (
         <div className="fixed inset-0 z-55 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full border border-slate-150 shadow-2xl relative">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-8 max-w-sm w-full border border-slate-150 dark:border-slate-800 shadow-2xl relative">
             <button 
               onClick={() => setIsInviteModalOpen(false)}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 flex items-center justify-center cursor-pointer transition border-0 bg-transparent"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-800 flex items-center justify-center cursor-pointer transition border-0 bg-transparent"
             >
               <i className="fa-solid fa-xmark text-sm" />
             </button>
 
             <div className="text-center space-y-5">
-              <div className="w-12 h-12 rounded-full bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-650 mx-auto text-xl">
+              <div className="w-12 h-12 rounded-full bg-purple-50 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-900/50 flex items-center justify-center text-purple-650 dark:text-purple-300 mx-auto text-xl">
                 💎
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-black text-slate-900">Invite Your Network</h3>
-                <p className="text-xs text-slate-455 font-semibold">Earn 10% commission on every purchase made with your code.</p>
+                <h3 className="text-base font-black text-slate-900 dark:text-white">Invite Your Network</h3>
+                <p className="text-xs text-slate-455 dark:text-slate-400 font-semibold">Earn 10% commission on every purchase made with your code.</p>
               </div>
 
               <div className="space-y-3.5">
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex justify-between items-center text-xs">
-                  <span className="font-mono font-black text-slate-800 tracking-wide select-all">
+                <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 flex justify-between items-center text-xs">
+                  <span className="font-mono font-black text-slate-800 dark:text-slate-200 tracking-wide select-all">
                     {referralCode}
                   </span>
                   <span className="text-[10px] text-purple-600 bg-purple-50 px-2 py-0.5 rounded font-black border border-purple-100 uppercase">
@@ -430,7 +430,7 @@ export default function DashboardHome({
                     type="text"
                     readOnly
                     value={`https://zatbiz.site/ref/${userName.toLowerCase().replace(/[^a-z0-9]/g, '')}-${referralCode}`}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-4.5 pr-20 text-[10px] text-slate-500 font-bold select-all outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-4.5 pr-20 text-[10px] text-slate-500 dark:text-slate-400 font-bold select-all outline-none"
                   />
                   <button
                     onClick={handleCopyReferral}
@@ -442,7 +442,7 @@ export default function DashboardHome({
 
                 <button
                   onClick={() => setIsInviteModalOpen(false)}
-                  className="w-full py-3 border border-slate-200 hover:bg-slate-50 text-slate-655 text-xs font-bold rounded-xl transition cursor-pointer bg-white"
+                  className="w-full py-3 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-655 dark:text-slate-400 text-xs font-bold rounded-xl transition cursor-pointer bg-white dark:bg-slate-900"
                 >
                   Close
                 </button>
@@ -455,9 +455,9 @@ export default function DashboardHome({
       {/* Floating Need Help Widget */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 select-none">
         {isHelpOpen && (
-          <div className="bg-white border border-slate-200 rounded-2xl shadow-xl p-4 w-72 text-left space-y-3 animate-slide-in relative">
-            <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-              <span className="text-xs font-black text-slate-800">Support Chat Helper</span>
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-4 w-72 text-left space-y-3 animate-slide-in relative">
+            <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
+              <span className="text-xs font-black text-slate-800 dark:text-white">Support Chat Helper</span>
               <button 
                 onClick={() => setIsHelpOpen(false)} 
                 className="text-slate-400 hover:text-slate-700 text-xs transition cursor-pointer border-0 bg-transparent"
@@ -466,7 +466,7 @@ export default function DashboardHome({
               </button>
             </div>
             
-            <p className="text-[11px] text-slate-500 leading-relaxed font-semibold">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-semibold">
               Have questions about templates, downloads, or API settings? Connect with our support team.
             </p>
             

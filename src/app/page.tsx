@@ -3,8 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import ModernLandingPage from '@/components/landing/ModernLandingPage';
 
 export default function LandingPage() {
+  return <ModernLandingPage />;
+
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [langOpen, setLangOpen] = useState(false);
