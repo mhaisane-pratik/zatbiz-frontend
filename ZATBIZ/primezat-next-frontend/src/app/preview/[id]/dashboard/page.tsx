@@ -5,14 +5,29 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/services/api';
 import { Project } from '@/types';
 
-import RestaurantDashboard from '@/components/preview/dashboard/templates/RestaurantDashboard';
-import HospitalDashboard from '@/components/preview/dashboard/templates/HospitalDashboard';
-import SchoolDashboard from '@/components/preview/dashboard/templates/SchoolDashboard';
-import RealEstateDashboard from '@/components/preview/dashboard/templates/RealEstateDashboard';
-import EcommerceDashboard from '@/components/preview/dashboard/templates/EcommerceDashboard';
-import EventDashboard from '@/components/preview/dashboard/templates/EventDashboard';
-import MedicalShopDashboard from '@/components/preview/dashboard/templates/MedicalShopDashboard';
-import GymDashboard from '@/components/preview/dashboard/templates/GymDashboard';
+import RestaurantUserDashboard from '@/components/preview/templates/restaurant/UserDashboard';
+import RestaurantAdminDashboard from '@/components/preview/templates/restaurant/AdminDashboard';
+
+import HospitalUserDashboard from '@/components/preview/templates/hospital/UserDashboard';
+import HospitalAdminDashboard from '@/components/preview/templates/hospital/AdminDashboard';
+
+import SchoolUserDashboard from '@/components/preview/templates/school/UserDashboard';
+import SchoolAdminDashboard from '@/components/preview/templates/school/AdminDashboard';
+
+import GymUserDashboard from '@/components/preview/templates/gym/UserDashboard';
+import GymAdminDashboard from '@/components/preview/templates/gym/AdminDashboard';
+
+import WeddingUserDashboard from '@/components/preview/templates/wedding/UserDashboard';
+import WeddingAdminDashboard from '@/components/preview/templates/wedding/AdminDashboard';
+
+import RealEstateUserDashboard from '@/components/preview/templates/realestate/UserDashboard';
+import RealEstateAdminDashboard from '@/components/preview/templates/realestate/AdminDashboard';
+
+import MedicalShopUserDashboard from '@/components/preview/templates/medical-shop/UserDashboard';
+import MedicalShopAdminDashboard from '@/components/preview/templates/medical-shop/AdminDashboard';
+
+import StorefrontUserDashboard from '@/components/preview/templates/storefront/UserDashboard';
+import StorefrontAdminDashboard from '@/components/preview/templates/storefront/AdminDashboard';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -232,21 +247,35 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
            projectData.description?.toLowerCase().includes('gym') ||
            projectData.description?.toLowerCase().includes('fitness');
 
-           if (isMedicalShop) {
-             detectedTemplate = 'medical-shop';
-           } else if (isRealEstate) {
-            detectedTemplate = 'realestate';
-          } else if (isRest) {
-            detectedTemplate = 'restaurant';
-          } else if (isClinic) {
-            detectedTemplate = 'clinic';
-          } else if (isSchool) {
-            detectedTemplate = 'school';
-          } else if (isWedding) {
-            detectedTemplate = 'wedding';
-          } else if (isGym) {
-            detectedTemplate = 'gym';
-          }
+           if (config.businessType === 'hospital' || config.businessType === 'clinic') {
+              detectedTemplate = 'clinic';
+            } else if (config.businessType === 'school') {
+              detectedTemplate = 'school';
+            } else if (config.businessType === 'gym') {
+              detectedTemplate = 'gym';
+            } else if (config.businessType === 'restaurant') {
+              detectedTemplate = 'restaurant';
+            } else if (config.businessType === 'wedding' || config.businessType === 'event') {
+              detectedTemplate = 'wedding';
+            } else if (config.businessType === 'realestate') {
+              detectedTemplate = 'realestate';
+            } else if (config.businessType === 'medical-shop') {
+              detectedTemplate = 'medical-shop';
+            } else if (isMedicalShop) {
+              detectedTemplate = 'medical-shop';
+            } else if (isRealEstate) {
+              detectedTemplate = 'realestate';
+            } else if (isRest) {
+              detectedTemplate = 'restaurant';
+            } else if (isClinic) {
+              detectedTemplate = 'clinic';
+            } else if (isSchool) {
+              detectedTemplate = 'school';
+            } else if (isWedding) {
+              detectedTemplate = 'wedding';
+            } else if (isGym) {
+              detectedTemplate = 'gym';
+            }
 
           setTemplateId(detectedTemplate);
         } catch (err) {
@@ -283,125 +312,77 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
 
   const activeTheme = themeStyles[themeName] || themeStyles.slate;
 
-  switch (templateId) {
-    case 'restaurant':
-      return (
-        <RestaurantDashboard
-          projectId={projectId}
-          project={project}
-          clientEmail={clientEmail}
-          theme={activeTheme}
-          onLogout={handleLogout}
-          companyName={companyName}
-          setCompanyName={setCompanyName}
-          logoIcon={logoIcon}
-          logoUrl={logoUrl}
-          shopNiche={shopNiche}
-        />
-      );
-    case 'medical-shop':
-      return (
-        <MedicalShopDashboard
-          projectId={projectId}
-          project={project}
-          clientEmail={clientEmail}
-          theme={activeTheme}
-          onLogout={handleLogout}
-          companyName={companyName}
-          setCompanyName={setCompanyName}
-          logoIcon={logoIcon}
-          logoUrl={logoUrl}
-          shopNiche={shopNiche}
-        />
-      );
-    case 'clinic':
-      return (
-        <HospitalDashboard
-          projectId={projectId}
-          project={project}
-          clientEmail={clientEmail}
-          theme={activeTheme}
-          onLogout={handleLogout}
-          companyName={companyName}
-          setCompanyName={setCompanyName}
-          logoIcon={logoIcon}
-          logoUrl={logoUrl}
-          shopNiche={shopNiche}
-        />
-      );
-    case 'school':
-      return (
-        <SchoolDashboard
-          projectId={projectId}
-          project={project}
-          clientEmail={clientEmail}
-          theme={activeTheme}
-          onLogout={handleLogout}
-          companyName={companyName}
-          setCompanyName={setCompanyName}
-          logoIcon={logoIcon}
-          logoUrl={logoUrl}
-          shopNiche={shopNiche}
-        />
-      );
-    case 'realestate':
-      return (
-        <RealEstateDashboard
-          projectId={projectId}
-          project={project}
-          clientEmail={clientEmail}
-          theme={activeTheme}
-          onLogout={handleLogout}
-          companyName={companyName}
-          logoIcon={logoIcon}
-          logoUrl={logoUrl}
-          shopNiche={shopNiche}
-        />
-      );
-    case 'wedding':
-      return (
-        <EventDashboard
-          projectId={projectId}
-          project={project}
-          clientEmail={clientEmail}
-          theme={activeTheme}
-          onLogout={handleLogout}
-          companyName={companyName}
-          logoIcon={logoIcon}
-          logoUrl={logoUrl}
-          shopNiche={shopNiche || undefined}
-          selectedDashboardOption={selectedDashboardOption}
-        />
-      );
-    case 'gym':
-      return (
-        <GymDashboard
-          projectId={projectId}
-          project={project}
-          clientEmail={clientEmail}
-          theme={activeTheme}
-          onLogout={handleLogout}
-          companyName={companyName}
-          setCompanyName={setCompanyName}
-          logoIcon={logoIcon}
-          logoUrl={logoUrl}
-          shopNiche={shopNiche}
-        />
-      );
-    default:
-      return (
-        <EcommerceDashboard
-          projectId={projectId}
-          project={project}
-          clientEmail={clientEmail}
-          theme={activeTheme}
-          onLogout={handleLogout}
-          companyName={companyName}
-          setCompanyName={setCompanyName}
-          logoIcon={logoIcon}
-          logoUrl={logoUrl}
-          shopNiche={shopNiche}
-        />
-      );
-  }
+    const isAdmin = clientEmail === 'admin@gmail.com' || clientEmail === 'agent@gmail.com' || clientEmail === 'broker@gmail.com';
+  const dashboardProps = {
+    projectId,
+    project,
+    clientEmail,
+    theme: activeTheme,
+    onLogout: handleLogout,
+    companyName,
+    setCompanyName,
+    logoIcon,
+    logoUrl,
+    shopNiche,
+    selectedDashboardOption
+  };
+
+  const renderDashboardContent = () => {
+    switch (templateId) {
+      case 'restaurant':
+        return isAdmin ? (
+          <RestaurantAdminDashboard {...dashboardProps} />
+        ) : (
+          <RestaurantUserDashboard {...dashboardProps} />
+        );
+      case 'medical-shop':
+        return isAdmin ? (
+          <MedicalShopAdminDashboard {...dashboardProps} />
+        ) : (
+          <MedicalShopUserDashboard {...dashboardProps} />
+        );
+      case 'clinic':
+        return isAdmin ? (
+          <HospitalAdminDashboard {...dashboardProps} />
+        ) : (
+          <HospitalUserDashboard {...dashboardProps} />
+        );
+      case 'school':
+        return isAdmin ? (
+          <SchoolAdminDashboard {...dashboardProps} />
+        ) : (
+          <SchoolUserDashboard {...dashboardProps} />
+        );
+      case 'realestate':
+        return isAdmin ? (
+          <RealEstateAdminDashboard {...dashboardProps} />
+        ) : (
+          <RealEstateUserDashboard {...dashboardProps} />
+        );
+      case 'wedding':
+        return isAdmin ? (
+          <WeddingAdminDashboard {...dashboardProps} />
+        ) : (
+          <WeddingUserDashboard {...dashboardProps} />
+        );
+      case 'gym':
+        return isAdmin ? (
+          <GymAdminDashboard {...dashboardProps} />
+        ) : (
+          <GymUserDashboard {...dashboardProps} />
+        );
+      default:
+        return isAdmin ? (
+          <StorefrontAdminDashboard {...dashboardProps} />
+        ) : (
+          <StorefrontUserDashboard {...dashboardProps} />
+        );
+    }
+  };
+
+  return (
+    <div className="dashboard-portal-override min-h-screen">
+      {renderDashboardContent()}
+    </div>
+  );
 }

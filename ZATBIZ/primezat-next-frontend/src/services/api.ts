@@ -442,6 +442,21 @@ export const api = {
     },
   },
 
+  // Scratch API
+  scratch: {
+    get: (projectId: number) => request<any>(`/scratch?projectId=${projectId}`),
+    create: (projectId: number, data: any) =>
+      request<any>(`/scratch?projectId=${projectId}`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }),
+    update: (projectId: number, data: any) =>
+      request<any>(`/scratch?projectId=${projectId}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      }),
+  },
+
   // Restaurant API
   restaurant: {
     get: (projectId: number) => request<any>(`/restaurant?projectId=${projectId}`),

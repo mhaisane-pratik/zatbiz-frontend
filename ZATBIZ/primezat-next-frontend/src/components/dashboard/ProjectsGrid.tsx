@@ -162,92 +162,7 @@ function getProjectMockImage(project: Project): string {
   return 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&auto=format&fit=crop&q=80';
 }
 
-const MOCK_WORKSPACES = [
-  {
-    id: 1001,
-    name: 'Java Site',
-    title: 'Authentic Italian Cuisine',
-    description: 'Fresh ingredients, hand-tossed pizzas, and traditional Italian pasta recipes.',
-    status: 'Published',
-    domain: 'javasite.zatbiz.site',
-    avatar: 'J',
-    avatarBg: 'bg-[#eae8ff] text-[#5c3bee]',
-    image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&auto=format&fit=crop&q=80',
-    updatedText: 'Updated 2 hours ago',
-    badgeStyle: 'bg-[#e6fbf4] text-[#03a87c] border-[#bef3e5]',
-    isMock: true
-  },
-  {
-    id: 1002,
-    name: 'Royal Site',
-    title: 'Modern Furniture For Your Home',
-    description: 'Minimalist wood designs, ergonomic chairs, and contemporary home decor.',
-    status: 'Draft',
-    domain: 'royalsite.zatbiz.site',
-    avatar: 'R',
-    avatarBg: 'bg-[#e6f0fa] text-[#2563eb]',
-    image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&auto=format&fit=crop&q=80',
-    updatedText: 'Updated 1 day ago',
-    badgeStyle: 'bg-[#fff8ec] text-[#e09117] border-[#ffe8cc]',
-    isMock: true
-  },
-  {
-    id: 1003,
-    name: 'Shipra Site',
-    title: 'Luxury Fashion Collection',
-    description: 'High-end apparel, designer sunglasses, and seasonal couture collections.',
-    status: 'Password Protected',
-    domain: 'shiprasite.zatbiz.site',
-    avatar: 'S',
-    avatarBg: 'bg-[#fbe8eb] text-[#db2777]',
-    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80',
-    updatedText: 'Updated 2 days ago',
-    badgeStyle: 'bg-[#f4f3ff] text-[#5c3bee] border-[#eae8ff]',
-    isMock: true
-  },
-  {
-    id: 1004,
-    name: 'Tech Site',
-    title: 'Digital Solutions For Your Business',
-    description: 'Cloud systems consulting, modern SaaS frameworks, and custom web development.',
-    status: 'Private',
-    domain: 'techsite.zatbiz.site',
-    avatar: 'T',
-    avatarBg: 'bg-[#e6f4f2] text-[#0d9488]',
-    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&auto=format&fit=crop&q=80',
-    updatedText: 'Updated 3 days ago',
-    badgeStyle: 'bg-[#f4f4f5] text-[#71717a] border-[#e4e4e7]',
-    isMock: true
-  },
-  {
-    id: 1005,
-    name: 'Beauty Site',
-    title: 'Natural Skincare That Glows',
-    description: 'Organic serum drops, green tea skin cleansers, and dermatologist tested lotions.',
-    status: 'Published',
-    domain: 'beautysite.zatbiz.site',
-    avatar: 'B',
-    avatarBg: 'bg-[#fff5e6] text-[#d97706]',
-    image: 'https://images.unsplash.com/photo-1608248597481-496100c80836?w=800&auto=format&fit=crop&q=80',
-    updatedText: 'Updated 5 days ago',
-    badgeStyle: 'bg-[#e6fbf4] text-[#03a87c] border-[#bef3e5]',
-    isMock: true
-  },
-  {
-    id: 1006,
-    name: 'Creative Site',
-    title: 'Creative Agency For Bold Brands',
-    description: 'Full-service advertising campaigns, brand identity audits, and 3D visual design.',
-    status: 'Draft',
-    domain: 'creativesite.zatbiz.site',
-    avatar: 'C',
-    avatarBg: 'bg-[#f3e6fa] text-[#9333ea]',
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80',
-    updatedText: 'Updated 1 week ago',
-    badgeStyle: 'bg-[#fff8ec] text-[#e09117] border-[#ffe8cc]',
-    isMock: true
-  }
-];
+const MOCK_WORKSPACES: any[] = [];
 
 interface ProjectsGridProps {
   projects: Project[];
@@ -510,7 +425,7 @@ export default function ProjectsGrid({ projects, onDeleteProject, onNavigateToTe
                       {w.title}
                     </p>
                     <a 
-                      href={`https://${w.domain}`}
+                      href={w.isMock ? `https://${w.domain}` : `/preview/${w.id}`}
                       target="_blank"
                       rel="noreferrer"
                       className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-700 mt-2 hover:underline"

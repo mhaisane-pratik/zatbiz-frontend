@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS store_reservation (
     table_number VARCHAR(255),
     status VARCHAR(255) DEFAULT 'Pending',
     notes VARCHAR(1000),
+    pre_order_items VARCHAR(2000),
     created_at TIMESTAMP
 );
 

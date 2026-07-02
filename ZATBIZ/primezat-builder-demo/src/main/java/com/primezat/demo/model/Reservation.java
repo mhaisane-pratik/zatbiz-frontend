@@ -32,6 +32,9 @@ public class Reservation {
     @Column(length = 1000)
     private String notes;
 
+    @Column(length = 2000)
+    private String preOrderItems;
+
     private LocalDateTime createdAt;
 
     public Reservation() {
@@ -150,5 +153,13 @@ public class Reservation {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getPreOrderItems() {
+        return preOrderItems;
+    }
+
+    public void setPreOrderItems(String preOrderItems) {
+        this.preOrderItems = preOrderItems;
     }
 }

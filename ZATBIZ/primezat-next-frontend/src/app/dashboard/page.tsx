@@ -22,7 +22,21 @@ import DashboardHome from '@/components/dashboard/DashboardHome';
 import DynamicCategorySelectorModal from '@/components/dashboard/DynamicCategorySelectorModal';
 import WeddingSelectorModal from '@/components/dashboard/WeddingSelectorModal';
 import MedicalShopSelectorModal from '@/components/dashboard/MedicalShopSelectorModal';
+import ScratchSelectorModal from '@/components/dashboard/ScratchSelectorModal';
 type TabType = 'home' | 'projects' | 'templates' | 'analytics' | 'products' | 'orders' | 'customers' | 'marketing' | 'discounts' | 'integrations' | 'automation' | 'settings' | 'superadmin' | 'themes' | 'browse_products' | 'categories' | 'wishlist' | 'reviews' | 'messages' | 'downloads';
+
+const COLOR_THEMES = [
+  { id: 'theme-indigo', name: 'Indigo', color: '#6366f1' },
+  { id: 'theme-emerald', name: 'Emerald', color: '#10b981' },
+  { id: 'theme-rose', name: 'Rose', color: '#f43f5e' },
+  { id: 'theme-amber', name: 'Amber', color: '#f59e0b' },
+  { id: 'theme-violet', name: 'Violet', color: '#8b5cf6' },
+  { id: 'theme-teal', name: 'Teal', color: '#0d9488' },
+  { id: 'theme-blue', name: 'Blue', color: '#3b82f6' },
+  { id: 'theme-crimson', name: 'Crimson', color: '#dc2626' },
+  { id: 'theme-charcoal', name: 'Charcoal', color: '#475569' },
+  { id: 'theme-sunset', name: 'Sunset', color: '#ea580c' },
+];
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -30,20 +44,29 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
   const [wishlistCount, setWishlistCount] = useState(12);
 
   // Theme state for light/dark mode
   const [themeMode, setThemeMode] = useState<'light' | 'dark'>('light');
+  const [colorTheme, setColorTheme] = useState<string>('theme-indigo');
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('zatbiz_dashboard_theme') || 'light';
     setThemeMode(savedTheme as 'light' | 'dark');
+    const savedColorTheme = localStorage.getItem('zatbiz_dashboard_color_theme') || 'theme-indigo';
+    setColorTheme(savedColorTheme);
   }, []);
 
   const toggleTheme = () => {
     const nextTheme = themeMode === 'light' ? 'dark' : 'light';
     setThemeMode(nextTheme);
     localStorage.setItem('zatbiz_dashboard_theme', nextTheme);
+  };
+
+  const changeColorTheme = (themeName: string) => {
+    setColorTheme(themeName);
+    localStorage.setItem('zatbiz_dashboard_color_theme', themeName);
   };
 
   // Search input state
@@ -59,7 +82,14 @@ export default function DashboardPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Spring Boot backend settings
-  const [apiEndpoint, setApiEndpoint] = useState('http://localhost:8080');
+  const [apiEndpoint, setApiEndpoint] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('zatbizApiEndpoint');
+      if (saved) return saved;
+      if (window.location.hostname !== 'localhost') return 'https://zatbiz-backend.onrender.com';
+    }
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+  });
   const [backendStatus, setBackendStatus] = useState<'testing' | 'online' | 'offline'>('testing');
 
   // Create empty project modal state
@@ -98,6 +128,8 @@ export default function DashboardPage() {
   const [isMedicalShopSelectorOpen, setIsMedicalShopSelectorOpen] = useState(false);
   const [selectedMedicalShopConfig, setSelectedMedicalShopConfig] = useState<any>(null);
   const [selectedRestaurantConfig, setSelectedRestaurantConfig] = useState<any>(null);
+  const [isScratchSelectorOpen, setIsScratchSelectorOpen] = useState(false);
+  const [selectedScratchConfig, setSelectedScratchConfig] = useState<any>(null);
 
   // Theme selection modal states
   const [isThemeSelectorOpen, setIsThemeSelectorOpen] = useState(false);
@@ -130,6 +162,7 @@ export default function DashboardPage() {
       router.push('/login');
     } else {
       setUserEmail(email);
+      setAuthToken(token);
       if (email === 'admin@gmail.com') {
         setActiveTab('superadmin');
       } else {
@@ -141,6 +174,10 @@ export default function DashboardPage() {
     const savedEndpoint = localStorage.getItem('zatbizApiEndpoint');
     if (savedEndpoint) {
       setApiEndpoint(savedEndpoint);
+    } else if (process.env.NEXT_PUBLIC_API_URL) {
+      setApiEndpoint(process.env.NEXT_PUBLIC_API_URL);
+    } else if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+      setApiEndpoint('https://zatbiz-backend.onrender.com');
     }
 
     const promoClosed = localStorage.getItem('zatbiz_promo_closed') === 'true';
@@ -197,7 +234,7 @@ export default function DashboardPage() {
     } catch (err) {
       console.error('API Error:', err);
       showToast(
-        'Could not load projects from the database. Ensure Spring Boot is running on http://localhost:8080 and you are logged in.',
+        `Could not load projects from the database. Ensure Spring Boot is running on ${apiEndpoint} and you are logged in.`,
         true
       );
     } finally {
@@ -307,6 +344,8 @@ export default function DashboardPage() {
       setIsCorporateSelectorOpen(true);
     } else if (templateId === 'medical-shop') {
       setIsMedicalShopSelectorOpen(true);
+    } else if (templateId === 'scratch') {
+      setIsScratchSelectorOpen(true);
     } else {
       setSelectedTemplateId(templateId);
       setIsWizardOpen(true);
@@ -499,6 +538,27 @@ export default function DashboardPage() {
       };
 
       const newProj = await api.projects.create(payload);
+
+      if (themeSelectorTemplateId === 'scratch') {
+        await api.scratch.create(newProj.id, {
+          name: companyName,
+          email: `hello@${companyName.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
+          password: 'password123',
+          businessType: theme.industry,
+          ownerName: companyName,
+          ownerEmail: `hello@${companyName.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
+          mobileNo: '+91 99999 88888',
+          whatsappNo: '+91 99999 88888',
+          address: 'Commercial Hub, Noida, India',
+          logoUrl: '',
+          bannerUrl: theme.bannerImageUrl,
+          photoUrl: theme.heroImageUrl,
+          selectedTheme: theme.id,
+          selectedHomepageLayout: 'banner-focus',
+          selectedLoginLayout: 'left-illustration',
+          selectedDashboardLayout: 'metric-overview'
+        });
+      }
 
       try {
         const existingProducts = await api.products.list(newProj.id);
@@ -1353,7 +1413,7 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className={`h-screen flex overflow-hidden antialiased font-sans transition-colors duration-300 ${themeMode === 'dark' ? 'dark-mode bg-[#0c0a09]' : 'bg-slate-50 text-slate-800'}`}>
+    <div className={`h-screen flex overflow-hidden antialiased font-sans transition-colors duration-300 ${colorTheme} ${themeMode === 'dark' ? 'dark-mode bg-[#0c0a09]' : 'bg-slate-50 text-slate-800'}`}>
       <style>{`
         @keyframes statusPulse {
           0%, 100% { box-shadow: 0 0 4px rgba(16, 185, 129, 0.4); opacity: 0.8; }
@@ -1455,6 +1515,20 @@ export default function DashboardPage() {
                 <i className="fa-solid fa-sun text-sm text-amber-500" />
               )}
             </button>
+
+            {/* Connection Status Badge */}
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200/60 bg-slate-50/50 shadow-sm select-none">
+              <span className={`w-2 h-2 rounded-full ${
+                backendStatus === 'online' 
+                  ? 'bg-emerald-500' 
+                  : backendStatus === 'testing' 
+                    ? 'bg-amber-400 animate-pulse' 
+                    : 'bg-rose-400'
+              } flex-shrink-0`} />
+              <span className="text-[9px] font-black text-slate-500 uppercase tracking-wider">
+                {backendStatus === 'online' ? 'Database Sync' : backendStatus === 'testing' ? 'Connecting...' : 'Sandbox Mode'}
+              </span>
+            </div>
 
             {/* Profile Dropdown */}
             <div className="flex items-center gap-3 pl-3 border-l border-slate-200">
@@ -2061,6 +2135,37 @@ export default function DashboardPage() {
               </div>
 
               <form onSubmit={handleSaveSettings} className="space-y-6">
+                <div className="space-y-3 pb-6 border-b border-slate-100">
+                  <span className="block text-xs font-bold text-slate-600 uppercase tracking-wider">
+                    Dashboard Accent Theme Color
+                  </span>
+                  <p className="text-[10px] text-slate-450 font-medium mt-1">
+                    Select a color scheme to apply to all dashboard highlights, badges, and primary buttons.
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-4">
+                    {COLOR_THEMES.map((theme) => (
+                      <button
+                        key={theme.id}
+                        type="button"
+                        onClick={() => changeColorTheme(theme.id)}
+                        className={`flex items-center gap-2.5 p-3 rounded-2xl border text-left cursor-pointer transition-all duration-300 hover:scale-[1.03] select-none ${
+                          colorTheme === theme.id
+                            ? 'border-indigo-600 bg-indigo-50/50 shadow-sm ring-1 ring-indigo-500/25'
+                            : 'border-slate-200 bg-white hover:border-slate-350'
+                        }`}
+                      >
+                        <span
+                          className="w-4.5 h-4.5 rounded-full flex-shrink-0 border border-black/10 shadow-sm"
+                          style={{ backgroundColor: theme.color }}
+                        />
+                        <span className="text-[11px] font-black text-slate-800 tracking-tight">
+                          {theme.name}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">
                     Spring Boot API Server Endpoint
@@ -2070,7 +2175,7 @@ export default function DashboardPage() {
                     required
                     value={apiEndpoint}
                     onChange={(e) => setApiEndpoint(e.target.value)}
-                    placeholder="e.g. http://localhost:8080"
+                    placeholder="e.g. https://zatbiz-backend.onrender.com"
                     className="w-full bg-slate-50 border border-slate-200 focus:border-indigo-550 focus:bg-white rounded-xl px-4 py-2.5 text-xs text-slate-900 outline-none transition"
                   />
                   <p className="text-[10px] text-slate-450 font-medium mt-1.5">
@@ -2438,6 +2543,44 @@ export default function DashboardPage() {
         />
       )}
 
+      {/* Scratch Category Selector Modal */}
+      {isScratchSelectorOpen && (
+        <ScratchSelectorModal
+          isOpen={isScratchSelectorOpen}
+          onClose={() => setIsScratchSelectorOpen(false)}
+          onSelectCategory={async (category, configData) => {
+            setIsScratchSelectorOpen(false);
+            
+            const payload = {
+              name: `${configData.businessType} Site`,
+              description: `Custom visual scratch website for ${configData.businessType}`,
+              blocksJson: JSON.stringify({
+                pages: {
+                  home: []
+                },
+                activePages: ['home'],
+                businessConfig: {
+                  businessType: 'scratch'
+                }
+              }),
+              status: 'Published'
+            };
+
+            try {
+              const newProj = await api.projects.create(payload);
+              await api.scratch.create(newProj.id, configData);
+              
+              setProjects((prev) => [newProj, ...prev]);
+              showToast('Website built from scratch successfully!');
+              setActiveTab('projects');
+            } catch (err) {
+              console.error('Failed to create scratch project:', err);
+              showToast('Failed to build website from scratch.', true);
+            }
+          }}
+        />
+      )}
+
       {/* Hospital Category Selector Modal */}
       {isHospitalSelectorOpen && (
         <HospitalSelectorModal
@@ -2631,6 +2774,7 @@ export default function DashboardPage() {
           initialMedicalShopConfig={selectedMedicalShopConfig}
           initialRestaurantConfig={selectedRestaurantConfig}
           initialGymConfig={selectedGymConfig}
+          initialScratchConfig={selectedScratchConfig}
           projects={projects}
           onClose={() => {
             setIsWizardOpen(false);
@@ -2649,6 +2793,7 @@ export default function DashboardPage() {
             setSelectedCorporateCategory(null);
             setSelectedMedicalShopConfig(null);
             setSelectedRestaurantConfig(null);
+            setSelectedScratchConfig(null);
           }}
           onComplete={(newProj) => {
             setProjects((prev) => [newProj, ...prev]);
@@ -2656,6 +2801,7 @@ export default function DashboardPage() {
             setSelectedMedicalShopConfig(null);
             setSelectedRestaurantConfig(null);
             setSelectedGymConfig(null);
+            setSelectedScratchConfig(null);
             setActiveTab('downloads');
           }}
           showToast={showToast}
@@ -3165,7 +3311,7 @@ export default function DashboardPage() {
 
       {/* Floating Parent Login / Chat Link */}
       <a
-        href="https://jdk-pi.vercel.app/login"
+        href={authToken && userEmail ? `https://jdk-pi.vercel.app/login?token=${encodeURIComponent(authToken)}&email=${encodeURIComponent(userEmail)}` : "https://jdk-pi.vercel.app/login"}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-24 right-6 z-40 flex items-center gap-2 px-5 py-3 bg-white border border-slate-250 text-slate-800 hover:text-indigo-600 font-bold rounded-full shadow-lg transition hover:scale-105 hover:bg-slate-50 active:scale-95 cursor-pointer text-xs"

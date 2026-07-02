@@ -132,9 +132,11 @@ export function UserOrdersPanel({
   shopNiche,
   theme,
 }: UserOrdersPanelProps) {
-  const userOrders = orders.filter(
-    (o) => o.customer === clientEmail || o.customer === 'Guest Customer' || o.customer === 'customer@example.com'
-  );
+  const userOrders = orders.filter((o) => {
+    const email = (o.customerEmail || o.customer || '').trim().toLowerCase();
+    const target = (clientEmail || '').trim().toLowerCase();
+    return email === target || email === 'guest customer' || email === 'customer@example.com';
+  });
   const currencySymbol = shopNiche === 'cloth' || (shopNiche && (shopNiche.startsWith('fashion') || shopNiche.startsWith('electronics') || shopNiche.startsWith('grocery'))) ? '₹' : '$';
 
   return (
@@ -155,31 +157,39 @@ export function UserOrdersPanel({
           </div>
         ) : (
           <div className="divide-y divide-slate-100">
-            {userOrders.map((o) => (
-              <div key={o.id} className="py-4 first:pt-0 last:pb-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                  <span className="text-xs font-black text-slate-905">Order #{o.id}</span>
-                  <span className="text-[10px] font-bold text-slate-400 block mt-0.5">{o.date}</span>
-                </div>
-                <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
-                  <div className="text-right">
-                    <span className={`text-xs font-black ${theme.accentText}`}>
-                      {o.amount.startsWith('₹') || o.amount.startsWith('$') ? o.amount : `${currencySymbol}${o.amount}`}
-                    </span>
-                    <span className="text-[9px] text-slate-400 block font-semibold">Free Delivery</span>
+            {userOrders.map((o) => {
+              const displayAmount = o.total !== undefined 
+                ? `${currencySymbol}${o.total.toFixed(2)}` 
+                : (o.amount ? (o.amount.startsWith('₹') || o.amount.startsWith('$') ? o.amount : `${currencySymbol}${o.amount}`) : '0.00');
+              const displayDate = o.createdAt 
+                ? new Date(o.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) 
+                : (o.date || '');
+              return (
+                <div key={o.id} className="py-4 first:pt-0 last:pb-0 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div>
+                    <span className="text-xs font-black text-slate-905">Order #{o.id}</span>
+                    <span className="text-[10px] font-bold text-slate-400 block mt-0.5">{displayDate}</span>
                   </div>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase ${
-                    o.status === 'Delivered'
-                      ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
-                      : o.status === 'Shipped'
-                      ? 'bg-blue-50 text-blue-600 border border-blue-100'
-                      : 'bg-amber-50 text-amber-600 border border-amber-100'
-                  }`}>
-                    {o.status}
-                  </span>
+                  <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+                    <div className="text-right">
+                      <span className={`text-xs font-black ${theme.accentText}`}>
+                        {displayAmount}
+                      </span>
+                      <span className="text-[9px] text-slate-400 block font-semibold">Free Delivery</span>
+                    </div>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase ${
+                      o.status === 'Delivered'
+                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
+                        : o.status === 'Shipped'
+                        ? 'bg-blue-50 text-blue-600 border border-blue-100'
+                        : 'bg-amber-50 text-amber-600 border border-amber-100'
+                    }`}>
+                      {o.status}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

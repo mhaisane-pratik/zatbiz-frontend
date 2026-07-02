@@ -9,6 +9,16 @@ import BlockMarkup from '@/components/preview/BlockMarkup';
 import FashionStorefront from '@/components/preview/FashionStorefront';
 import RestaurantStorefront from '@/components/preview/restaurant/RestaurantStorefront';
 import WeddingStorefront from '@/components/preview/wedding/WeddingStorefront';
+import ScratchStorefront from '@/components/preview/scratch/ScratchStorefront';
+
+import RestaurantLanding from '@/components/preview/templates/restaurant/Landing';
+import HospitalLanding from '@/components/preview/templates/hospital/Landing';
+import SchoolLanding from '@/components/preview/templates/school/Landing';
+import GymLanding from '@/components/preview/templates/gym/Landing';
+import WeddingLanding from '@/components/preview/templates/wedding/Landing';
+import RealEstateLanding from '@/components/preview/templates/realestate/Landing';
+import MedicalShopLanding from '@/components/preview/templates/medical-shop/Landing';
+import StorefrontLanding from '@/components/preview/templates/storefront/Landing';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -49,6 +59,7 @@ function PreviewPageContent({ params }: PageProps) {
   const [realEstateInfo, setRealEstateInfo] = useState<any>(null);
   const [restaurantInfo, setRestaurantInfo] = useState<any>(null);
   const [gymInfo, setGymInfo] = useState<any>(null);
+  const [scratchInfo, setScratchInfo] = useState<any>(null);
 
   // Query parameter page switching
   const searchParams = useSearchParams();
@@ -57,6 +68,9 @@ function PreviewPageContent({ params }: PageProps) {
 
   // E-commerce View Routing State
   const [activeView, setActiveView] = useState<'landing' | 'cart' | 'checkout' | 'payment' | 'success' | 'orders'>('landing');
+
+  // Preview Mode: 'blocks' (Layout Blocks from Editor) vs 'template' (Niche Storefront Template View)
+  const [previewMode, setPreviewMode] = useState<'blocks' | 'template'>('blocks');
 
   // Customer Shopping States
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -157,6 +171,16 @@ function PreviewPageContent({ params }: PageProps) {
       })
       .catch((e) => console.log('Not restaurant or offline:', e));
 
+    // Fetch scratch details
+    api.scratch.get(projectId)
+      .then((scratchData) => {
+        if (scratchData && scratchData.projectId) {
+          setScratchInfo(scratchData);
+          setPreviewMode('template');
+        }
+      })
+      .catch((e) => console.log('Not scratch or offline:', e));
+
     // Fetch gym details
     api.gym.get(projectId)
       .then((gymData) => {
@@ -231,6 +255,9 @@ function PreviewPageContent({ params }: PageProps) {
           setPages(newPages);
           setActivePages(activePagesList);
           setProjectConfig(config);
+          if (config.businessType === 'restaurant' || config.businessType === 'hospital' || config.businessType === 'clinic' || config.businessType === 'school' || config.businessType === 'gym' || config.businessType === 'medical-shop' || config.businessType === 'scratch') {
+            setPreviewMode('template');
+          }
         } catch (e) {
           console.error('Error parsing blocksJson for preview:', e);
           setPages({ home: [] });
@@ -942,134 +969,181 @@ function PreviewPageContent({ params }: PageProps) {
       <div className="flex-1 pb-24 relative z-10">
         {/* VIEW 1: LANDING CATALOG */}
         {activeView === 'landing' && (
-          isFashion ? (
-            <FashionStorefront
-              projectId={projectId}
-              projectConfig={{ ...projectConfig, shopNiche }}
-              dbProducts={dbProducts}
-              wishlist={wishlist}
-              cartCountQuantity={cartCountQuantity}
-              customerSession={customerSession}
-              setActiveView={setActiveView}
-              openProductDetail={openProductDetail}
-              handleToggleWishlist={handleToggleWishlist}
-              handleAddToCart={handleAddToCart}
-              addToast={addToast}
-            />
-          ) : projectConfig?.businessType === 'restaurant' ? (
-            <RestaurantStorefront
-              projectId={projectId}
-              project={project!}
-              dbProducts={dbProducts}
-              cartCount={cartCountQuantity}
-              onAddToCart={(p) => handleAddToCart(p, 'M', 'Black', 1)}
-              onViewCart={() => setActiveView('cart')}
-              onViewMyOrders={() => {
-                if (!customerSession) {
-                  addToast('Please login to track your orders', true);
-                } else {
-                  setActiveView('orders');
-                }
-              }}
-              onProductClick={openProductDetail}
-              wishlist={wishlist}
-              onToggleWishlist={handleToggleWishlist}
-              setIsBookingModalOpen={setIsBookingModalOpen}
-              customerSession={customerSession}
-              onLogout={handleLogout}
-              shopNiche={shopNiche || null}
-              restaurantInfo={restaurantInfo}
-            />
-          ) : isWedding ? (
-            <WeddingStorefront
-              projectId={projectId}
-              project={project!}
-              currentPageBlocks={currentPageBlocks}
-              cartCount={cartCountQuantity}
-              onAddToCart={(p) => handleAddToCart(p, 'M', 'Black', 1)}
-              onViewCart={() => setActiveView('cart')}
-              onViewMyOrders={() => {
-                if (!customerSession) {
-                  addToast('Please login to track your orders', true);
-                } else {
-                  setActiveView('orders');
-                }
-              }}
-              onProductClick={openProductDetail}
-              wishlist={wishlist}
-              onToggleWishlist={handleToggleWishlist}
-              customerSession={customerSession}
-              onLogout={handleLogout}
-              dbProducts={dbProducts}
-              projectIdStr={projectIdStr}
-            />
-          ) : (
-            <main className="divide-y divide-slate-100 bg-white">
-              {currentPageBlocks.length === 0 ? (
-                <div className="text-center py-32 text-slate-400">
-                  <span className="text-4xl block mb-4">📄</span>
-                  <h2 className="text-lg font-bold text-slate-900 mb-1">This page is blank</h2>
-                  <p className="text-xs max-w-xs mx-auto">
-                    Open the dashboard editor and construct layouts to show them here.
-                  </p>
-                </div>
-              ) : (
-                currentPageBlocks.map((block) => (
-                  <section key={block.id}>
-                    {block.type === 'products' && !customerSession && !isRealEstate ? (
-                      <div className="py-20 px-6 bg-slate-50 text-center border-t border-b border-slate-200/50">
-                        <div className="max-w-xl mx-auto p-8 sm:p-10 bg-white border border-slate-200/60 rounded-3xl shadow-xl space-y-6">
-                          <span className="text-4xl block animate-pulse">🔒</span>
-                          <div className="space-y-2 text-center">
-                            <h2 className="text-xl font-black text-slate-900 tracking-tight">
-                              Explore Our Premium Niche Catalog
-                            </h2>
-                            <p className="text-xs text-slate-500 font-medium leading-relaxed max-w-md mx-auto">
-                              Sign in to unlock our interactive product catalog. Browse apparel, filter by price, brand, color, and rating, select sizes and colors, add items to cart, checkout with discount coupons, and track shipments in real-time.
-                            </p>
-                          </div>
-                          <Link
-                            href={`/preview/${projectId}/login`}
-                            className="inline-block px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-xl text-xs transition uppercase tracking-wider shadow-md hover:scale-[1.02] active:scale-[0.98]"
-                          >
-                            Sign In to Shop
-                          </Link>
-                        </div>
-                      </div>
-                    ) : (
-                      (() => {
-                        const isProductsBlock = block.type === 'products';
-                        const isRealEstateBlock = block.type === 'products' && isRealEstate;
-                        const blockStyle = isRealEstateBlock ? 'bg-amber-50/20' : 'bg-white';
+          (() => {
+            const landingProps = {
+              projectId,
+              project: project!,
+              currentPageBlocks,
+              dbProducts,
+              cartCountQuantity,
+              customerSession,
+              openProductDetail,
+              handleAddToCart,
+              gymInfo,
+            };
 
-                        return (
-                          <BlockMarkup
-                            block={block}
-                            projectId={projectIdStr}
-                            dbProducts={dbProducts}
-                            cartCount={cartCountQuantity}
-                            onAddToCart={(p) => handleAddToCart(p, 'M', 'Black', 1)}
-                            onViewCart={() => setActiveView('cart')}
-                            onViewMyOrders={() => {
-                              if (!customerSession) {
-                                addToast('Please login to track your orders', true);
-                              } else {
-                                setActiveView('orders');
-                              }
-                            }}
-                            onProductClick={openProductDetail}
-                            wishlist={wishlist}
-                            onToggleWishlist={handleToggleWishlist}
-                            gymInfo={gymInfo}
-                          />
-                        );
-                      })()
-                    )}
-                  </section>
-                ))
-              )}
-            </main>
-          )
+            if (previewMode === 'template') {
+              if (scratchInfo || projectConfig?.businessType === 'scratch') {
+                return (
+                  <ScratchStorefront
+                    projectId={projectId}
+                    project={project!}
+                    scratchInfo={scratchInfo}
+                  />
+                );
+              }
+              if (projectConfig?.businessType === 'restaurant') {
+                return (
+                  <RestaurantLanding
+                    projectId={projectId}
+                    project={project!}
+                    dbProducts={dbProducts}
+                    cartCount={cartCountQuantity}
+                    cart={cart}
+                    onUpdateCartQuantity={handleUpdateQuantity}
+                    onRemoveFromCart={handleRemoveFromCart}
+                    onCheckout={() => setActiveView('checkout')}
+                    onAddToCart={(p) => handleAddToCart(p, 'M', 'Black', 1)}
+                    onViewCart={() => setActiveView('cart')}
+                    onViewMyOrders={() => {
+                      if (!customerSession) {
+                        addToast('Please login to track your orders', true);
+                      } else {
+                        setActiveView('orders');
+                      }
+                    }}
+                    onProductClick={openProductDetail}
+                    wishlist={wishlist}
+                    onToggleWishlist={handleToggleWishlist}
+                    setIsBookingModalOpen={setIsBookingModalOpen}
+                    customerSession={customerSession}
+                    onLogout={handleLogout}
+                    shopNiche={shopNiche || null}
+                    restaurantInfo={restaurantInfo}
+                  />
+                );
+              }
+              if (isWedding) {
+                return (
+                  <WeddingLanding
+                    projectId={projectId}
+                    project={project!}
+                    currentPageBlocks={currentPageBlocks}
+                    cartCount={cartCountQuantity}
+                    onAddToCart={(p) => handleAddToCart(p, 'M', 'Black', 1)}
+                    onViewCart={() => setActiveView('cart')}
+                    onViewMyOrders={() => {
+                      if (!customerSession) {
+                        addToast('Please login to track your orders', true);
+                      } else {
+                        setActiveView('orders');
+                      }
+                    }}
+                    onProductClick={openProductDetail}
+                    wishlist={wishlist}
+                    onToggleWishlist={handleToggleWishlist}
+                    customerSession={customerSession}
+                    onLogout={handleLogout}
+                    dbProducts={dbProducts}
+                    projectIdStr={projectIdStr}
+                  />
+                );
+              }
+              if (projectConfig?.businessType === 'hospital' || projectConfig?.businessType === 'clinic') {
+                return <HospitalLanding {...landingProps} />;
+              }
+              if (projectConfig?.businessType === 'school') {
+                return <SchoolLanding {...landingProps} />;
+              }
+              if (projectConfig?.businessType === 'gym') {
+                return <GymLanding {...landingProps} />;
+              }
+              if (isRealEstate) {
+                return <RealEstateLanding {...landingProps} />;
+              }
+              if (projectConfig?.businessType === 'medical-shop') {
+                return <MedicalShopLanding {...landingProps} />;
+              }
+              if (isFashion) {
+                return (
+                  <StorefrontLanding
+                    projectId={projectId}
+                    projectConfig={{ ...projectConfig, shopNiche }}
+                    dbProducts={dbProducts}
+                    wishlist={wishlist}
+                    cartCountQuantity={cartCountQuantity}
+                    customerSession={customerSession}
+                    setActiveView={setActiveView}
+                    openProductDetail={openProductDetail}
+                    handleToggleWishlist={handleToggleWishlist}
+                    handleAddToCart={handleAddToCart}
+                    addToast={addToast}
+                  />
+                );
+              }
+            }
+
+            // Fallback default
+            return (
+              <main className="divide-y divide-slate-100 bg-white">
+                {currentPageBlocks.length === 0 ? (
+                  <div className="text-center py-32 text-slate-400">
+                    <span className="text-4xl block mb-4">📄</span>
+                    <h2 className="text-lg font-bold text-slate-900 mb-1">This page is blank</h2>
+                    <p className="text-xs max-w-xs mx-auto">
+                      Open the dashboard editor and construct layouts to show them here.
+                    </p>
+                  </div>
+                ) : (
+                  currentPageBlocks.map((block) => (
+                    <section key={block.id}>
+                      {block.type === 'products' && !customerSession && !isRealEstate ? (
+                        <div className="py-20 px-6 bg-slate-50 text-center border-t border-b border-slate-200/50">
+                          <div className="max-w-xl mx-auto p-8 sm:p-10 bg-white border border-slate-200/60 rounded-3xl shadow-xl space-y-6">
+                            <span className="text-4xl block animate-pulse">🔒</span>
+                            <div className="space-y-2 text-center">
+                              <h2 className="text-xl font-black text-slate-900 tracking-tight">
+                                Explore Our Premium Niche Catalog
+                              </h2>
+                              <p className="text-xs text-slate-500 font-medium leading-relaxed max-w-md mx-auto">
+                                Sign in to unlock our interactive product catalog. Browse apparel, filter by price, brand, color, and rating, select sizes and colors, add items to cart, checkout with discount coupons, and track shipments in real-time.
+                              </p>
+                            </div>
+                            <Link
+                              href={`/preview/${projectId}/login`}
+                              className="inline-block px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-xl text-xs transition uppercase tracking-wider shadow-md hover:scale-[1.02] active:scale-[0.98]"
+                            >
+                              Sign In to Shop
+                            </Link>
+                          </div>
+                        </div>
+                      ) : (
+                        <BlockMarkup
+                          block={block}
+                          projectId={projectIdStr}
+                          dbProducts={dbProducts}
+                          cartCount={cartCountQuantity}
+                          onAddToCart={(p) => handleAddToCart(p, 'M', 'Black', 1)}
+                          onViewCart={() => setActiveView('cart')}
+                          onViewMyOrders={() => {
+                            if (!customerSession) {
+                              addToast('Please login to track your orders', true);
+                            } else {
+                              setActiveView('orders');
+                            }
+                          }}
+                          onProductClick={openProductDetail}
+                          wishlist={wishlist}
+                          onToggleWishlist={handleToggleWishlist}
+                          gymInfo={gymInfo}
+                        />
+                      )}
+                    </section>
+                  ))
+                )}
+              </main>
+            );
+          })()
         )}
 
         {/* Mini Storefront Header for sub-views */}
@@ -2129,16 +2203,41 @@ function PreviewPageContent({ params }: PageProps) {
       {/* Floating Preview Info Bar */}
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white border border-slate-200 px-5 py-3 rounded-2xl flex flex-col sm:flex-row items-center gap-3 text-xs shadow-2xl z-50 backdrop-blur-md no-print animate-fade-in">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 bg-emerald-500 rounded-full" />
+          <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
           <span className="text-slate-500 font-semibold">Previewing:</span>
-          <span className="text-slate-900 font-bold truncate max-w-[150px]">{project.name}</span>
+          <span className="text-slate-900 font-bold truncate max-w-[120px]">{project?.name}</span>
         </div>
+        
         <span className="hidden sm:inline text-slate-200">|</span>
+        
+        {/* Toggle Mode Control */}
+        <div className="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200/50">
+          <button
+            onClick={() => setPreviewMode('blocks')}
+            className={`px-3 py-1.5 rounded-lg font-extrabold transition cursor-pointer border-none text-[10px] uppercase flex items-center gap-1 ${
+              previewMode === 'blocks'
+                ? 'bg-white text-indigo-650 shadow-sm font-sans'
+                : 'text-slate-500 hover:text-slate-800 bg-transparent font-sans'
+            }`}
+          >
+            🛠️ Designer Layout
+          </button>
+          <button
+            onClick={() => setPreviewMode('template')}
+            className={`px-3 py-1.5 rounded-lg font-extrabold transition cursor-pointer border-none text-[10px] uppercase flex items-center gap-1 ${
+              previewMode === 'template'
+                ? 'bg-white text-indigo-650 shadow-sm font-sans'
+                : 'text-slate-500 hover:text-slate-800 bg-transparent font-sans'
+            }`}
+          >
+            🛒 Interactive Storefront
+          </button>
+        </div>
+
+        <span className="hidden sm:inline text-slate-200">|</span>
+
         <div className="flex items-center gap-2">
-          <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[10px] font-extrabold uppercase">
-            Demo Flow
-          </span>
-          <span className="text-slate-655 font-medium flex items-center gap-1">
+          <span className="text-slate-505 font-medium flex items-center gap-1">
             Click{' '}
             <Link
               href={`/preview/${projectId}/login`}
@@ -2146,7 +2245,7 @@ function PreviewPageContent({ params }: PageProps) {
             >
               "Log In"
             </Link>{' '}
-            to check client dashboard flow.
+            to check dashboard flow.
           </span>
         </div>
       </div>

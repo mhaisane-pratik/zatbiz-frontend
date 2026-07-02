@@ -22,6 +22,7 @@ export interface CategoryProps {
   heroTitle?: string;
   heroSubtitle?: string;
   themePreset?: string;
+  restaurantInfo?: any;
 }
 
 export interface CategoryLoginProps {
@@ -34,6 +35,7 @@ export interface CategoryLoginProps {
   errorMessage: string;
   successMessage: string;
   handleLoginSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  restaurantInfo?: any;
 }
 
 export interface RestaurantDashboardProps {

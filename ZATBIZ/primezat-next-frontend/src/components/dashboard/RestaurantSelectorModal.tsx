@@ -17,6 +17,7 @@ interface LayoutOption {
   name: string;
   desc: string;
   previewIcon: string;
+  imageUrl: string;
 }
 
 // 10 Restaurant Themes
@@ -35,44 +36,44 @@ export const RESTAURANT_THEMES: ThemeOption[] = [
 
 // 10 Homepage Layout Options
 export const RESTAURANT_HOMEPAGES: LayoutOption[] = [
-  { id: 'menu-grid-focus', name: 'Menu Grid Focus', desc: 'Highlights your dish items directly on the home banner.', previewIcon: '🍔' },
-  { id: 'reservation-banner', name: 'Table Booking Center', desc: 'Sticky booking calendar in the hero block for instant reservations.', previewIcon: '📅' },
-  { id: 'chef-specials', name: 'Chef Signature Slides', desc: 'Spotlights rotating signature recipes, wines, and chef interviews.', previewIcon: '👨‍🍳' },
-  { id: 'category-circles', name: 'Visual Category Circles', desc: 'Renders circular cuisine selectors (Pizza, Cafe, Fast Food) on top.', previewIcon: '🍕' },
-  { id: 'deal-hero', name: 'Coupon & Offers Focus', desc: 'Prominent banner showcasing current happy hours and combo packages.', previewIcon: '🏷️' },
-  { id: 'blog-articles', name: 'Culinary Advisory Blog', desc: 'Highlight food recipe articles, team updates, and newsletter signups.', previewIcon: '📰' },
-  { id: 'gallery-carousel', name: 'Dining Room Photo Stream', desc: 'Features a large visual grid of plates and dining room atmospheres.', previewIcon: '📸' },
-  { id: 'sidebar-menu', name: 'Left Sidebar Categories', desc: 'Left categories scroll sidebar with right-side scrolling food items.', previewIcon: '🧱' },
-  { id: 'reviews-showcase', name: 'Client Testimonials Focus', desc: 'Displays social proofs, ratings, and critic write-ups prominently.', previewIcon: '⭐' },
-  { id: 'map-timings', name: 'Store Locator & Map', desc: 'Focuses on Google Maps coordinates, address, and live open status.', previewIcon: '📍' },
+  { id: 'menu-grid-focus', name: 'Menu Grid Focus', desc: 'Highlights your dish items directly on the home banner.', previewIcon: '🍔', imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&auto=format&fit=crop&q=80' },
+  { id: 'reservation-banner', name: 'Table Booking Center', desc: 'Sticky booking calendar in the hero block for instant reservations.', previewIcon: '📅', imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=80' },
+  { id: 'chef-specials', name: 'Chef Signature Slides', desc: 'Spotlights rotating signature recipes, wines, and chef interviews.', previewIcon: '👨‍🍳', imageUrl: 'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=500&auto=format&fit=crop&q=80' },
+  { id: 'category-circles', name: 'Visual Category Circles', desc: 'Renders circular cuisine selectors (Pizza, Cafe, Fast Food) on top.', previewIcon: '🍕', imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&auto=format&fit=crop&q=80' },
+  { id: 'deal-hero', name: 'Coupon & Offers Focus', desc: 'Prominent banner showcasing current happy hours and combo packages.', previewIcon: '🏷️', imageUrl: 'https://images.unsplash.com/photo-1543353071-10c8ba85a904?w=500&auto=format&fit=crop&q=80' },
+  { id: 'blog-articles', name: 'Culinary Advisory Blog', desc: 'Highlight food recipe articles, team updates, and newsletter signups.', previewIcon: '📰', imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=80' },
+  { id: 'gallery-carousel', name: 'Dining Room Photo Stream', desc: 'Features a large visual grid of plates and dining room atmospheres.', previewIcon: '📸', imageUrl: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=500&auto=format&fit=crop&q=80' },
+  { id: 'sidebar-menu', name: 'Left Sidebar Categories', desc: 'Left categories scroll sidebar with right-side scrolling food items.', previewIcon: '🧱', imageUrl: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=500&auto=format&fit=crop&q=80' },
+  { id: 'reviews-showcase', name: 'Client Testimonials Focus', desc: 'Displays social proofs, ratings, and critic write-ups prominently.', previewIcon: '⭐', imageUrl: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&auto=format&fit=crop&q=80' },
+  { id: 'map-timings', name: 'Store Locator & Map', desc: 'Focuses on Google Maps coordinates, address, and live open status.', previewIcon: '📍', imageUrl: 'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=500&auto=format&fit=crop&q=80' },
 ];
 
 // 10 Login Layout Options
 export const RESTAURANT_LOGINS: LayoutOption[] = [
-  { id: 'left-illustration', name: 'Left Chef Illustration', desc: 'Gourmet Chef artwork on the left side, login inputs on the right.', previewIcon: '🎨' },
-  { id: 'right-illustration', name: 'Right Buffet Vector', desc: 'Vibrant dining scene illustration on the right, form on the left.', previewIcon: '🖼' },
-  { id: 'floating-dishes', name: 'Floating Culinary Glassmorphism', desc: 'Form card floating over floating vector food ingredients.', previewIcon: '🍅' },
-  { id: 'minimal-logo', name: 'Minimal Emblem Card', desc: 'Simple centered login card with a clean restaurant crest on top.', previewIcon: '🍴' },
-  { id: 'curved-wave', name: 'Curved Wave Divider', desc: 'Form separated from illustration with a curved wave design.', previewIcon: '🌊' },
-  { id: 'neon-dark', name: 'Vibrant Neon Dark Mode', desc: 'Deep slate grey backdrop with neon orange and gold borders.', previewIcon: '🌙' },
-  { id: 'double-banner', name: 'Laboratory Buffet Panels', desc: 'Centered login forms framed by gourmet vector illustrations.', previewIcon: '🍷' },
-  { id: 'chef-overlay', name: 'Gourmet Chef Overlay', desc: 'Inputs floating over a background chef illustration.', previewIcon: '🍳' },
-  { id: 'biological-grid', name: 'Dining Table Grid', desc: 'Inputs flanked by a structural pattern resembling restaurant seating.', previewIcon: '🪑' },
-  { id: 'delivery-scooter', name: 'Scooter Delivery Stand', desc: 'Delivery rider illustration beside a giant mobile login screen.', previewIcon: '🛵' },
+  { id: 'left-illustration', name: 'Left Chef Illustration', desc: 'Gourmet Chef artwork on the left side, login inputs on the right.', previewIcon: '🎨', imageUrl: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=500&auto=format&fit=crop&q=80' },
+  { id: 'right-illustration', name: 'Right Buffet Vector', desc: 'Vibrant dining scene illustration on the right, form on the left.', previewIcon: '🖼', imageUrl: 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=500&auto=format&fit=crop&q=80' },
+  { id: 'floating-dishes', name: 'Floating Culinary Glassmorphism', desc: 'Form card floating over floating vector food ingredients.', previewIcon: '🍅', imageUrl: 'https://images.unsplash.com/photo-1506368249639-73a05d6f6488?w=500&auto=format&fit=crop&q=80' },
+  { id: 'minimal-logo', name: 'Minimal Emblem Card', desc: 'Simple centered login card with a clean restaurant crest on top.', previewIcon: '🍴', imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&auto=format&fit=crop&q=80' },
+  { id: 'curved-wave', name: 'Curved Wave Divider', desc: 'Form separated from illustration with a curved wave design.', previewIcon: '🌊', imageUrl: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&auto=format&fit=crop&q=80' },
+  { id: 'neon-dark', name: 'Vibrant Neon Dark Mode', desc: 'Deep slate grey backdrop with neon orange and gold borders.', previewIcon: '🌙', imageUrl: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=500&auto=format&fit=crop&q=80' },
+  { id: 'double-banner', name: 'Laboratory Buffet Panels', desc: 'Centered login forms framed by gourmet vector illustrations.', previewIcon: '🍷', imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=80' },
+  { id: 'chef-overlay', name: 'Gourmet Chef Overlay', desc: 'Inputs floating over a background chef illustration.', previewIcon: '🍳', imageUrl: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500&auto=format&fit=crop&q=80' },
+  { id: 'biological-grid', name: 'Dining Table Grid', desc: 'Inputs flanked by a structural pattern resembling restaurant seating.', previewIcon: '🪑', imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=80' },
+  { id: 'delivery-scooter', name: 'Scooter Delivery Stand', desc: 'Delivery rider illustration beside a giant mobile login screen.', previewIcon: '🛵', imageUrl: 'https://images.unsplash.com/photo-1512152497639-6133999e9e40?w=500&auto=format&fit=crop&q=80' },
 ];
 
 // 10 Dashboard Layout Options
 export const RESTAURANT_DASHBOARDS: LayoutOption[] = [
-  { id: 'metric-overview', name: 'Sales Metric Console', desc: 'Heavy on visual counters for sales totals, ticket entries, and reviews.', previewIcon: '📊' },
-  { id: 'menu-catalog', name: 'Menu CRUD Catalog Manager', desc: 'Immediate view of catalog status and category selectors.', previewIcon: '📦' },
-  { id: 'reservations-inbox', name: 'Table Reservation Log', desc: 'Highlights upcoming bookings and table assignment lists.', previewIcon: '📥' },
-  { id: 'courier-tracking', name: 'Delivery Partners Dispatcher', desc: 'Focuses on driver status tracking and earnings summaries.', previewIcon: '🚚' },
-  { id: 'points-wallet', name: 'Points & Wallet Balances', desc: 'User-side screen displaying active loyalty cash and credits.', previewIcon: '✨' },
-  { id: 'simple-tables', name: 'Clean Table Logs', desc: 'Basic data tables omitting charts for fast, clean operations.', previewIcon: '📋' },
-  { id: 'neon-dark-admin', name: 'Neon Admin Dark Mode', desc: 'Dark theme utilizing high-contrast gold and slate colors.', previewIcon: '🕶️' },
-  { id: 'compact-sidebar', name: 'Compact Icon-Only Menu', desc: 'Collapsible navigation sidebar suited for kitchen tablets.', previewIcon: '📱' },
-  { id: 'dispatch-tracker', name: 'Gps Dispatch Tracker', desc: 'Focuses on active order delivery maps and route planning.', previewIcon: '🗺️' },
-  { id: 'telemetry-hub', name: 'Monthly Telemetry & Analytics', desc: 'Provides comparison graphs, profit margins, and food waste.', previewIcon: '📉' },
+  { id: 'metric-overview', name: 'Sales Metric Console', desc: 'Heavy on visual counters for sales totals, ticket entries, and reviews.', previewIcon: '📊', imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&auto=format&fit=crop&q=80' },
+  { id: 'menu-catalog', name: 'Menu CRUD Catalog Manager', desc: 'Immediate view of catalog status and category selectors.', previewIcon: '📦', imageUrl: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&auto=format&fit=crop&q=80' },
+  { id: 'reservations-inbox', name: 'Table Reservation Log', desc: 'Highlights upcoming bookings and table assignment lists.', previewIcon: '📥', imageUrl: 'https://images.unsplash.com/photo-1588675646184-f5b0b0b0b2de?w=500&auto=format&fit=crop&q=80' },
+  { id: 'courier-tracking', name: 'Delivery Partners Dispatcher', desc: 'Focuses on driver status tracking and earnings summaries.', previewIcon: '🚚', imageUrl: 'https://images.unsplash.com/photo-1512152497639-6133999e9e40?w=500&auto=format&fit=crop&q=80' },
+  { id: 'points-wallet', name: 'Points & Wallet Balances', desc: 'User-side screen displaying active loyalty cash and credits.', previewIcon: '✨', imageUrl: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=500&auto=format&fit=crop&q=80' },
+  { id: 'simple-tables', name: 'Clean Table Logs', desc: 'Basic data tables omitting charts for fast, clean operations.', previewIcon: '📋', imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&auto=format&fit=crop&q=80' },
+  { id: 'neon-dark-admin', name: 'Neon Admin Dark Mode', desc: 'Dark theme utilizing high-contrast gold and slate colors.', previewIcon: '🕶️', imageUrl: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=500&auto=format&fit=crop&q=80' },
+  { id: 'compact-sidebar', name: 'Compact Icon-Only Menu', desc: 'Collapsible navigation sidebar suited for kitchen tablets.', previewIcon: '📱', imageUrl: 'https://images.unsplash.com/photo-1542744094-3a31f103e35f?w=500&auto=format&fit=crop&q=80' },
+  { id: 'dispatch-tracker', name: 'Gps Dispatch Tracker', desc: 'Focuses on active order delivery maps and route planning.', previewIcon: '🗺️', imageUrl: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=500&auto=format&fit=crop&q=80' },
+  { id: 'telemetry-hub', name: 'Monthly Telemetry & Analytics', desc: 'Provides comparison graphs, profit margins, and food waste.', previewIcon: '📉', imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format&fit=crop&q=80' },
 ];
 
 interface RestaurantSelectorModalProps {
@@ -176,7 +177,7 @@ export default function RestaurantSelectorModal({
           {step === 1 && (
             <div className="space-y-6 max-w-2xl mx-auto text-left">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1">
+                <div className="space-y-1 sm:col-span-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase">Restaurant Name *</label>
                   <input
                     type="text"
@@ -195,18 +196,6 @@ export default function RestaurantSelectorModal({
                     placeholder="Chef Marcus"
                     className="w-full bg-slate-900 border border-slate-800 focus:border-[#c5a880] rounded-xl px-4 py-2.5 text-xs text-white outline-none"
                   />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-black text-slate-400 uppercase">Niche subcategory *</label>
-                  <select
-                    value={subcategory}
-                    onChange={e => setSubcategory(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-800 focus:border-[#c5a880] rounded-xl px-4 py-2.5 text-xs text-white outline-none"
-                  >
-                    {['Fine Dining', 'Fast Food', 'Pizza', 'Indian', 'Cafe', 'Bakery', 'Chinese', 'Vegan', 'General Restaurant'].map((c, i) => (
-                      <option key={i} value={c}>{c}</option>
-                    ))}
-                  </select>
                 </div>
                 <div className="space-y-1">
                   <label className="text-[10px] font-black text-slate-400 uppercase">Contact Mobile *</label>
@@ -269,6 +258,40 @@ export default function RestaurantSelectorModal({
                   className="w-full bg-slate-900 border border-slate-800 focus:border-[#c5a880] rounded-xl px-4 py-2.5 text-xs text-white outline-none resize-none"
                 />
               </div>
+
+              <div className="border-t border-slate-900 pt-6">
+                <label className="text-[10px] font-black text-[#c5a880] uppercase tracking-widest block mb-4">Select Restaurant Niche</label>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                  {[
+                    { id: 'Fine Dining', name: 'Fine Dining', icon: '⚜️', img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=300', desc: 'Gourmet plates & wine pairings' },
+                    { id: 'Fast Food', name: 'Fast Food', icon: '🍔', img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300', desc: 'Flame-grilled burgers & fries' },
+                    { id: 'Pizza', name: 'Pizza & Pasta', icon: '🍕', img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300', desc: 'Wood-fired Neapolitan pizzas' },
+                    { id: 'Indian', name: 'Indian Cuisine', icon: '🍲', img: 'https://images.unsplash.com/photo-1585938338392-50a59970642c?w=300', desc: 'Biryanis & rich curries' },
+                    { id: 'Cafe', name: 'Cafe & Roastery', icon: '☕', img: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=300', desc: 'Specialty coffee & pastries' }
+                  ].map((cat) => {
+                    const isSelected = subcategory === cat.id;
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setSubcategory(cat.id)}
+                        className={`flex flex-col bg-slate-900 border text-left overflow-hidden rounded-2xl group transition duration-300 ${
+                          isSelected ? 'border-[#c5a880] ring-1 ring-[#c5a880]' : 'border-slate-800 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="h-20 w-full overflow-hidden relative">
+                          <img src={cat.img} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                          <span className="absolute top-2 right-2 w-6 h-6 bg-slate-950/80 backdrop-blur rounded-full flex items-center justify-center text-xs">{cat.icon}</span>
+                        </div>
+                        <div className="p-3 space-y-1">
+                          <h4 className="text-white font-extrabold text-[10px] uppercase truncate">{cat.name}</h4>
+                          <p className="text-slate-500 text-[8px] leading-normal font-semibold line-clamp-2">{cat.desc}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           )}
 
@@ -321,68 +344,98 @@ export default function RestaurantSelectorModal({
             </div>
           )}
 
-          {/* Step 3: Homepage Layout Selector */}
-          {step === 3 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left">
-              {RESTAURANT_HOMEPAGES.map((layoutOpt) => (
-                <button
-                  key={layoutOpt.id}
-                  onClick={() => setSelectedHomepageLayout(layoutOpt.id)}
-                  className={`p-5 border rounded-2xl flex flex-col justify-between min-h-[120px] transition cursor-pointer text-left ${
-                    selectedHomepageLayout === layoutOpt.id ? 'border-[#c5a880] bg-[#c5a880]/5' : 'border-slate-900 bg-slate-900/20 hover:border-slate-800'
-                  }`}
-                >
-                  <span className="text-3xl">{layoutOpt.previewIcon}</span>
-                  <div className="mt-3">
-                    <h4 className="text-xs font-bold text-white">{layoutOpt.name}</h4>
-                    <p className="text-[9px] text-slate-500 mt-1 line-clamp-2">{layoutOpt.desc}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+              {/* Step 3: Homepage Layout Selector */}
+              {step === 3 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left max-h-[50vh] overflow-y-auto pr-2">
+                  {RESTAURANT_HOMEPAGES.map((layoutOpt) => (
+                    <button
+                      key={layoutOpt.id}
+                      type="button"
+                      onClick={() => setSelectedHomepageLayout(layoutOpt.id)}
+                      className={`p-4 border rounded-2xl flex flex-col justify-between transition cursor-pointer text-left ${
+                        selectedHomepageLayout === layoutOpt.id ? 'border-[#c5a880] bg-[#c5a880]/5 shadow-[0_0_15px_rgba(197,168,128,0.15)]' : 'border-slate-800 bg-slate-900/20 hover:border-slate-750'
+                      }`}
+                    >
+                      <div className="relative w-full h-32 rounded-xl overflow-hidden mb-3 border border-slate-850 bg-slate-950">
+                        <img 
+                          src={layoutOpt.imageUrl} 
+                          alt={layoutOpt.name} 
+                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                        />
+                        <span className="absolute top-2 right-2 bg-black/70 backdrop-blur-md w-7 h-7 rounded-full flex items-center justify-center text-xs select-none">
+                          {layoutOpt.previewIcon}
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-white uppercase tracking-wider">{layoutOpt.name}</h4>
+                        <p className="text-[9px] text-slate-500 mt-1 line-clamp-2">{layoutOpt.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
 
-          {/* Step 4: Login Layout Selector */}
-          {step === 4 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left">
-              {RESTAURANT_LOGINS.map((layoutOpt) => (
-                <button
-                  key={layoutOpt.id}
-                  onClick={() => setSelectedLoginLayout(layoutOpt.id)}
-                  className={`p-5 border rounded-2xl flex flex-col justify-between min-h-[120px] transition cursor-pointer text-left ${
-                    selectedLoginLayout === layoutOpt.id ? 'border-[#c5a880] bg-[#c5a880]/5' : 'border-slate-900 bg-slate-900/20 hover:border-slate-800'
-                  }`}
-                >
-                  <span className="text-3xl">{layoutOpt.previewIcon}</span>
-                  <div className="mt-3">
-                    <h4 className="text-xs font-bold text-white">{layoutOpt.name}</h4>
-                    <p className="text-[9px] text-slate-500 mt-1 line-clamp-2">{layoutOpt.desc}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+              {/* Step 4: Login Layout Selector */}
+              {step === 4 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left max-h-[50vh] overflow-y-auto pr-2">
+                  {RESTAURANT_LOGINS.map((layoutOpt) => (
+                    <button
+                      key={layoutOpt.id}
+                      type="button"
+                      onClick={() => setSelectedLoginLayout(layoutOpt.id)}
+                      className={`p-4 border rounded-2xl flex flex-col justify-between transition cursor-pointer text-left ${
+                        selectedLoginLayout === layoutOpt.id ? 'border-[#c5a880] bg-[#c5a880]/5 shadow-[0_0_15px_rgba(197,168,128,0.15)]' : 'border-slate-800 bg-slate-900/20 hover:border-slate-750'
+                      }`}
+                    >
+                      <div className="relative w-full h-32 rounded-xl overflow-hidden mb-3 border border-slate-850 bg-slate-950">
+                        <img 
+                          src={layoutOpt.imageUrl} 
+                          alt={layoutOpt.name} 
+                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                        />
+                        <span className="absolute top-2 right-2 bg-black/70 backdrop-blur-md w-7 h-7 rounded-full flex items-center justify-center text-xs select-none">
+                          {layoutOpt.previewIcon}
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-white uppercase tracking-wider">{layoutOpt.name}</h4>
+                        <p className="text-[9px] text-slate-500 mt-1 line-clamp-2">{layoutOpt.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
 
-          {/* Step 5: Dashboard Layout Selector */}
-          {step === 5 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left">
-              {RESTAURANT_DASHBOARDS.map((layoutOpt) => (
-                <button
-                  key={layoutOpt.id}
-                  onClick={() => setSelectedDashboardLayout(layoutOpt.id)}
-                  className={`p-5 border rounded-2xl flex flex-col justify-between min-h-[120px] transition cursor-pointer text-left ${
-                    selectedDashboardLayout === layoutOpt.id ? 'border-[#c5a880] bg-[#c5a880]/5' : 'border-slate-900 bg-slate-900/20 hover:border-slate-800'
-                  }`}
-                >
-                  <span className="text-3xl">{layoutOpt.previewIcon}</span>
-                  <div className="mt-3">
-                    <h4 className="text-xs font-bold text-white">{layoutOpt.name}</h4>
-                    <p className="text-[9px] text-slate-500 mt-1 line-clamp-2">{layoutOpt.desc}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+              {/* Step 5: Dashboard Layout Selector */}
+              {step === 5 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left max-h-[50vh] overflow-y-auto pr-2">
+                  {RESTAURANT_DASHBOARDS.map((layoutOpt) => (
+                    <button
+                      key={layoutOpt.id}
+                      type="button"
+                      onClick={() => setSelectedDashboardLayout(layoutOpt.id)}
+                      className={`p-4 border rounded-2xl flex flex-col justify-between transition cursor-pointer text-left ${
+                        selectedDashboardLayout === layoutOpt.id ? 'border-[#c5a880] bg-[#c5a880]/5 shadow-[0_0_15px_rgba(197,168,128,0.15)]' : 'border-slate-800 bg-slate-900/20 hover:border-slate-750'
+                      }`}
+                    >
+                      <div className="relative w-full h-32 rounded-xl overflow-hidden mb-3 border border-slate-850 bg-slate-950">
+                        <img 
+                          src={layoutOpt.imageUrl} 
+                          alt={layoutOpt.name} 
+                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                        />
+                        <span className="absolute top-2 right-2 bg-black/70 backdrop-blur-md w-7 h-7 rounded-full flex items-center justify-center text-xs select-none">
+                          {layoutOpt.previewIcon}
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-white uppercase tracking-wider">{layoutOpt.name}</h4>
+                        <p className="text-[9px] text-slate-500 mt-1 line-clamp-2">{layoutOpt.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
 
         </div>
 

@@ -36,6 +36,7 @@ public class ReservationApiController {
             Integer numberOfGuests = Integer.parseInt(request.get("numberOfGuests").toString());
             String tableNumber = (String) request.get("tableNumber");
             String notes = (String) request.get("notes");
+            String preOrderItems = (String) request.get("preOrderItems");
             String status = request.get("status") != null ? (String) request.get("status") : "Pending";
 
             // CRM Sync: Find or create a customer profile
@@ -75,6 +76,7 @@ public class ReservationApiController {
                 status,
                 notes
             );
+            reservation.setPreOrderItems(preOrderItems);
 
             Reservation saved = reservationRepository.save(reservation);
             return ResponseEntity.ok(saved);

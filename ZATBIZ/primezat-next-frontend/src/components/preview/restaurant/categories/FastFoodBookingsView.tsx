@@ -59,6 +59,7 @@ export function FastFoodBookingsView({
                   <th className="py-3 font-black">Guests</th>
                   <th className="py-3 font-black">Booth Number</th>
                   <th className="py-3 font-black">Notes</th>
+                  <th className="py-3 font-black">Pre-Orders</th>
                   <th className="py-3 font-black">Status</th>
                   <th className="py-3 font-black text-right">Actions</th>
                 </tr>
@@ -71,6 +72,7 @@ export function FastFoodBookingsView({
                     <td className={`py-3.5 font-bold ${colors.textAccent}`}>{res.numberOfGuests} Guests</td>
                     <td className="py-3.5 font-mono text-[10px]">{res.tableNumber}</td>
                     <td className="py-3.5 text-slate-400 italic">"{res.notes || 'No notes'}"</td>
+                    <td className="py-3.5 text-white font-bold">{res.preOrderItems || 'None'}</td>
                     <td className="py-3.5">
                       <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase border ${
                         res.status === 'Confirmed' ? 'bg-emerald-950/20 text-emerald-400 border-emerald-900/40' : res.status === 'Completed' ? 'bg-blue-950/20 text-blue-400 border-blue-900/40' : 'bg-amber-950/20 text-amber-450 border-amber-900/40'
@@ -157,6 +159,11 @@ export function FastFoodBookingsView({
                   Scheduled for <strong className="text-white">{res.bookingDate}</strong> at <strong className={colors.textAccent}>{res.bookingTime}</strong>
                 </p>
                 {res.notes && <p className="text-[9px] text-slate-500 italic">" {res.notes} "</p>}
+                {res.preOrderItems && (
+                  <p className="text-[9px] font-black text-orange-400 bg-orange-500/5 border border-orange-500/10 rounded-lg px-2.5 py-1 inline-block mt-1 uppercase tracking-wider">
+                    ⚡ Pre-Ordered: {res.preOrderItems}
+                  </p>
+                )}
               </div>
               {res.status === 'Pending' && (
                 <button onClick={() => handleDeleteBooking(res.id)} className="px-3 py-1.5 border border-slate-850 hover:bg-[#1a1c23] rounded-lg font-bold text-slate-400 transition cursor-pointer bg-transparent">
