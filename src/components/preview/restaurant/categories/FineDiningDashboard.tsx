@@ -107,6 +107,10 @@ export function FineDiningDashboard({
 
   const handleCreateBooking = async (e: React.FormEvent) => {
     e.preventDefault();
+    const preOrderSummary = cartItems.length > 0
+      ? cartItems.map(c => `${c.quantity}x ${c.product.name}`).join(', ')
+      : '';
+
     const payload = {
       projectId,
       customerName: userName || 'VIP Guest',
@@ -117,12 +121,18 @@ export function FineDiningDashboard({
       numberOfGuests: resFormGuests,
       tableNumber: 'Auto-Allocated Private Room',
       notes: resFormNotes,
+      preOrderItems: preOrderSummary,
       status: 'Pending'
     };
 
     try {
       await api.reservations.create(payload);
-      alert('Bespoke Table Reservation Requested! Check reservation log below.');
+      if (preOrderSummary) {
+        alert(`Bespoke Reservation and Fine Dining Pre-Order ("${preOrderSummary}") requested successfully!`);
+        clearCart();
+      } else {
+        alert('Bespoke Table Reservation Requested! Check reservation log below.');
+      }
       setResFormNotes('');
       fetchReservationsList();
     } catch (err) {

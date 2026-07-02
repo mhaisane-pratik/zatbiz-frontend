@@ -107,6 +107,10 @@ export function FastFoodDashboard({
 
   const handleCreateBooking = async (e: React.FormEvent) => {
     e.preventDefault();
+    const preOrderSummary = cartItems.length > 0
+      ? cartItems.map(c => `${c.quantity}x ${c.product.name}`).join(', ')
+      : '';
+
     const payload = {
       projectId,
       customerName: userName || 'Customer',
@@ -117,16 +121,23 @@ export function FastFoodDashboard({
       numberOfGuests: resFormGuests,
       tableNumber: 'Auto-Allocated Booth',
       notes: resFormNotes,
+      preOrderItems: preOrderSummary,
       status: 'Pending'
     };
 
     try {
       await api.reservations.create(payload);
-      alert('Table reservation requested successfully!');
+      if (preOrderSummary) {
+        alert(`Table reservation and Pre-Order ("${preOrderSummary}") requested successfully!`);
+        clearCart();
+      } else {
+        alert('Table reservation requested successfully!');
+      }
       setResFormNotes('');
       fetchReservationsList();
     } catch (err) {
       console.error(err);
+      alert('Failed to submit reservation.');
     }
   };
 

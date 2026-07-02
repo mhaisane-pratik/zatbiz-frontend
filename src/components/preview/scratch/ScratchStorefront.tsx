@@ -125,6 +125,9 @@ export default function ScratchStorefront({
   const homeLayout = scratchInfo?.selectedHomepageLayout || 'grid-focus';
   const loginLayout = scratchInfo?.selectedLoginLayout || 'left-illustration';
   const dashboardLayout = scratchInfo?.selectedDashboardLayout || 'metric-overview';
+  const isBannerFocus = homeLayout === 'banner-focus';
+  const isGridFocus = homeLayout === 'grid-focus';
+  const isMapFocus = homeLayout === 'map-focus';
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans relative flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
@@ -167,7 +170,7 @@ export default function ScratchStorefront({
         {activeTab === 'home' && (
           <div className="space-y-16 pb-20">
             {/* Conditional Layout headers */}
-            {homeLayout === 'map-focus' ? (
+            {isMapFocus ? (
               <section className="bg-slate-900 text-white py-12 px-6 border-b border-slate-800 text-center font-sans">
                 <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-left">
                   <div className="space-y-4">
@@ -186,30 +189,117 @@ export default function ScratchStorefront({
                   </div>
                 </div>
               </section>
-            ) : (
-              /* Standard Banner/Grid Focus Hero */
-              <section 
-                className="relative py-28 px-6 text-center text-white bg-cover bg-center"
-                style={{
-                  backgroundImage: `linear-gradient(to bottom, rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.95)), url('${resolvedBannerUrl}')`
-                }}
-              >
-                <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
-                  <span className="text-[9px] bg-white/10 border border-white/15 px-3 py-1 rounded-full font-black uppercase tracking-widest inline-block">
-                    {bizEmoji()} {bizType} Platform
-                  </span>
-                  <h1 className="text-4xl sm:text-5xl font-black uppercase tracking-tight leading-none">{resolvedTitle}</h1>
-                  <p className="text-xs sm:text-sm text-slate-350 max-w-md mx-auto leading-relaxed">{resolvedDesc}</p>
-                  <div className="pt-2 flex justify-center gap-4 text-xs font-bold uppercase tracking-wider">
-                    <a href="#products" className="px-6 py-3 bg-indigo-650 hover:bg-indigo-700 text-white rounded-xl transition shadow">Browse Catalog</a>
-                    <button onClick={() => setActiveTab('login')} className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl transition">Sign In Portal</button>
+            ) : isBannerFocus ? (
+              <section className="max-w-6xl mx-auto px-6 pt-10">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                  <div className="lg:col-span-7 relative overflow-hidden rounded-[32px] min-h-[440px] text-white shadow-2xl border border-slate-200/60" style={{ backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.30), rgba(15,23,42,0.92)), url('${resolvedBannerUrl}')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                    <div className="absolute inset-0 bg-gradient-to-tr from-indigo-950/35 via-transparent to-fuchsia-900/25" />
+                    <div className="relative z-10 p-8 md:p-10 flex flex-col justify-end h-full">
+                      <span className="text-[9px] bg-white/15 backdrop-blur border border-white/15 px-3 py-1 rounded-full font-black uppercase tracking-widest inline-flex w-fit mb-4">
+                        {bizEmoji()} Promotional Banner Focus
+                      </span>
+                      <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight leading-none max-w-xl">{resolvedTitle}</h1>
+                      <p className="text-xs md:text-sm text-slate-200 max-w-lg mt-4 leading-relaxed">{resolvedDesc}</p>
+                      <div className="flex flex-wrap gap-3 mt-6 text-xs font-black uppercase tracking-wider">
+                        <a href="#products" className="px-6 py-3 bg-white text-slate-900 rounded-xl transition shadow hover:translate-y-[-1px]">Browse Catalog</a>
+                        <button onClick={() => setActiveTab('login')} className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition shadow">Sign In Portal</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-5 grid grid-cols-1 gap-4">
+                    <div className="bg-white border border-slate-200/70 rounded-[28px] p-5 shadow-sm flex items-center gap-4">
+                      <img src={resolvedLogoUrl} alt="Brand logo" className="w-14 h-14 rounded-2xl object-cover border border-slate-100" />
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Brand Identity</p>
+                        <h3 className="text-sm font-black text-slate-900">Selected logo is live</h3>
+                        <p className="text-[11px] text-slate-500">Your uploaded logo and color choices should appear here.</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-slate-900 text-white rounded-[24px] p-4 shadow-xl min-h-[176px] flex flex-col justify-end" style={{ backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.05), rgba(15,23,42,0.85)), url('${resolvedPhotoUrl}')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                        <span className="text-[9px] font-black uppercase tracking-wider bg-white/15 backdrop-blur px-2 py-1 rounded-full w-fit">Custom Photo</span>
+                        <p className="text-xs font-bold mt-3">Uploaded image preview</p>
+                      </div>
+                      <div className="bg-indigo-50 border border-indigo-100 rounded-[24px] p-4 shadow-sm min-h-[176px] flex flex-col justify-between">
+                        <div>
+                          <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600">Promo Layout</span>
+                          <p className="text-sm font-black text-slate-900 mt-2">Campaign ready</p>
+                        </div>
+                        <p className="text-[11px] text-slate-600 leading-relaxed">This layout is now distinct from the grid-focused version.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>
+            ) : (
+              isGridFocus ? (
+                <section className="max-w-6xl mx-auto px-6 pt-10">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    <div className="lg:col-span-5 bg-white border border-slate-200/70 rounded-[32px] p-6 shadow-sm space-y-5">
+                      <div className="flex items-center gap-4">
+                        <img src={resolvedLogoUrl} alt="Brand logo" className="w-14 h-14 rounded-2xl object-cover border border-slate-100" />
+                        <div>
+                          <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600">Grid Focus</span>
+                          <h2 className="text-xl font-black text-slate-900 mt-1">{resolvedTitle}</h2>
+                        </div>
+                      </div>
+                      <p className="text-xs text-slate-500 leading-relaxed">{resolvedDesc}</p>
+                      <div className="grid grid-cols-2 gap-3 text-[10px] font-black uppercase tracking-wider text-slate-600">
+                        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-3">Custom logo</div>
+                        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-3">Custom banner</div>
+                        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-3">Product grid</div>
+                        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-3">Promo cards</div>
+                      </div>
+                      <div className="flex gap-3">
+                        <a href="#products" className="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition shadow">Browse Catalog</a>
+                        <button onClick={() => setActiveTab('login')} className="px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition shadow">Sign In</button>
+                      </div>
+                    </div>
+
+                    <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="md:col-span-2 rounded-[28px] overflow-hidden min-h-[260px] border border-slate-200 shadow-xl" style={{ backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.30), rgba(15,23,42,0.92)), url('${resolvedBannerUrl}')`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                      <div className="bg-white border border-slate-200 rounded-[28px] p-4 shadow-sm flex flex-col justify-between">
+                        <div>
+                          <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Preview</span>
+                          <p className="text-sm font-black text-slate-900 mt-2">Selected layout</p>
+                        </div>
+                        <img src={resolvedPhotoUrl} alt="Custom preview" className="w-full h-32 object-cover rounded-2xl border border-slate-100" />
+                      </div>
+                      <div className="bg-indigo-50 border border-indigo-100 rounded-[28px] p-4 shadow-sm md:col-span-1">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600">Theme</span>
+                        <p className="text-sm font-black text-slate-900 mt-2">Product Grid Focus</p>
+                        <p className="text-[11px] text-slate-600 mt-2 leading-relaxed">This path now emphasizes product discovery instead of promo-first framing.</p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              ) : (
+                /* Standard fallback hero */
+                <section 
+                  className="relative py-28 px-6 text-center text-white bg-cover bg-center"
+                  style={{
+                    backgroundImage: `linear-gradient(to bottom, rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.95)), url('${resolvedBannerUrl}')`
+                  }}
+                >
+                  <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
+                    <span className="text-[9px] bg-white/10 border border-white/15 px-3 py-1 rounded-full font-black uppercase tracking-widest inline-block">
+                      {bizEmoji()} {bizType} Platform
+                    </span>
+                    <h1 className="text-4xl sm:text-5xl font-black uppercase tracking-tight leading-none">{resolvedTitle}</h1>
+                    <p className="text-xs sm:text-sm text-slate-350 max-w-md mx-auto leading-relaxed">{resolvedDesc}</p>
+                    <div className="pt-2 flex justify-center gap-4 text-xs font-bold uppercase tracking-wider">
+                      <a href="#products" className="px-6 py-3 bg-indigo-650 hover:bg-indigo-700 text-white rounded-xl transition shadow">Browse Catalog</a>
+                      <button onClick={() => setActiveTab('login')} className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl transition">Sign In Portal</button>
+                    </div>
+                  </div>
+                </section>
+              )
             )}
 
             {/* Custom Banner Showcase for banner-focus */}
-            {homeLayout === 'banner-focus' && (
+            {isBannerFocus && (
               <section className="max-w-5xl mx-auto px-6">
                 <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-3xl p-8 flex flex-col md:flex-row justify-between items-center gap-8 text-left">
                   <div className="space-y-3 max-w-md">

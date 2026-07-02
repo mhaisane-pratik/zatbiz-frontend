@@ -539,6 +539,27 @@ export default function DashboardPage() {
 
       const newProj = await api.projects.create(payload);
 
+      if (themeSelectorTemplateId === 'scratch') {
+        await api.scratch.create(newProj.id, {
+          name: companyName,
+          email: `hello@${companyName.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
+          password: 'password123',
+          businessType: theme.industry,
+          ownerName: companyName,
+          ownerEmail: `hello@${companyName.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
+          mobileNo: '+91 99999 88888',
+          whatsappNo: '+91 99999 88888',
+          address: 'Commercial Hub, Noida, India',
+          logoUrl: '',
+          bannerUrl: theme.bannerImageUrl,
+          photoUrl: theme.heroImageUrl,
+          selectedTheme: theme.id,
+          selectedHomepageLayout: 'banner-focus',
+          selectedLoginLayout: 'left-illustration',
+          selectedDashboardLayout: 'metric-overview'
+        });
+      }
+
       try {
         const existingProducts = await api.products.list(newProj.id);
         for (const p of existingProducts) {

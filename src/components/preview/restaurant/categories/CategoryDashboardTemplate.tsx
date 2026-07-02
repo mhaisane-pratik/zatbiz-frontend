@@ -97,6 +97,10 @@ export function CategoryDashboardTemplate({
 
   const handleCreateBooking = async (e: React.FormEvent) => {
     e.preventDefault();
+    const preOrderSummary = cartItems.length > 0
+      ? cartItems.map(c => `${c.quantity}x ${c.product.name}`).join(', ')
+      : '';
+
     const payload = {
       projectId,
       customerName: userName || 'Honored Guest',
@@ -107,12 +111,18 @@ export function CategoryDashboardTemplate({
       numberOfGuests: resFormGuests,
       tableNumber: 'Auto-Allocated Table',
       notes: resFormNotes,
+      preOrderItems: preOrderSummary,
       status: 'Pending'
     };
 
     try {
       await api.reservations.create(payload);
-      alert('Table reservation requested successfully! Check status below.');
+      if (preOrderSummary) {
+        alert(`Table reservation and Pre-Order ("${preOrderSummary}") requested successfully!`);
+        clearCart();
+      } else {
+        alert('Table reservation requested successfully! Check status below.');
+      }
       setResFormNotes('');
       fetchReservationsList();
     } catch (err) {

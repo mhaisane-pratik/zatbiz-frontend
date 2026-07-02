@@ -50,6 +50,23 @@ interface LoginConfigContent extends HeaderContent {
   btnText?: string;
   illustrationUrl?: string;
 }
+interface ScratchContent extends HeaderContent {
+  name?: string;
+  email?: string;
+  password?: string;
+  businessType?: string;
+  ownerName?: string;
+  ownerEmail?: string;
+  mobileNo?: string;
+  whatsappNo?: string;
+  address?: string;
+  photoUrl?: string;
+  bannerUrl?: string;
+  selectedTheme?: string;
+  selectedHomepageLayout?: string;
+  selectedLoginLayout?: string;
+  selectedDashboardLayout?: string;
+}
 
 interface BuilderBlock {
   type: string;
@@ -317,6 +334,7 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
   const [loading, setLoading] = useState(true);
   const [shopNiche, setShopNiche] = useState<string | null>(null);
   const [selectedLoginOption, setSelectedLoginOption] = useState<number>(1);
+  const [scratchInfo, setScratchInfo] = useState<ScratchContent | null>(null);
 
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -335,6 +353,13 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
         }
       })
       .catch((e) => console.log('Not gym or offline:', e));
+    api.scratch.get(projectId)
+      .then((scratchData) => {
+        if (scratchData && scratchData.projectId) {
+          setScratchInfo(scratchData);
+        }
+      })
+      .catch((e) => console.log('Not scratch or offline:', e));
 
     // Fetch restaurant custom layouts
     api.restaurant.get(projectId)
@@ -436,6 +461,13 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
             setIllustrationUrl('https://images.unsplash.com/photo-1471286174240-e7a8853b5e40?w=600&auto=format&fit=crop&q=80');
           } else if (activeNiche === 'fashion_footwear') {
             setIllustrationUrl('https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&auto=format&fit=crop&q=80');
+          }
+          if (config.businessType === 'scratch' || scratchInfo?.businessType) {
+            setTemplateId('scratch');
+            setCompanyName(scratchInfo?.name || data.name);
+            if (scratchInfo?.logoUrl) setLogoUrl(scratchInfo.logoUrl);
+            if (scratchInfo?.photoUrl) setIllustrationUrl(scratchInfo.photoUrl);
+            if (scratchInfo?.bannerUrl) setIllustrationUrl((prev) => prev || scratchInfo.bannerUrl || prev);
           }
 
           const isRest = config.businessType === 'restaurant' ||
@@ -719,6 +751,145 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
     successMessage,
     handleLoginSubmit,
   };
+  if (templateId === 'scratch') {
+    const scratchLayout = scratchInfo?.selectedLoginLayout || 'left-illustration';
+    const isNeon = scratchLayout === 'neon-dark';
+    const isGlass = scratchLayout === 'glassmorphism';
+    const isMinimal = scratchLayout === 'minimal-logo';
+    const isRight = scratchLayout === 'right-illustration';
+    const isLeft = scratchLayout === 'left-illustration';
+    const isCurved = scratchLayout === 'curved-wave';
+    const isSplit = scratchLayout === 'split-screen';
+    const isGlow = scratchLayout === 'gradient-glow';
+    const isMasonry = scratchLayout === 'grid-masonry';
+    const isFloatingImg = scratchLayout === 'floating-dishes';
+
+    const scratchBgClass =
+      isNeon ? 'bg-slate-950 text-white' :
+      isGlass ? 'bg-gradient-to-tr from-slate-900 to-indigo-950 text-white' :
+      isGlow ? 'bg-slate-900 text-white relative' :
+      isMasonry ? 'bg-cover bg-center relative' :
+      'bg-slate-50 text-slate-800';
+
+    const scratchCardClass =
+      isMinimal ? 'w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-xl' :
+      isGlass ? 'w-full max-w-[850px] rounded-[36px] overflow-hidden border border-white/10 bg-white/[0.02] backdrop-blur-2xl shadow-2xl flex flex-col md:flex-row p-6 gap-6 items-stretch' :
+      isNeon ? 'w-full max-w-[850px] bg-slate-900 border border-amber-500/20 rounded-[32px] overflow-hidden flex flex-col md:flex-row p-6 gap-6 items-stretch shadow-[0_0_30px_rgba(245,158,11,0.05)]' :
+      isSplit ? 'w-full min-h-screen flex flex-col md:flex-row items-stretch' :
+      'w-full max-w-[850px] bg-white border border-slate-200 rounded-[32px] overflow-hidden flex flex-col md:flex-row p-6 gap-6 items-stretch shadow-xl';
+
+    const scratchLogo = scratchInfo?.logoUrl || '';
+    const scratchBanner = scratchInfo?.bannerUrl || scratchInfo?.photoUrl || illustrationUrl;
+    const scratchTitle = scratchInfo?.name || companyName;
+    const scratchDesc = scratchInfo?.address || 'Custom business workspace.';
+
+    return (
+      <div
+        className={`min-h-[100vh] flex items-center justify-center p-6 ${scratchBgClass}`}
+        style={isMasonry ? { backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.85), rgba(15,23,42,0.95)), url('${scratchBanner}')` } : {}}
+      >
+        {isGlow && (
+          <>
+            <div className="absolute top-[10%] left-[10%] w-[30%] h-[30%] bg-indigo-500/20 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-[10%] right-[10%] w-[30%] h-[30%] bg-purple-500/20 blur-[120px] rounded-full pointer-events-none" />
+          </>
+        )}
+
+        {isFloatingImg && (
+          <div className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none overflow-hidden select-none">
+            <span className="absolute top-[10%] left-[20%] text-6xl rotate-12">📦</span>
+            <span className="absolute top-[50%] left-[10%] text-6xl -rotate-12">👕</span>
+            <span className="absolute top-[20%] right-[15%] text-6xl rotate-45">🛒</span>
+            <span className="absolute bottom-[15%] right-[25%] text-6xl -rotate-45">✨</span>
+          </div>
+        )}
+
+        <div className={scratchCardClass}>
+          {((isLeft || isCurved || isGlass || isNeon || isFloatingImg) && !isMinimal) && (
+            <div
+              className={`flex-1 min-h-[350px] rounded-2xl relative overflow-hidden hidden md:flex flex-col justify-end p-8 text-white ${isCurved ? 'clip-curved-wave' : ''}`}
+              style={{ backgroundImage: `url('${scratchBanner}')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent z-10" />
+              <div className="relative z-20 space-y-2">
+                <span className="text-[9px] bg-white/20 backdrop-blur px-2.5 py-1 rounded-full font-black uppercase tracking-wider inline-block">Official Site</span>
+                <h3 className="text-xl font-black uppercase tracking-tight">{scratchTitle}</h3>
+                <p className="text-[10px] text-slate-300 leading-relaxed font-semibold">{scratchDesc}</p>
+              </div>
+            </div>
+          )}
+
+          {isSplit && (
+            <div className="flex-1 hidden md:block" style={{ backgroundImage: `url('${scratchBanner}')`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+          )}
+
+          <div className="flex-grow max-w-md w-full mx-auto flex flex-col justify-center p-4 md:p-8 text-left z-10">
+            <div className="space-y-2 mb-6">
+              {scratchLogo ? (
+                <img src={scratchLogo} alt="Logo" className="w-10 h-10 rounded-xl object-cover border border-slate-100" />
+              ) : (
+                <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black">Z</div>
+              )}
+              <h3 className={`text-xl font-black uppercase ${isNeon ? 'text-amber-500' : 'text-slate-900'}`}>Sign In Portal</h3>
+              <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">Scratch website login preview</p>
+            </div>
+
+            {errorMessage && (
+              <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-xl text-[10px] font-bold text-center mb-4">
+                ⚠️ {errorMessage}
+              </div>
+            )}
+
+            <form onSubmit={handleLoginSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-[9px] font-black uppercase text-slate-400">Email Address *</label>
+                <input
+                  type="email"
+                  value={loginEmail}
+                  onChange={e => setLoginEmail(e.target.value)}
+                  placeholder="admin@gmail.com"
+                  required
+                  className="w-full border border-slate-200 focus:border-indigo-500 bg-white/50 backdrop-blur rounded-xl px-4 py-2.5 text-xs text-slate-800 outline-none transition"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[9px] font-black uppercase text-slate-400">Secret Password *</label>
+                <input
+                  type="password"
+                  value={loginPass}
+                  onChange={e => setLoginPass(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className="w-full border border-slate-200 focus:border-indigo-500 bg-white/50 backdrop-blur rounded-xl px-4 py-2.5 text-xs text-slate-800 outline-none transition"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className={`w-full py-3 ${isNeon ? 'bg-amber-500 hover:bg-amber-600' : 'bg-indigo-600 hover:bg-indigo-750'} text-white rounded-xl text-xs font-black uppercase tracking-wider transition cursor-pointer border-none shadow`}
+              >
+                Verify Credentials ➔
+              </button>
+            </form>
+          </div>
+
+          {(isRight && !isMinimal) && (
+            <div
+              className="flex-1 min-h-[350px] rounded-2xl relative overflow-hidden hidden md:flex flex-col justify-end p-8 text-white"
+              style={{ backgroundImage: `url('${scratchBanner}')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent z-10" />
+              <div className="relative z-20 space-y-2">
+                <span className="text-[9px] bg-white/20 backdrop-blur px-2.5 py-1 rounded-full font-black uppercase tracking-wider inline-block">Official Site</span>
+                <h3 className="text-xl font-black uppercase tracking-tight">{scratchTitle}</h3>
+                <p className="text-[10px] text-slate-300 leading-relaxed font-semibold">{scratchDesc}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   switch (templateId) {
     case 'restaurant':
