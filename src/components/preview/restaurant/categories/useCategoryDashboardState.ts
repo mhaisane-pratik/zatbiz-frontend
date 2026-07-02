@@ -33,6 +33,32 @@ export function useCategoryDashboardState(projectId: number, clientEmail: string
   const [userPhone, setUserPhone] = useState('+91 98765 43210');
   const [userAddressHome, setUserAddressHome] = useState('Flat 402, Skyline Towers, Sector 62, Noida, UP');
 
+  const [eventsList, setEventsList] = useState<any[]>([]);
+  const [eventBookings, setEventBookings] = useState<any[]>([]);
+  const [couponsList, setCouponsList] = useState<any[]>([]);
+  const [offersList, setOffersList] = useState<any[]>([]);
+  const [categoriesList, setCategoriesList] = useState<any[]>([]);
+
+  const fetchEvents = () => {
+    api.restaurantData.list(projectId, 'event').then(setEventsList).catch(console.error);
+  };
+
+  const fetchEventBookings = () => {
+    api.restaurantData.list(projectId, 'event_booking').then(setEventBookings).catch(console.error);
+  };
+
+  const fetchCoupons = () => {
+    api.coupons.list(projectId).then(setCouponsList).catch(console.error);
+  };
+
+  const fetchOffers = () => {
+    api.restaurantData.list(projectId, 'offer').then(setOffersList).catch(console.error);
+  };
+
+  const fetchCategories = () => {
+    api.categories.list(projectId).then(setCategoriesList).catch(console.error);
+  };
+
   // Load cart from localStorage
   useEffect(() => {
     if (typeof window !== 'undefined' && clientEmail) {
@@ -100,7 +126,8 @@ export function useCategoryDashboardState(projectId: number, clientEmail: string
     paymentMethod: string = 'Cash on Delivery',
     city: string = 'Local City',
     state: string = 'Local State',
-    pincode: string = '110001'
+    pincode: string = '110001',
+    notes: string = ''
   ) => {
     if (cartItems.length === 0) return;
     const clientIdStr = localStorage.getItem('clientId');
@@ -136,6 +163,7 @@ export function useCategoryDashboardState(projectId: number, clientEmail: string
       city,
       state,
       pincode,
+      notes,
       paymentGateway: paymentMethod === 'COD' ? 'COD' : 'Stripe',
       paymentStatus: paymentMethod === 'COD' ? 'Pending' : 'Paid'
     };
@@ -193,6 +221,11 @@ export function useCategoryDashboardState(projectId: number, clientEmail: string
     fetchDbProducts();
     fetchOrders();
     fetchReservationsList();
+    fetchEvents();
+    fetchEventBookings();
+    fetchCoupons();
+    fetchOffers();
+    fetchCategories();
   }, [projectId, clientEmail]);
 
   return {
@@ -204,6 +237,11 @@ export function useCategoryDashboardState(projectId: number, clientEmail: string
     storeSettings, setStoreSettings,
     userName, setUserName,
     userPhone, setUserPhone,
-    userAddressHome, setUserAddressHome
+    userAddressHome, setUserAddressHome,
+    eventsList, setEventsList, fetchEvents,
+    eventBookings, setEventBookings, fetchEventBookings,
+    couponsList, setCouponsList, fetchCoupons,
+    offersList, setOffersList, fetchOffers,
+    categoriesList, setCategoriesList, fetchCategories
   };
 }

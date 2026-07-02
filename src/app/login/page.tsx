@@ -180,33 +180,30 @@ export default function LoginPage() {
       <div className="absolute bottom-[-15%] right-[-10%] w-[70%] h-[70%] rounded-full bg-fuchsia-600/25 blur-[160px] pointer-events-none" />
       
       {/* Main Container Card (The Glass Panel) */}
-      <div className="w-full max-w-[1100px] rounded-[36px] overflow-hidden border border-white/10 bg-white/[0.02] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.5)] flex flex-col lg:flex-row p-6 md:p-8 gap-8 items-stretch relative z-10">
+      <div className="w-full max-w-[1100px] rounded-[36px] overflow-hidden border border-white/10 bg-white/[0.02] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.5)] flex flex-col lg:flex-row items-stretch relative z-10">
         
         {/* Left Side: Cropped Illustration from A_more_advanced_and_modern.jpeg */}
-        <div className="flex-1 relative hidden lg:block rounded-2xl overflow-hidden min-h-[500px]">
+        <div className="flex-1 relative hidden lg:block rounded-l-[36px] rounded-r-none overflow-hidden min-h-[550px]">
           <img
             src="/A_more_advanced_and_modern.jpeg"
             alt="Zatbiz E-commerce Illustration"
             className="absolute inset-0 w-[200%] h-full object-cover object-left"
             style={{ maxWidth: 'none' }}
           />
-          {/* Brand Logo Header overlay */}
-          <div className="absolute top-6 left-6 z-20 select-none">
-            <div className="inline-flex items-center gap-2 px-4 py-2 border border-white/10 bg-white/[0.04] backdrop-blur-md rounded-xl text-white font-extrabold text-lg shadow-sm">
-              <svg className="w-4 h-4 text-white rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-              <span>Zatbiz</span>
+          {/* Brand Logo Header overlay - positioned and sized to completely mask the baked-in image logo */}
+          <div className="absolute top-7 left-[28px] z-20 select-none">
+            <div className="inline-flex items-center justify-center w-[236px] h-[48px] border border-white/20 bg-[#1c4fd8] rounded-xl text-white font-black text-sm shadow-md uppercase tracking-wider">
+              <span>ZATBIZ</span>
             </div>
           </div>
         </div>
 
-        {/* Right Side: The overlaid secondary Glass Card */}
-        <div className="w-full lg:max-w-[480px] rounded-[28px] border border-white/15 bg-white/[0.05] backdrop-blur-xl shadow-2xl p-6 md:p-10 flex flex-col justify-between min-h-[540px] relative z-20">
+        {/* Right Side: Seamless login form, integrated into the main container */}
+        <div className="w-full lg:max-w-[500px] p-8 md:p-14 flex flex-col justify-between min-h-[540px] relative z-20 bg-transparent">
           
           {/* Welcome Text */}
           <div className="flex flex-col items-center lg:items-start select-none">
-            <p className="font-bold text-[10px] tracking-[0.2em] text-slate-455 uppercase">
+            <p className="font-bold text-[10px] tracking-[0.2em] text-slate-450 uppercase">
               {isRegisterMode ? 'Get Started' : 'Welcome Back!'}
             </p>
             <h2 className="font-extrabold text-2xl tracking-tight text-white mt-1">
@@ -399,7 +396,7 @@ export default function LoginPage() {
           {/* Card Footer Link */}
           <div className="mt-6 text-center select-none">
             <p className="font-bold text-xs text-slate-400">
-              {isRegisterMode ? 'Already have a store?' : 'New to Zatbiz?'}{' '}
+              {isRegisterMode ? 'Already have a store?' : 'New to ZATBIZ?'}{' '}
               <button
                 type="button"
                 onClick={() => {
@@ -418,3 +415,6 @@ export default function LoginPage() {
     </main>
   );
 }
+
+
+

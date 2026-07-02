@@ -312,7 +312,7 @@ export default function FastFoodCategory({
                     <p className="text-slate-400 text-[11px] min-h-[40px] leading-relaxed font-sans">{p.description}</p>
                   </div>
                   <button 
-                    onClick={() => onAddToCart(p)} 
+                    onClick={() => onAddToCart(p as any)} 
                     className={`w-full py-3 bg-transparent border ${colors.btnBorderAccent} hover:${colors.btnHoverBgAccent} hover:text-white ${colors.btnTextAccent} font-bold text-[10px] uppercase rounded-xl transition cursor-pointer mt-4`}
                     type="button"
                   >

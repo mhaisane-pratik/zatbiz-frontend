@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { api } from '@/services/api';
 import { Product, Project } from '@/types';
 import FineDiningCategory from './categories/FineDiningCategory';
 import FastFoodCategory from './categories/FastFoodCategory';
@@ -115,6 +116,14 @@ export default function RestaurantStorefront({
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
   const [isSeatBookingModalOpen, setIsSeatBookingModalOpen] = useState(false);
 
+  const [coupons, setCoupons] = useState<any[]>([]);
+  const [offers, setOffers] = useState<any[]>([]);
+
+  useEffect(() => {
+    api.coupons.list(projectId).then(setCoupons).catch(console.error);
+    api.restaurantData.list(projectId, 'offer').then(setOffers).catch(console.error);
+  }, [projectId]);
+
   // Normalize the category name
   const catLower = (shopNiche || restaurantInfo?.subcategory || '').toLowerCase();
   const isCustomNiche = catLower.includes('fine dining') || catLower.includes('fast food') || catLower.includes('pizza') || catLower.includes('cafe') || catLower.includes('coffee') || catLower.includes('burger');
@@ -172,7 +181,9 @@ export default function RestaurantStorefront({
     heroTitle: resolvedHeroTitle,
     heroSubtitle: resolvedHeroSubtitle,
     themePreset: resolvedThemePreset,
-    restaurantInfo
+    restaurantInfo,
+    coupons,
+    offers
   };
 
   const renderCategoryStorefront = () => {
@@ -249,11 +260,20 @@ export default function RestaurantStorefront({
 
   const getThemeColorClass = () => {
     switch (resolvedThemePreset) {
-      case 'slate': return 'bg-slate-700 hover:bg-slate-800 text-white';
-      case 'deepblue': return 'bg-indigo-600 hover:bg-indigo-700 text-white';
-      case 'sunset': return 'bg-orange-600 hover:bg-orange-700 text-white';
-      case 'purple': return 'bg-purple-600 hover:bg-purple-700 text-white';
-      case 'emerald': return 'bg-emerald-600 hover:bg-emerald-700 text-white';
+      case 'slate':
+      case 'charcoal-slate': return 'bg-slate-700 hover:bg-slate-800 text-white';
+      case 'deepblue':
+      case 'indigo-ocean': return 'bg-indigo-600 hover:bg-indigo-700 text-white';
+      case 'sunset':
+      case 'amber-spiced': return 'bg-orange-600 hover:bg-orange-700 text-white';
+      case 'purple':
+      case 'velvet-plum': return 'bg-purple-600 hover:bg-purple-700 text-white';
+      case 'emerald':
+      case 'emerald-mint': return 'bg-emerald-600 hover:bg-emerald-700 text-white';
+      case 'rose-vintage': return 'bg-pink-500 hover:bg-pink-650 text-white';
+      case 'ruby-wine': return 'bg-rose-600 hover:bg-rose-700 text-white';
+      case 'tangerine-peel': return 'bg-orange-500 hover:bg-orange-650 text-white';
+      case 'forest-herbs': return 'bg-emerald-700 hover:bg-emerald-800 text-white';
       default: return 'bg-[#c5a880] hover:bg-[#d8c2a3] text-black';
     }
   };

@@ -97,33 +97,60 @@ export default function BookingSeatMapModal({
 
   const getThemeColor = () => {
     switch (themePreset) {
-      case 'slate': return 'bg-slate-700 hover:bg-slate-800 border-slate-650';
-      case 'deepblue': return 'bg-indigo-650 hover:bg-indigo-700 border-indigo-500';
-      case 'sunset': return 'bg-orange-600 hover:bg-orange-700 border-orange-500';
-      case 'purple': return 'bg-purple-650 hover:bg-purple-700 border-purple-500';
-      case 'emerald': return 'bg-emerald-600 hover:bg-emerald-700 border-emerald-500';
+      case 'slate':
+      case 'charcoal-slate': return 'bg-slate-700 hover:bg-slate-800 border-slate-650';
+      case 'deepblue':
+      case 'indigo-ocean': return 'bg-indigo-650 hover:bg-indigo-700 border-indigo-500';
+      case 'sunset':
+      case 'amber-spiced': return 'bg-orange-600 hover:bg-orange-700 border-orange-500';
+      case 'purple':
+      case 'velvet-plum': return 'bg-purple-650 hover:bg-purple-700 border-purple-500';
+      case 'emerald':
+      case 'emerald-mint': return 'bg-emerald-600 hover:bg-emerald-700 border-emerald-500';
+      case 'rose-vintage': return 'bg-pink-500 hover:bg-pink-600 border-pink-500';
+      case 'ruby-wine': return 'bg-rose-600 hover:bg-rose-700 border-rose-650';
+      case 'tangerine-peel': return 'bg-orange-500 hover:bg-orange-600 border-orange-450';
+      case 'forest-herbs': return 'bg-emerald-700 hover:bg-emerald-800 border-emerald-650';
       default: return 'bg-[#c5a880] hover:bg-[#d8c2a3] text-black border-[#c5a880]';
     }
   };
 
   const getThemeText = () => {
     switch (themePreset) {
-      case 'slate': return 'text-slate-400';
-      case 'deepblue': return 'text-indigo-400';
-      case 'sunset': return 'text-orange-400';
-      case 'purple': return 'text-purple-400';
-      case 'emerald': return 'text-emerald-400';
+      case 'slate':
+      case 'charcoal-slate': return 'text-slate-400';
+      case 'deepblue':
+      case 'indigo-ocean': return 'text-indigo-400';
+      case 'sunset':
+      case 'amber-spiced': return 'text-orange-400';
+      case 'purple':
+      case 'velvet-plum': return 'text-purple-400';
+      case 'emerald':
+      case 'emerald-mint': return 'text-emerald-400';
+      case 'rose-vintage': return 'text-pink-500';
+      case 'ruby-wine': return 'text-rose-500';
+      case 'tangerine-peel': return 'text-orange-500';
+      case 'forest-herbs': return 'text-emerald-650';
       default: return 'text-[#c5a880]';
     }
   };
 
   const getThemeBorderFocus = () => {
     switch (themePreset) {
-      case 'slate': return 'focus:border-slate-500';
-      case 'deepblue': return 'focus:border-indigo-500';
-      case 'sunset': return 'focus:border-orange-500';
-      case 'purple': return 'focus:border-purple-500';
-      case 'emerald': return 'focus:border-emerald-500';
+      case 'slate':
+      case 'charcoal-slate': return 'focus:border-slate-500';
+      case 'deepblue':
+      case 'indigo-ocean': return 'focus:border-indigo-500';
+      case 'sunset':
+      case 'amber-spiced': return 'focus:border-orange-500';
+      case 'purple':
+      case 'velvet-plum': return 'focus:border-purple-500';
+      case 'emerald':
+      case 'emerald-mint': return 'focus:border-emerald-500';
+      case 'rose-vintage': return 'focus:border-pink-500';
+      case 'ruby-wine': return 'focus:border-rose-500';
+      case 'tangerine-peel': return 'focus:border-orange-500';
+      case 'forest-herbs': return 'focus:border-emerald-600';
       default: return 'focus:border-[#c5a880]';
     }
   };

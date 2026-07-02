@@ -845,8 +845,7 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
                 <label className="text-[9px] font-black uppercase text-slate-400">Email Address *</label>
                 <input
                   type="email"
-                  value={loginEmail}
-                  onChange={e => setLoginEmail(e.target.value)}
+                  name="email"
                   placeholder="admin@gmail.com"
                   required
                   className="w-full border border-slate-200 focus:border-indigo-500 bg-white/50 backdrop-blur rounded-xl px-4 py-2.5 text-xs text-slate-800 outline-none transition"
@@ -856,8 +855,7 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
                 <label className="text-[9px] font-black uppercase text-slate-400">Secret Password *</label>
                 <input
                   type="password"
-                  value={loginPass}
-                  onChange={e => setLoginPass(e.target.value)}
+                  name="password"
                   placeholder="••••••••"
                   required
                   className="w-full border border-slate-200 focus:border-indigo-500 bg-white/50 backdrop-blur rounded-xl px-4 py-2.5 text-xs text-slate-800 outline-none transition"

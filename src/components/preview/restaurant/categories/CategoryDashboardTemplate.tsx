@@ -48,7 +48,12 @@ export function CategoryDashboardTemplate({
     storeSettings, setStoreSettings,
     userName, setUserName,
     userPhone, setUserPhone,
-    userAddressHome, setUserAddressHome
+    userAddressHome, setUserAddressHome,
+    eventsList, fetchEvents,
+    eventBookings, fetchEventBookings,
+    couponsList, fetchCoupons,
+    offersList, fetchOffers,
+    categoriesList, fetchCategories
   } = useCategoryDashboardState(projectId, clientEmail, companyName, logoUrl);
 
   const [checkoutCity, setCheckoutCity] = useState('Local City');
@@ -57,12 +62,107 @@ export function CategoryDashboardTemplate({
   const [checkoutPaymentMethod, setCheckoutPaymentMethod] = useState('COD');
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
+  const [checkoutNotes, setCheckoutNotes] = useState('');
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+  const [couponError, setCouponError] = useState('');
+  const [couponSuccess, setCouponSuccess] = useState('');
+  const [ticketQuantities, setTicketQuantities] = useState<Record<string, number>>({});
+  const [dealsSearchQuery, setDealsSearchQuery] = useState('');
+
+  const handleApplyCoupon = () => {
+    setCouponError('');
+    setCouponSuccess('');
+    const codeClean = couponCode.trim().toUpperCase();
+    if (!codeClean) return;
+    const found = couponsList.find(c => c.code.toUpperCase() === codeClean);
+    if (!found) {
+      setCouponError('Invalid coupon code.');
+      setAppliedCoupon(null);
+      return;
+    }
+    const subtotal = cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+    if (subtotal < found.minOrderAmount) {
+      setCouponError(`Min order amount to use this coupon is $${found.minOrderAmount}.`);
+      setAppliedCoupon(null);
+      return;
+    }
+    setAppliedCoupon(found);
+    setCouponSuccess(`Coupon applied! $${found.discountType === 'Percentage' ? `${found.discountValue}%` : found.discountValue} discount.`);
+  };
+
+  const handleBookTickets = async (eventObj: any) => {
+    const e = JSON.parse(eventObj.dataJson);
+    const qty = ticketQuantities[eventObj.id] || 1;
+    const cost = qty * e.price;
+    if (walletBalance < cost) {
+      alert("Insufficient wallet balance to buy these tickets!");
+      return;
+    }
+    
+    // Deduct wallet balance
+    const newBalance = walletBalance - cost;
+    setWalletBalance(newBalance);
+    localStorage.setItem(`zatbiz_wallet_balance_${projectId}_${clientEmail}`, String(newBalance));
+    
+    // Save event booking
+    const bookingPayload = {
+      eventName: e.name,
+      customerName: userName || 'Gourmet Diner',
+      customerEmail: clientEmail,
+      tickets: qty,
+      totalPaid: cost,
+      status: 'Approved'
+    };
+    
+    try {
+      await api.restaurantData.create({
+        projectId,
+        dataType: 'event_booking',
+        dataJson: JSON.stringify(bookingPayload)
+      });
+      alert(`Successfully booked ${qty} tickets for ${e.name}! $${cost} deducted from wallet.`);
+      fetchEventBookings();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to book event tickets.");
+    }
+  };
+
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setCheckoutLoading(true);
     try {
-      await placeDinerOrder(checkoutPaymentMethod, checkoutCity, checkoutState, checkoutPincode);
+      const subtotal = cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+      let discountVal = 0;
+      if (appliedCoupon) {
+        if (appliedCoupon.discountType === 'Percentage') {
+          discountVal = subtotal * (parseFloat(appliedCoupon.discountValue) / 100);
+        } else {
+          discountVal = parseFloat(appliedCoupon.discountValue);
+        }
+      }
+      const finalSubtotal = Math.max(0, subtotal - discountVal);
+      const tax = finalSubtotal * (storeSettings.taxRate / 100);
+      const total = finalSubtotal + tax + (storeSettings.shippingFee || 0);
+
+      if (checkoutPaymentMethod === 'Wallet') {
+        if (walletBalance < total) {
+          alert('Insufficient wallet balance!');
+          setCheckoutLoading(false);
+          return;
+        }
+        const newBalance = walletBalance - total;
+        setWalletBalance(newBalance);
+        localStorage.setItem(`zatbiz_wallet_balance_${projectId}_${clientEmail}`, String(newBalance));
+      }
+
+      await placeDinerOrder(checkoutPaymentMethod, checkoutCity, checkoutState, checkoutPincode, checkoutNotes);
       alert('Order placed successfully!');
+      setCheckoutNotes('');
+      setAppliedCoupon(null);
+      setCouponCode('');
+      setCouponSuccess('');
     } catch (err) {
       console.error(err);
       alert('Failed to place order.');
@@ -161,6 +261,19 @@ export function CategoryDashboardTemplate({
     }
   }, [clientEmail]);
 
+  const subtotal = cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+  let discountVal = 0;
+  if (appliedCoupon) {
+    if (appliedCoupon.discountType === 'Percentage') {
+      discountVal = subtotal * (parseFloat(appliedCoupon.discountValue) / 100);
+    } else {
+      discountVal = parseFloat(appliedCoupon.discountValue);
+    }
+  }
+  const finalSubtotal = Math.max(0, subtotal - discountVal);
+  const tax = finalSubtotal * (storeSettings.taxRate / 100);
+  const total = finalSubtotal + tax + (storeSettings.shippingFee || 0);
+
   return (
     <div className="flex flex-1 min-h-screen bg-[#faf8f5] text-slate-800 font-sans">
       {/* Category-Specific Sidebar */}
@@ -183,6 +296,8 @@ export function CategoryDashboardTemplate({
               ? [
                   { id: 'dashboard', label: 'Dashboard', icon: '📊' },
                   { id: 'items', label: 'Plated Menu', icon: emoji },
+                  { id: 'events', label: 'Special Events', icon: '✨' },
+                  { id: 'offers_coupons', label: 'Offers & Coupons', icon: '🔥' },
                   { id: 'bookings', label: 'Reservations', icon: '📅' },
                   { id: 'orders', label: 'Order Drafts', icon: '🛵' },
                   { id: 'profile', label: 'Profile', icon: '👤' }
@@ -330,11 +445,14 @@ export function CategoryDashboardTemplate({
 
           {/* Plated Menu Tab (Diner) */}
           {activeTab === 'items' && isDiner && (
-            <DashboardItemsView
-              products={products}
-              primaryColor={primaryColor}
-              onAddToCart={addToCart}
-            />
+            <div className="text-left font-sans animate-fadeIn">
+              <DashboardItemsView
+                products={products}
+                categories={categoriesList}
+                primaryColor={primaryColor}
+                onAddToCart={addToCart}
+              />
+            </div>
           )}
 
           {/* Orders Log (Diner) */}
@@ -394,11 +512,17 @@ export function CategoryDashboardTemplate({
                     <div className="border-t border-slate-100 pt-4 space-y-2 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
                       <div className="flex justify-between">
                         <span>Subtotal</span>
-                        <span className="font-mono text-slate-850">₹{cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0).toFixed(2)}</span>
+                        <span className="font-mono text-slate-850">₹{subtotal.toFixed(2)}</span>
                       </div>
+                      {discountVal > 0 && (
+                        <div className="flex justify-between text-emerald-600">
+                          <span>Discount ({appliedCoupon.code})</span>
+                          <span className="font-mono">-₹{discountVal.toFixed(2)}</span>
+                        </div>
+                      )}
                       <div className="flex justify-between">
                         <span>GST Tax ({storeSettings.taxRate}%)</span>
-                        <span className="font-mono text-slate-850">₹{(cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0) * (storeSettings.taxRate / 100)).toFixed(2)}</span>
+                        <span className="font-mono text-slate-850">₹{tax.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Delivery & Packaging Fee</span>
@@ -407,10 +531,7 @@ export function CategoryDashboardTemplate({
                       <div className="flex justify-between border-t border-slate-100 pt-2 text-xs font-black text-slate-900">
                         <span>Total Payable</span>
                         <span className="font-mono" style={{ color: primaryColor }}>
-                          ₹{(
-                            cartItems.reduce((acc, item) => acc + (item.product.price * item.quantity), 0) * (1 + storeSettings.taxRate / 100) +
-                            (storeSettings.shippingFee || 0)
-                          ).toFixed(2)}
+                          ₹{total.toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -451,6 +572,40 @@ export function CategoryDashboardTemplate({
                         </div>
                       </div>
 
+                      {/* ORDER NOTES */}
+                      <div>
+                        <label className="block text-[8px] text-slate-400 font-bold uppercase mb-1">Special Instructions / Order Notes</label>
+                        <textarea
+                          placeholder="e.g. Make it extra spicy, no onions, delivery instructions..."
+                          value={checkoutNotes}
+                          onChange={(e) => setCheckoutNotes(e.target.value)}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] text-slate-800 outline-none h-12 resize-none focus:border-stone-400 transition"
+                        />
+                      </div>
+
+                      {/* COUPONS */}
+                      <div className="space-y-1.5 border-t border-slate-100 pt-3">
+                        <label className="block text-[8px] text-slate-400 font-bold uppercase mb-1">Coupon Discount Code</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            placeholder="e.g. ROYAL10"
+                            value={couponCode}
+                            onChange={(e) => setCouponCode(e.target.value)}
+                            className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-[10px] text-slate-800 outline-none uppercase"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleApplyCoupon}
+                            className="px-3 py-1.5 bg-stone-800 hover:bg-stone-900 text-white rounded-lg text-[9px] font-black uppercase tracking-wider cursor-pointer border-none"
+                          >
+                            Apply
+                          </button>
+                        </div>
+                        {couponError && <p className="text-[9px] text-rose-500 font-semibold">{couponError}</p>}
+                        {couponSuccess && <p className="text-[9px] text-emerald-600 font-semibold">{couponSuccess}</p>}
+                      </div>
+
                       <div>
                         <label className="block text-[8px] text-slate-400 font-bold uppercase mb-1">Payment Option</label>
                         <select
@@ -461,6 +616,7 @@ export function CategoryDashboardTemplate({
                           <option value="COD">Cash on Delivery (COD)</option>
                           <option value="UPI">UPI Instant Payment</option>
                           <option value="Card">Visa / MasterCard / Rupay</option>
+                          <option value="Wallet">ZatBiz Wallet (Balance: ₹{walletBalance.toFixed(2)})</option>
                         </select>
                       </div>
 
@@ -520,6 +676,7 @@ export function CategoryDashboardTemplate({
           )}
 
           {/* Profile Tab (Diner) */}
+          {/* Profile Tab (Diner) */}
           {activeTab === 'profile' && isDiner && (
             <div className="text-left font-sans animate-fadeIn">
               <UserProfilePanel
@@ -534,6 +691,197 @@ export function CategoryDashboardTemplate({
                 shopNiche={shopNiche}
                 handleSaveProfileChanges={handleSaveProfileChanges}
               />
+            </div>
+          )}
+
+          {/* Special Events Tab (Diner) */}
+          {activeTab === 'events' && isDiner && (
+            <div className="space-y-6 text-left font-sans animate-fadeIn">
+              <div className="bg-white border rounded-3xl p-6" style={{ borderColor: `${primaryColor}20` }}>
+                <span className="text-[9px] font-black uppercase tracking-wider block mb-1" style={{ color: primaryColor }}>
+                  🌟 Exclusive Dining Galas
+                </span>
+                <h3 className="text-xl font-black text-slate-800 uppercase tracking-wider mb-1">VIP Events Masterlist</h3>
+                <p className="text-slate-500 text-xs font-semibold">
+                  Reserve entry passes and pairings to our upcoming gourmet events. Paid instantly using your wallet balance.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {eventsList.filter(item => JSON.parse(item.dataJson).status === 'Published').length === 0 ? (
+                  <div className="col-span-2 py-12 bg-white border border-stone-200 rounded-3xl text-center text-slate-500 font-bold uppercase text-xs">
+                    No active events listed at this time.
+                  </div>
+                ) : (
+                  eventsList.filter(item => JSON.parse(item.dataJson).status === 'Published').map((item) => {
+                    const e = JSON.parse(item.dataJson);
+                    const qty = ticketQuantities[item.id] || 1;
+                    const eventBookingsForThisEvent = eventBookings.filter(eb => JSON.parse(eb.dataJson).eventName === e.name);
+                    const ticketsSold = eventBookingsForThisEvent.reduce((acc, eb) => acc + (JSON.parse(eb.dataJson).tickets || 1), 0);
+                    const remainingTickets = Math.max(0, e.capacity - ticketsSold);
+
+                    return (
+                      <div key={item.id} className="bg-white border border-stone-200/80 rounded-[32px] overflow-hidden flex flex-col justify-between shadow-sm">
+                        <div className="h-48 bg-stone-100 relative">
+                          <img
+                            src={e.banner || 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&auto=format&fit=crop&q=80'}
+                            alt={e.name}
+                            className="w-full h-full object-cover"
+                          />
+                          <span className="absolute top-3 right-3 bg-slate-905/90 px-3 py-1 rounded-full text-xs font-black text-white">
+                            ${e.price} / Ticket
+                          </span>
+                        </div>
+                        <div className="p-6 space-y-4 text-left">
+                          <div>
+                            <span className="text-[9.5px] font-black uppercase tracking-wider" style={{ color: primaryColor }}>
+                              📅 {e.date} | ⏰ {e.time}
+                            </span>
+                            <h4 className="font-serif text-lg font-black text-slate-805 uppercase mt-1">{e.name}</h4>
+                            {e.artist && <p className="text-[10px] text-stone-500 font-bold mt-1">Host/Performer: <span className="text-[#c5a880] font-black">{e.artist}</span></p>}
+                            <p className="text-slate-500 text-xs mt-2 font-medium leading-relaxed">{e.description || 'Join us for a unique gourmet dining experience.'}</p>
+                          </div>
+
+                          <div className="flex justify-between items-center pt-2 border-t border-slate-100">
+                            <div>
+                              <span className="text-[9px] text-slate-400 uppercase font-black block">Available Passes</span>
+                              <span className="text-xs font-black text-slate-800">{remainingTickets} Remaining</span>
+                            </div>
+                            {remainingTickets > 0 ? (
+                              <div className="flex items-center gap-2">
+                                <label className="text-[9px] text-slate-400 font-bold uppercase">Qty:</label>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max={remainingTickets}
+                                  value={qty}
+                                  onChange={(evt) => setTicketQuantities({ ...ticketQuantities, [item.id]: parseInt(evt.target.value, 10) })}
+                                  className="w-12 text-center bg-stone-50 border rounded p-1 text-xs font-bold outline-none text-slate-800"
+                                />
+                                <button
+                                  onClick={() => handleBookTickets(item)}
+                                  className="px-4 py-2 rounded-xl text-slate-850 font-black text-[10px] uppercase border-none cursor-pointer"
+                                  style={{ backgroundColor: primaryColor }}
+                                >
+                                  Book passes
+                                </button>
+                              </div>
+                            ) : (
+                              <span className="text-[10px] px-2.5 py-1 rounded bg-rose-500/10 text-rose-500 border border-rose-500/25 font-black uppercase">Sold Out</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Offers & Coupons Tab (Diner) */}
+          {activeTab === 'offers_coupons' && isDiner && (
+            <div className="space-y-6 text-left font-sans animate-fadeIn">
+              <div className="bg-white border rounded-3xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4" style={{ borderColor: `${primaryColor}20` }}>
+                <div className="space-y-1">
+                  <span className="text-[9px] font-black uppercase tracking-wider block mb-1" style={{ color: primaryColor }}>
+                    🔥 Active discount codes
+                  </span>
+                  <h3 className="text-xl font-black text-slate-800 uppercase tracking-wider mb-1">Diner Offers & Coupons</h3>
+                  <p className="text-slate-500 text-xs font-semibold">
+                    Copy and apply discount coupons during checkout to save on your orders!
+                  </p>
+                </div>
+
+                {/* SEARCH BAR */}
+                <div className="w-full md:w-72">
+                  <input
+                    type="text"
+                    placeholder="🔍 Search offers, coupons..."
+                    value={dealsSearchQuery}
+                    onChange={(e) => setDealsSearchQuery(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 outline-none focus:border-stone-400 transition"
+                  />
+                </div>
+              </div>
+
+              {/* GRID */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                {/* OFFERS LIST */}
+                <div className="bg-white border border-stone-200/80 p-6 rounded-3xl shadow-sm space-y-4">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-[#c5a880] border-b pb-2 flex items-center gap-1.5">
+                    🔥 Promo & Happy Hour Offers
+                  </h4>
+                  <div className="space-y-4 divide-y divide-slate-100">
+                    {offersList.filter(item => {
+                      const o = JSON.parse(item.dataJson);
+                      return o.title.toLowerCase().includes(dealsSearchQuery.toLowerCase()) || 
+                             o.details.toLowerCase().includes(dealsSearchQuery.toLowerCase());
+                    }).length === 0 ? (
+                      <p className="text-xs text-slate-400 py-6 font-bold text-center">No matching offers found.</p>
+                    ) : (
+                      offersList.filter(item => {
+                        const o = JSON.parse(item.dataJson);
+                        return o.title.toLowerCase().includes(dealsSearchQuery.toLowerCase()) || 
+                               o.details.toLowerCase().includes(dealsSearchQuery.toLowerCase());
+                      }).map((item) => {
+                        const o = JSON.parse(item.dataJson);
+                        return (
+                          <div key={item.id} className="pt-4 first:pt-0 space-y-2 relative">
+                            <h5 className="font-extrabold text-slate-800 text-sm uppercase tracking-wide">{o.title}</h5>
+                            <p className="text-xs text-slate-500 font-medium leading-relaxed">{o.details}</p>
+                            <span className="text-[10px] text-amber-500 font-extrabold block">📅 {o.schedule}</span>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+
+                {/* COUPONS LIST */}
+                <div className="bg-white border border-stone-200/80 p-6 rounded-3xl shadow-sm space-y-4">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-emerald-600 border-b pb-2 flex items-center gap-1.5">
+                    🎟️ Available Discount Coupons
+                  </h4>
+                  <div className="space-y-4">
+                    {couponsList.filter(c => {
+                      return c.code.toLowerCase().includes(dealsSearchQuery.toLowerCase());
+                    }).length === 0 ? (
+                      <p className="text-xs text-slate-400 py-6 font-bold text-center">No matching coupons found.</p>
+                    ) : (
+                      couponsList.filter(c => {
+                        return c.code.toLowerCase().includes(dealsSearchQuery.toLowerCase());
+                      }).map((c) => (
+                        <div key={c.id} className="p-4 border border-dashed border-emerald-500/20 rounded-2xl flex justify-between items-center bg-emerald-50/5">
+                          <div className="space-y-1">
+                            <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 text-[9px] font-black uppercase">
+                              {c.code}
+                            </span>
+                            <p className="text-[11px] text-slate-805 font-extrabold pt-1">
+                              {c.discountType === 'Percentage' ? `${c.discountValue}% Off` : `$${c.discountValue} Flat Off`}
+                            </p>
+                            <p className="text-[9px] text-slate-450 font-bold">
+                              Valid on orders above ${c.minOrderAmount}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(c.code);
+                              alert(`Coupon code "${c.code}" copied to clipboard!`);
+                              setCouponCode(c.code);
+                            }}
+                            className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-slate-850 font-black text-[9px] uppercase tracking-wider rounded-xl cursor-pointer border-none shadow-sm transition"
+                          >
+                            Copy & Use
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+              </div>
             </div>
           )}
         </div>

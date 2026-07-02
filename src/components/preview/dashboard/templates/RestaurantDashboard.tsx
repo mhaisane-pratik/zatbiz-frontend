@@ -85,6 +85,7 @@ export default function RestaurantDashboard({
         onLogout={onLogout}
         companyName={activeCompanyName}
         logoIcon={logoIcon}
+        onUpdateRestaurantInfo={setRestaurantInfo}
       />
     );
   }

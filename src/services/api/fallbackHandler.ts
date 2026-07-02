@@ -614,7 +614,8 @@ export async function request<T>(path: string, options?: RequestInit): Promise<T
           paymentStatus: bodyData.paymentStatus || 'Paid',
           status: 'Processing',
           invoiceNumber: 'GST-2026-' + Math.floor(Math.random() * 9000 + 1000),
-          date: 'Just Now'
+          date: 'Just Now',
+          notes: bodyData.notes || ''
         };
         if (typeof window !== 'undefined') {
           let list: any[] = [];

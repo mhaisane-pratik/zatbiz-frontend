@@ -355,7 +355,7 @@ export default function FineDiningCategory({
                     <p className="text-stone-400 text-[11px] min-h-[40px] font-sans leading-relaxed">{p.description}</p>
                   </div>
                   <button 
-                    onClick={() => onAddToCart(p)} 
+                    onClick={() => onAddToCart(p as any)} 
                     className={`w-full py-2.5 bg-transparent border border-stone-850 hover:border-[#c5a880] ${colors.textAccent} font-bold text-[9px] uppercase tracking-widest transition cursor-pointer font-sans mt-4`}
                     type="button"
                   >

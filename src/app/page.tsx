@@ -8,6 +8,7 @@ export default function LandingPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [langOpen, setLangOpen] = useState(false);
+  const [simTheme, setSimTheme] = useState<'dining' | 'gym' | 'wedding'>('dining');
 
   const handleEmailSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,17 +17,23 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="hero-theme relative min-h-screen bg-surface text-on-surface font-sans antialiased selection:bg-primary selection:text-on-primary blueprint-grid bg-pattern">
+    <div className="hero-theme relative min-h-screen bg-surface text-on-surface font-sans antialiased selection:bg-primary selection:text-on-primary blueprint-grid bg-pattern overflow-hidden">
       
-      {/* Background Glowing Blobs */}
+      {/* Background Glowing Blobs & Floating 3D Spheres */}
       <div className="glowing-blobs">
-        <div className="blob blob-violet animate-blob-complex top-[-100px] right-[-50px] w-[600px] h-[600px]"></div>
-        <div className="blob blob-rose animate-blob-complex bottom-[-150px] left-[-150px] w-[500px] h-[500px]" style={{ animationDelay: '-7s' }}></div>
-        <div className="blob blob-cyan animate-blob-complex top-[40%] left-[20%] w-[450px] h-[450px]" style={{ animationDelay: '-14s' }}></div>
+        <div className="blob blob-violet animate-blob-complex top-[-100px] right-[-50px] w-[600px] h-[600px] opacity-75"></div>
+        <div className="blob blob-rose animate-blob-complex bottom-[-150px] left-[-150px] w-[500px] h-[500px] opacity-75" style={{ animationDelay: '-7s' }}></div>
+        <div className="blob blob-cyan animate-blob-complex top-[40%] left-[20%] w-[450px] h-[450px] opacity-75" style={{ animationDelay: '-14s' }}></div>
       </div>
 
+      {/* Floating 3D Spheres (Aesthetic Accents) */}
+      <div className="absolute top-[15%] left-[5%] w-24 h-24 rounded-full bg-gradient-to-tr from-indigo-500/30 to-purple-600/30 blur-[2px] float-slow pointer-events-none z-10 border border-white/10 shadow-lg" />
+      <div className="absolute top-[35%] right-[8%] w-16 h-16 rounded-full bg-gradient-to-tr from-purple-500/20 to-pink-500/20 blur-[1px] float-medium pointer-events-none z-10 border border-white/10 shadow-lg" style={{ animationDelay: '-3s' }} />
+      <div className="absolute top-[65%] left-[8%] w-28 h-28 rounded-full bg-gradient-to-tr from-cyan-400/20 to-indigo-500/20 blur-[3px] float-fast pointer-events-none z-10 border border-white/10 shadow-lg" style={{ animationDelay: '-5s' }} />
+      <div className="absolute top-[85%] right-[12%] w-20 h-20 rounded-full bg-gradient-to-tr from-purple-500/30 to-indigo-650/30 blur-[2px] float-slow pointer-events-none z-10 border border-white/10 shadow-lg" style={{ animationDelay: '-1s' }} />
+
       {/* Sticky Premium Navigation Header */}
-      <nav className="sticky top-0 z-50 bg-white/85 backdrop-blur-md border-b border-slate-100/80 px-6 md:px-12 lg:px-16 py-4 flex justify-between items-center select-none shadow-sm">
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-100/60 px-6 md:px-12 lg:px-16 py-4 flex justify-between items-center select-none shadow-sm">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5">
           <div className="w-8.5 h-8.5 flex items-center justify-center bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-650 rounded-xl shadow-md shadow-indigo-600/10">
@@ -36,21 +43,21 @@ export default function LandingPage() {
         </Link>
 
         {/* Center Nav Links */}
-        <ul className="hidden md:flex gap-8 text-slate-600 font-semibold text-sm">
+        <ul className="hidden md:flex gap-8 text-slate-650 font-semibold text-sm">
           <li>
             <a href="#" className="hover:text-indigo-600 transition-colors">Home</a>
           </li>
           <li>
-            <a href="#features" className="hover:text-indigo-600 transition-colors">Features</a>
+            <a href="#features" className="hover:text-indigo-600 transition-colors">Capabilities</a>
+          </li>
+          <li>
+            <a href="#simulator" className="hover:text-indigo-600 transition-colors">3D Canvas</a>
+          </li>
+          <li>
+            <a href="#templates" className="hover:text-indigo-600 transition-colors">Templates</a>
           </li>
           <li>
             <a href="#pricing" className="hover:text-indigo-600 transition-colors">Pricing</a>
-          </li>
-          <li>
-            <a href="#blog" className="hover:text-indigo-600 transition-colors">Resources</a>
-          </li>
-          <li>
-            <a href="#footer-cta" className="hover:text-indigo-600 transition-colors">About us</a>
           </li>
         </ul>
 
@@ -99,16 +106,22 @@ export default function LandingPage() {
               playsInline 
               className="w-full h-full object-cover"
             />
-          </div>
-          {/* Decorative Elements */}
-          <div className="absolute top-4 right-4 bg-secondary-container text-slate-950 rounded-full p-4 shadow-lg animate-bounce flex items-center justify-center z-20">
-            <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+            {/* Cinematic Bottom Fade to Hide Watermarks */}
+            <div className="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none z-10" />
+            
+            {/* Brand Watermark Overlay to mask AI video watermark */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-lg select-none">
+              <div className="w-5.5 h-5.5 flex items-center justify-center bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-650 rounded-lg shadow-md">
+                <span className="text-white text-[10px] font-black italic">Z</span>
+              </div>
+              <span className="text-white font-bold text-[10.5px] tracking-tight">ZatBiz</span>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Partners Grayscale Logobar */}
-      <section className="bg-white border-y border-outline-variant/20 py-8 px-6 md:px-12 select-none">
+      <section className="bg-white border-y border-outline-variant/20 py-8 px-6 md:px-12 select-none relative z-10">
         <div className="max-w-6xl mx-auto flex flex-wrap justify-center items-center gap-x-12 gap-y-6 text-on-surface-variant font-bold text-sm md:text-base tracking-wider opacity-60">
           <span className="hover:text-primary transition">webflow</span>
           <span className="hover:text-primary transition">shopify</span>
@@ -120,29 +133,35 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Feature Grid ("Everything You Need to Succeed") */}
-      <section id="features" className="px-6 md:px-12 lg:px-16 py-20 max-w-6xl mx-auto scroll-mt-20">
+      {/* 3D Capabilities Section */}
+      <section id="features" className="px-6 md:px-12 lg:px-16 py-24 max-w-6xl mx-auto scroll-mt-20 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-on-surface tracking-tight mb-3">
-            Everything You Need to Succeed
+          <span className="text-[10px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 border border-[#a855f7]/20 px-3 py-1.5 rounded-full inline-block mb-3.5">
+            ✦ Core Capabilities
+          </span>
+          <h2 className="text-3.5xl md:text-4.5xl font-black text-on-surface tracking-tight mb-3 font-serif">
+            Launch High-Fidelity App Spaces
           </h2>
           <p className="text-slate-500 text-sm font-semibold max-w-lg mx-auto">
-            Powerful features to build, manage, and grow your business — all in one place.
+            Design premium client applications with high-fidelity components, dynamic styling engines, and immediate relational syncing.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* 3D perspective cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 perspective-container">
+          
           {/* Card 1 */}
-          <div className="glass-panel rounded-2xl p-6.5 aura-shadow-purple hover:border-primary/50 transition duration-300 text-left flex flex-col justify-between min-h-[210px] hover:translate-y-[-2px]">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-100 text-blue-600 flex items-center justify-center mb-5 shadow-sm">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <div className="card-3d-bistro rounded-3xl p-6.5 text-left flex flex-col justify-between min-h-[240px] bg-white border border-purple-100 relative group overflow-hidden">
+            <div className="absolute right-0 top-0 w-24 h-24 bg-indigo-500/5 rounded-full blur-xl pointer-events-none group-hover:scale-125 transition duration-500" />
+            <div className="depth-element-20">
+              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-100 text-indigo-650 flex items-center justify-center mb-6 shadow-sm">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.015a2.993 2.993 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 2.44A1.5 1.5 0 015.378 2h13.243a1.5 1.5 0 011.06.44l3.19 3.19a3.004 3.004 0 01-.622 4.72m-16.5 0a3 3 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.015a2.993 2.993 0 003.75.614" />
                 </svg>
               </div>
-              <h3 className="text-on-surface font-extrabold text-sm mb-2">Powerful Store Builder</h3>
-              <p className="text-on-surface-variant text-[11px] font-semibold leading-relaxed mb-4">
-                Create stunning online stores without easy drag and drop builder. No coding required.
+              <h3 className="text-slate-900 font-extrabold text-sm mb-2 font-serif">01 / Visual Architecture</h3>
+              <p className="text-slate-500 text-[11px] font-semibold leading-relaxed mb-4">
+                Deploy elegant grid frameworks, dynamic light/dark cards, and interactive customer timelines without coding.
               </p>
             </div>
             <a href="#pricing" className="text-indigo-650 hover:text-indigo-800 text-[11px] font-black uppercase tracking-wider inline-flex items-center gap-1.5 mt-auto">
@@ -151,16 +170,17 @@ export default function LandingPage() {
           </div>
 
           {/* Card 2 */}
-          <div className="glass-panel rounded-2xl p-6.5 aura-shadow-purple hover:border-primary/50 transition duration-300 text-left flex flex-col justify-between min-h-[210px] hover:translate-y-[-2px]">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-100 text-orange-600 flex items-center justify-center mb-5 shadow-sm">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <div className="card-3d-wedding rounded-3xl p-6.5 text-left flex flex-col justify-between min-h-[240px] bg-white border border-purple-100 relative group overflow-hidden">
+            <div className="absolute right-0 top-0 w-24 h-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none group-hover:scale-125 transition duration-500" />
+            <div className="depth-element-20">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-100 text-amber-600 flex items-center justify-center mb-6 shadow-sm">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
                 </svg>
               </div>
-              <h3 className="text-on-surface font-extrabold text-sm mb-2">Everything in One Place</h3>
-              <p className="text-on-surface-variant text-[11px] font-semibold leading-relaxed mb-4">
-                Manage products, orders, customers, and workflows in a single, intuitive dashboard.
+              <h3 className="text-slate-900 font-extrabold text-sm mb-2 font-serif">02 / Relational Table Sync</h3>
+              <p className="text-slate-500 text-[11px] font-semibold leading-relaxed mb-4">
+                Synchronize reservations, orders, and customized client drafts instantly with relational database schemas.
               </p>
             </div>
             <a href="#pricing" className="text-indigo-650 hover:text-indigo-800 text-[11px] font-black uppercase tracking-wider inline-flex items-center gap-1.5 mt-auto">
@@ -169,16 +189,17 @@ export default function LandingPage() {
           </div>
 
           {/* Card 3 */}
-          <div className="glass-panel rounded-2xl p-6.5 aura-shadow-purple hover:border-primary/50 transition duration-300 text-left flex flex-col justify-between min-h-[210px] hover:translate-y-[-2px]">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-100 text-purple-650 flex items-center justify-center mb-5 shadow-sm">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <div className="card-3d-gym rounded-3xl p-6.5 text-left flex flex-col justify-between min-h-[240px] bg-white border border-purple-100 relative group overflow-hidden">
+            <div className="absolute right-0 top-0 w-24 h-24 bg-purple-500/5 rounded-full blur-xl pointer-events-none group-hover:scale-125 transition duration-500" />
+            <div className="depth-element-20">
+              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-100 text-purple-650 flex items-center justify-center mb-6 shadow-sm">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.63 8.41a14.98 14.98 0 00-6.16 12.12A14.98 14.98 0 0015.59 14.37zm0 0L12 10.78M9.63 8.41a6 6 0 015.84-7.38v4.8M9.63 8.41L12 10.78" />
                 </svg>
               </div>
-              <h3 className="text-on-surface font-extrabold text-sm mb-2">Grow Without Limits</h3>
-              <p className="text-on-surface-variant text-[11px] font-semibold leading-relaxed mb-4">
-                Advanced marketing, analytics, and SEO tools to scale your business faster.
+              <h3 className="text-slate-900 font-extrabold text-sm mb-2 font-serif">03 / Dual Contrast themes</h3>
+              <p className="text-slate-500 text-[11px] font-semibold leading-relaxed mb-4">
+                Toggle luxury dark mode or crisp light themes with responsive CSS styles, maintaining absolute contrast.
               </p>
             </div>
             <a href="#pricing" className="text-indigo-650 hover:text-indigo-800 text-[11px] font-black uppercase tracking-wider inline-flex items-center gap-1.5 mt-auto">
@@ -187,97 +208,230 @@ export default function LandingPage() {
           </div>
 
           {/* Card 4 */}
-          <div className="glass-panel rounded-2xl p-6.5 aura-shadow-purple hover:border-primary/50 transition duration-300 text-left flex flex-col justify-between min-h-[210px] hover:translate-y-[-2px]">
-            <div>
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-100 text-emerald-650 flex items-center justify-center mb-5 shadow-sm">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <div className="card-3d-bistro rounded-3xl p-6.5 text-left flex flex-col justify-between min-h-[240px] bg-white border border-purple-100 relative group overflow-hidden">
+            <div className="absolute right-0 top-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl pointer-events-none group-hover:scale-125 transition duration-500" />
+            <div className="depth-element-20">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-100 text-emerald-650 flex items-center justify-center mb-6 shadow-sm">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751A11.959 11.959 0 0112 2.714z" />
                 </svg>
               </div>
-              <h3 className="text-on-surface font-extrabold text-sm mb-2">Secure & Reliable</h3>
-              <p className="text-on-surface-variant text-[11px] font-semibold leading-relaxed mb-4">
-                Enterprise-grade security and 99.9% uptime keep your business online always.
+              <h3 className="text-slate-900 font-extrabold text-sm mb-2 font-serif">04 / Optimized Compiler</h3>
+              <p className="text-slate-500 text-[11px] font-semibold leading-relaxed mb-4">
+                Fast and lightweight builds powered by Next.js Turbopack to deliver optimized static performance.
               </p>
             </div>
             <a href="#pricing" className="text-indigo-650 hover:text-indigo-800 text-[11px] font-black uppercase tracking-wider inline-flex items-center gap-1.5 mt-auto">
               Learn More ➔
             </a>
           </div>
+
         </div>
       </section>
 
-      {/* Detailed Spotlight Spotlight Section ("A Platform That Grows With You") */}
-      <section className="px-6 md:px-12 lg:px-16 py-20 max-w-6xl mx-auto border-t border-outline-variant/20">
+      {/* 3D Interactive Visual Builder Simulator */}
+      <section id="simulator" className="px-6 md:px-12 lg:px-16 py-24 max-w-6xl mx-auto border-t border-outline-variant/15 scroll-mt-20 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Details column */}
-          <div className="lg:col-span-6 text-left flex flex-col items-start animate-fade-in">
-            <span className="text-[10px] font-black uppercase tracking-wider text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-full mb-4.5 font-sans">
-              Built for Modern Business
+          <div className="lg:col-span-5 text-left flex flex-col items-start">
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 border border-[#a855f7]/20 px-3 py-1.5 rounded-full mb-4.5">
+              Interactive 3D Workspace
             </span>
-            <h2 className="text-on-surface font-black text-3xl md:text-4xl leading-tight tracking-tight mb-4 max-w-md">
-              A Platform That Grows With You
+            <h2 className="text-on-surface font-black text-3.5xl leading-tight tracking-tight mb-4 font-serif">
+              Visual Canvas Simulator
             </h2>
+            <p className="text-slate-500 text-xs font-semibold leading-relaxed mb-8">
+              Click the builder presets below. See the floating 3D screen tilt and adjust its styling elements, interfaces, and contrast rules in real-time.
+            </p>
             
-            <div className="space-y-4 my-6">
+            {/* Interactive Tabs */}
+            <div className="w-full flex flex-col gap-3 font-sans text-xs">
               {[
-                'Available and platform on any browser/device',
-                'Powerful dashboard features for storefronts',
-                'Real-time analytics and actionable insights',
-                'Automated sync with relational sales database'
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center gap-3 text-on-surface-variant font-bold text-xs md:text-sm">
-                  <div className="w-5.5 h-5.5 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 flex-shrink-0">
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span>{item}</span>
-                </div>
-              ))}
+                { id: 'dining', label: '⚜️ Fine Dining Bistro', desc: 'Obsidian & Gold elegance with Sommelier features.' },
+                { id: 'gym', label: '💪 Iron Temple Gym', desc: 'Charcoal & Acid Green high-performance logs.' },
+                { id: 'wedding', label: '🌸 Vows & Floral Arches', desc: 'Pastel Rose & Gold romantic RSVP forms.' }
+              ].map((tab) => {
+                const isActive = simTheme === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setSimTheme(tab.id as any)}
+                    className={`w-full p-4.5 rounded-2xl border text-left transition duration-300 cursor-pointer flex flex-col gap-1 ${
+                      isActive 
+                        ? 'bg-indigo-650/10 border-indigo-500 shadow-md translate-x-2' 
+                        : 'bg-white/50 border-slate-100 hover:bg-white hover:translate-x-1'
+                    }`}
+                  >
+                    <span className={`font-black uppercase tracking-wider ${isActive ? 'text-indigo-650' : 'text-slate-700'}`}>
+                      {tab.label}
+                    </span>
+                    <span className="text-[10px] text-slate-450 font-medium">{tab.desc}</span>
+                  </button>
+                );
+              })}
             </div>
-
-            <Link href="/login" className="mt-2.5 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-indigo-650/10 cursor-pointer hover:translate-y-[-1px]">
-              <span>Explore All Features</span>
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </Link>
           </div>
 
-          {/* Right Showcase graphics column */}
-          <div className="lg:col-span-6 relative h-[380px] bg-gradient-to-tr from-purple-500/5 to-indigo-500/5 rounded-3xl p-6 border border-slate-100/60 hidden md:block">
-            
-            {/* Clothing shop preview screen */}
-            <div className="w-full bg-white rounded-2xl p-4 shadow-xl border border-slate-100 text-left">
-              <h4 className="text-xs font-black text-slate-900 border-b border-slate-100 pb-2 mb-3">Summer Collection New Arrivals</h4>
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { name: 'Casual T-Shirt', price: '$29', col: 'bg-indigo-50' },
-                  { name: 'Slim Fit Denim', price: '$59', col: 'bg-blue-50' },
-                  { name: 'Light Jacket', price: '$79', col: 'bg-purple-50' }
-                ].map((prod, idx) => (
-                  <div key={idx} className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 flex flex-col justify-between text-left hover:scale-[1.02] transition">
-                    <div className={`w-full h-16 rounded-lg ${prod.col} mb-2.5 flex items-center justify-center text-xl`}>👕</div>
-                    <span className="text-[9px] font-bold text-slate-700 truncate">{prod.name}</span>
-                    <span className="text-indigo-650 text-[9px] font-black mt-0.5">{prod.price}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* Right Simulator Screen (Tilted 3D floating window) */}
+          <div className="lg:col-span-7 perspective-container py-10">
+            <div className={`bg-slate-900 rounded-[36px] p-8 border border-slate-800 transition-all duration-700 relative min-h-[460px] flex flex-col justify-between text-left overflow-hidden ${
+              simTheme === 'dining' ? 'card-3d-bistro' : simTheme === 'gym' ? 'card-3d-gym' : 'card-3d-wedding'
+            }`}>
+              
+              {/* Decorative Ambient Backlights inside screen */}
+              <div className="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
+              <div className="absolute -bottom-12 -right-12 w-48 h-48 rounded-full bg-purple-500/10 blur-3xl pointer-events-none" />
 
-            {/* Overlap sales trend pill */}
-            <div 
-              className="absolute bottom-6 left-12 w-48 bg-white rounded-xl p-3 shadow-lg border border-slate-100 text-left"
-              style={{ transform: 'translateY(20px)' }}
-            >
-              <div className="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Store Sales Trend</div>
-              <div className="text-slate-800 text-sm font-black mt-0.5">$12,545</div>
-              {/* Tiny graph */}
-              <div className="h-6 w-full mt-1.5">
-                <svg viewBox="0 0 100 20" className="w-full h-full">
-                  <path d="M0,15 L25,12 L50,16 L75,8 L100,2" fill="none" stroke="#a855f7" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
+              {/* Window controls */}
+              <div className="flex justify-between items-center pb-4.5 border-b border-slate-800/80 mb-6.5 relative z-10">
+                <div className="flex gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                </div>
+                <span className="text-[9px] font-mono text-slate-500 font-black tracking-widest">ZATBIZ_3D_ENGINE.HEX</span>
+              </div>
+
+              {/* Dynamic UI Content based on selected Simulator Theme */}
+              <div className="relative z-10 flex-1 flex flex-col justify-center">
+                {simTheme === 'dining' && (
+                  <div className="space-y-6 animate-fade-in-up">
+                    {/* Simulated Header */}
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="text-[9px] font-bold text-stone-400 uppercase tracking-widest leading-none">VIP DINER CONCIERGE</h4>
+                        <h3 className="text-xl font-extrabold text-[#c5a880] mt-1 font-serif">HONORED GUEST: VIP</h3>
+                      </div>
+                      <span className="text-[10px] bg-[#c5a880]/15 text-[#c5a880] border border-[#c5a880]/30 px-3.5 py-1.5 rounded-full font-black uppercase tracking-wider">
+                        ⚜️ PLATINUM CLUB
+                      </span>
+                    </div>
+
+                    {/* Simulated Seating Area Card */}
+                    <div className="bg-[#16171f] border border-[#c5a880]/20 rounded-2xl p-5 space-y-4">
+                      <div className="flex justify-between items-center text-[10px] font-black uppercase text-[#c5a880]">
+                        <span>🏛️ Bespoke Placement Seating</span>
+                        <span className="text-emerald-500">✓ OPTIMAL STATUS</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3 text-xs">
+                        <div className="p-3 bg-[#0d0e12] border border-[#c5a880] rounded-xl text-left shadow-lg">
+                          <span className="text-[9px] font-black text-[#c5a880] block">GRAND SALON</span>
+                          <span className="text-[10px] text-stone-400 font-medium">Piano acoustics & fireplace.</span>
+                        </div>
+                        <div className="p-3 bg-[#0d0e12] border border-stone-850 rounded-xl text-left opacity-60">
+                          <span className="text-[9px] font-bold text-white block">SOMMELIER CELLAR</span>
+                          <span className="text-[10px] text-stone-500 font-medium">Vintage wine collection.</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Simulated Decanting Request */}
+                    <div className="bg-[#16171f] border border-stone-850 rounded-2xl p-5 flex justify-between items-center">
+                      <div className="text-left">
+                        <span className="text-[9px] font-black text-[#c5a880] uppercase tracking-wider block">WINE PRE-DECANT SERVICE</span>
+                        <p className="text-[10.5px] text-stone-400 font-semibold mt-0.5">Let red vintage wines breathe for 1.5 hours prior.</p>
+                      </div>
+                      <button className="px-4 py-2 bg-[#c5a880] text-black font-black text-[9px] uppercase rounded-xl">
+                        REQUESTED ✓
+                  </button>
+                    </div>
+                  </div>
+                )}
+
+                {simTheme === 'gym' && (
+                  <div className="space-y-6 animate-fade-in-up">
+                    {/* Simulated Header */}
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest leading-none">MEMBER PORTAL</h4>
+                        <h3 className="text-xl font-extrabold text-[#bef264] mt-1 font-mono">ATHLETE: ALEX RHEE</h3>
+                      </div>
+                      <span className="text-[10px] bg-[#bef264]/15 text-[#bef264] border border-[#bef264]/30 px-3.5 py-1.5 rounded-full font-mono uppercase tracking-wider">
+                        ⚡ IRON MEMBER
+                      </span>
+                    </div>
+
+                    {/* Simulated Work Routine */}
+                    <div className="bg-[#18181b] border border-[#bef264]/20 rounded-2xl p-5 space-y-4">
+                      <div className="flex justify-between items-center text-[10px] font-mono uppercase text-[#bef264]">
+                        <span>🏋️ Today's Training routine</span>
+                        <span className="text-amber-500">🔥 HIGH INTENSITY</span>
+                      </div>
+                      <div className="space-y-2 text-xs text-zinc-300">
+                        <div className="flex justify-between p-2.5 bg-zinc-900 border border-zinc-850 rounded-lg">
+                          <span className="font-bold">Barbell Deadlift</span>
+                          <span className="font-mono text-[#bef264]">5 Sets x 5 Reps (140kg)</span>
+                        </div>
+                        <div className="flex justify-between p-2.5 bg-zinc-900 border border-zinc-850 rounded-lg">
+                          <span className="font-bold">Weighted Pullups</span>
+                          <span className="font-mono text-[#bef264]">4 Sets x 8 Reps (20kg)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Simulated Progress tracker */}
+                    <div className="bg-[#18181b] border border-zinc-850 rounded-2xl p-5 flex justify-between items-center">
+                      <div className="text-left font-mono">
+                        <span className="text-[9px] font-black text-zinc-400 uppercase tracking-wider block">BODY FAT TARGET</span>
+                        <p className="text-[10.5px] text-white mt-0.5">Progressing from 14.5% to 11.0%</p>
+                      </div>
+                      <span className="text-xs font-black text-[#bef264] bg-[#bef264]/10 border border-[#bef264]/20 px-3.5 py-1.5 rounded-lg">
+                        80% ACHIEVED
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {simTheme === 'wedding' && (
+                  <div className="space-y-6 animate-fade-in-up">
+                    {/* Simulated Header */}
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h4 className="text-[9px] font-bold text-rose-350 uppercase tracking-widest leading-none">WEDDING GUEST RETAINER</h4>
+                        <h3 className="text-xl font-extrabold text-[#fbcfe8] mt-1 font-serif">VOWS OF EMILY & NICK</h3>
+                      </div>
+                      <span className="text-[10px] bg-rose-500/15 text-rose-300 border border-rose-500/30 px-3.5 py-1.5 rounded-full font-serif uppercase tracking-wider">
+                        🌸 RSVP CONTEST
+                      </span>
+                    </div>
+
+                    {/* Simulated Catering */}
+                    <div className="bg-[#241c21] border border-rose-500/20 rounded-2xl p-5 space-y-4">
+                      <div className="flex justify-between items-center text-[10px] font-black uppercase text-rose-300">
+                        <span>🍽️ Catering & Dinner Selections</span>
+                        <span className="text-rose-450">✓ RESERVED</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3 text-xs">
+                        <div className="p-3 bg-[#171014] border border-rose-500/40 rounded-xl text-left shadow-lg">
+                          <span className="text-[9px] font-black text-rose-200 block">SEARED WAGYU FILET</span>
+                          <span className="text-[10px] text-stone-400 font-medium">Truffle butter & asparagus.</span>
+                        </div>
+                        <div className="p-3 bg-[#171014] border border-stone-850 rounded-xl text-left opacity-60">
+                          <span className="text-[9px] font-bold text-stone-300 block">HERBED HALIBUT</span>
+                          <span className="text-[10px] text-stone-500 font-medium">Saffron broth reduction.</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Simulated Floral arch selection */}
+                    <div className="bg-[#241c21] border border-stone-850 rounded-2xl p-5 flex justify-between items-center">
+                      <div className="text-left">
+                        <span className="text-[9px] font-black text-rose-350 uppercase tracking-wider block">FLORAL ARCH SELECTOR</span>
+                        <p className="text-[10.5px] text-rose-100 font-semibold mt-0.5">Assigned to: "Bohemian Sunset Orchids"</p>
+                      </div>
+                      <span className="text-xs font-black text-rose-300 bg-rose-500/10 border border-rose-500/20 px-3.5 py-1.5 rounded-lg">
+                        STAGE PREP ACTIVE
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom code snippet */}
+              <div className="mt-8 pt-4.5 border-t border-slate-800/80 flex justify-between items-center text-[9px] font-mono text-slate-500 relative z-10">
+                <span>ACTIVE COMPILER: TURBOPACK</span>
+                <span>3D MATRIX: ACTIVE</span>
               </div>
             </div>
           </div>
@@ -285,97 +439,104 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials Section ("What Our Customers Say") */}
-      <section className="bg-white border-y border-outline-variant/20 py-20 px-6 md:px-12">
-        <div className="max-w-6xl mx-auto">
+      {/* 3D Niche Templates Showcase */}
+      <section id="templates" className="px-6 md:px-12 lg:px-16 py-24 max-w-6xl mx-auto border-t border-outline-variant/15 scroll-mt-20 relative z-10">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <span className="text-[10px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 border border-[#a855f7]/20 px-3 py-1.5 rounded-full inline-block mb-3.5">
+            ✦ Pre-built layouts
+          </span>
+          <h2 className="text-3.5xl md:text-4.5xl font-black text-on-surface tracking-tight mb-3 font-serif">
+            Deploy Specialized Templates
+          </h2>
+          <p className="text-slate-500 text-sm font-semibold max-w-lg mx-auto">
+            Choose from a catalog of specialized client templates. Each comes pre-equipped with responsive modules and database-linked forms.
+          </p>
+        </div>
+
+        {/* 3D tilted template layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 perspective-container">
           
-          <div className="text-center max-w-2xl mx-auto mb-16 animate-fade-in">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-on-surface tracking-tight mb-3">
-              What Our Customers Say
-            </h2>
-            <p className="text-slate-500 text-sm font-semibold max-w-lg mx-auto">
-              Join thousands of happy business owners using ZatBiz to grow their brands.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Card 1 */}
-            <div className="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6.5 shadow-sm text-left flex flex-col justify-between hover:translate-y-[-2px] transition duration-300">
-              <div>
-                <div className="flex gap-1 mb-4 select-none">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-amber-400 text-sm">★</span>
-                  ))}
-                </div>
-                <p className="text-on-surface-variant text-xs font-semibold leading-relaxed mb-6">
-                  "ZatBiz solved all my database sync problems! It's so easy to use. Highly recommended!"
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-550 to-purple-550 flex items-center justify-center text-white text-xs font-black">
-                  SJ
-                </div>
-                <div>
-                  <h4 className="text-on-surface font-extrabold text-xs">Sarah Johnson</h4>
-                  <p className="text-slate-400 text-[10px] font-bold mt-0.5">Founder, Bloom Floral</p>
-                </div>
-              </div>
+          {/* Template 1 */}
+          <div className="card-3d-bistro bg-white border border-slate-100 rounded-[32px] overflow-hidden shadow-md flex flex-col justify-between group cursor-pointer">
+            <div className="h-52 bg-[#0a0a0c] relative overflow-hidden flex items-center justify-center">
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                style={{ backgroundImage: `url('https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80')` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-[#0a0a0c]/40 to-transparent" />
+              <span className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md text-xs font-mono font-bold text-[#c5a880] border border-[#c5a880]/30 px-3.5 py-1.5 rounded-full uppercase tracking-wider">
+                ⚜️ Fine Dining Niche
+              </span>
             </div>
-
-            {/* Card 2 */}
-            <div className="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6.5 shadow-sm text-left flex flex-col justify-between hover:translate-y-[-2px] transition duration-300">
-              <div>
-                <div className="flex gap-1 mb-4 select-none">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-amber-400 text-sm">★</span>
-                  ))}
-                </div>
-                <p className="text-on-surface-variant text-xs font-semibold leading-relaxed mb-6">
-                  "The best platform I've used. Periodic sync to database works like magic."
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-indigo-650 flex items-center justify-center text-white text-xs font-black">
-                  MC
-                </div>
-                <div>
-                  <h4 className="text-on-surface font-extrabold text-xs">Michael Chen</h4>
-                  <p className="text-slate-400 text-[10px] font-bold mt-0.5">Tech Lead, Apex Co.</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6.5 shadow-sm text-left flex flex-col justify-between hover:translate-y-[-2px] transition duration-300">
-              <div>
-                <div className="flex gap-1 mb-4 select-none">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-amber-400 text-sm">★</span>
-                  ))}
-                </div>
-                <p className="text-on-surface-variant text-xs font-semibold leading-relaxed mb-6">
-                  "Excellent support and amazing features. ZatBiz helped me scale my business without worries."
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-white text-xs font-black">
-                  ER
-                </div>
-                <div>
-                  <h4 className="text-on-surface font-extrabold text-xs">Emily Rodriguez</h4>
-                  <p className="text-slate-400 text-[10px] font-bold mt-0.5">Owner, Deco Home</p>
-                </div>
+            <div className="p-6.5 space-y-2.5">
+              <h4 className="text-on-surface font-extrabold text-base font-serif">Luxury Haute Cuisine Portal</h4>
+              <p className="text-slate-500 text-[11px] font-semibold leading-relaxed">
+                Includes interactive bespoke floor plans, red wine decanting services, cellar sommelier catalogs, and guest loyalty account wallets.
+              </p>
+              <div className="pt-2 flex gap-4 text-[10px] font-black text-slate-450 uppercase">
+                <span>✓ Seating Selector</span>
+                <span>✓ Decant Form</span>
               </div>
             </div>
           </div>
 
+          {/* Template 2 */}
+          <div className="card-3d-wedding bg-white border border-slate-100 rounded-[32px] overflow-hidden shadow-md flex flex-col justify-between group cursor-pointer">
+            <div className="h-52 bg-slate-900 relative overflow-hidden flex items-center justify-center">
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                style={{ backgroundImage: `url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80')` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+              <span className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md text-xs font-mono font-bold text-[#bef264] border border-[#bef264]/30 px-3.5 py-1.5 rounded-full uppercase tracking-wider">
+                🏋️ Fitness Gym Niche
+              </span>
+            </div>
+            <div className="p-6.5 space-y-2.5">
+              <h4 className="text-on-surface font-extrabold text-base font-serif">Iron Temple Member Hub</h4>
+              <p className="text-slate-500 text-[11px] font-semibold leading-relaxed">
+                Includes high-intensity workout routine planners, trainer scheduling sheets, active body composition charts, and card supplements.
+              </p>
+              <div className="pt-2 flex gap-4 text-[10px] font-black text-slate-450 uppercase">
+                <span>✓ Routine Planner</span>
+                <span>✓ Tracker logs</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Template 3 */}
+          <div className="card-3d-gym bg-white border border-slate-100 rounded-[32px] overflow-hidden shadow-md flex flex-col justify-between group cursor-pointer">
+            <div className="h-52 bg-rose-950 relative overflow-hidden flex items-center justify-center">
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                style={{ backgroundImage: `url('https://images.unsplash.com/photo-1519741497674-611481863552?w=600&auto=format&fit=crop&q=80')` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-rose-950 via-rose-950/45 to-transparent" />
+              <span className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md text-xs font-mono font-bold text-rose-300 border border-rose-300/30 px-3.5 py-1.5 rounded-full uppercase tracking-wider">
+                🌸 Wedding Vows Niche
+              </span>
+            </div>
+            <div className="p-6.5 space-y-2.5">
+              <h4 className="text-on-surface font-extrabold text-base font-serif">Romantic Vows Guest Panel</h4>
+              <p className="text-slate-500 text-[11px] font-semibold leading-relaxed">
+                Includes digital RSVP attendance lists, floral theme selectors, customized catering options, and relative seat mapping modules.
+              </p>
+              <div className="pt-2 flex gap-4 text-[10px] font-black text-slate-450 uppercase">
+                <span>✓ RSVP Registry</span>
+                <span>✓ Food Selector</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Pricing Section ("Simple, Transparent Pricing") */}
-      <section id="pricing" className="px-6 md:px-12 lg:px-16 py-20 max-w-6xl mx-auto scroll-mt-20 text-center">
-        <div className="text-center max-w-2xl mx-auto mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-on-surface tracking-tight mb-3">
+      <section id="pricing" className="px-6 md:px-12 lg:px-16 py-24 max-w-6xl mx-auto border-t border-outline-variant/15 scroll-mt-20 text-center relative z-10">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <span className="text-[10px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 border border-[#a855f7]/20 px-3 py-1.5 rounded-full inline-block mb-3.5">
+            ✦ Pricing tiers
+          </span>
+          <h2 className="text-3.5xl md:text-4.5xl font-black text-on-surface tracking-tight mb-3 font-serif">
             Simple, Transparent Pricing
           </h2>
           <p className="text-slate-500 text-sm font-semibold max-w-lg mx-auto">
@@ -383,45 +544,46 @@ export default function LandingPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+        {/* 3D Pricing Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch perspective-container">
           
           {/* Plan 1 */}
-          <div className="bg-white border border-outline-variant/30 rounded-2xl p-6 flex flex-col justify-between text-left relative transition duration-300 hover:border-slate-300 hover:translate-y-[-2px]">
+          <div className="card-3d-bistro bg-white border border-slate-100 rounded-3xl p-6.5 flex flex-col justify-between text-left relative shadow-sm">
             <div>
-              <h3 className="text-on-surface font-black text-base">Starter</h3>
-              <p className="text-slate-400 text-[10.5px] font-bold mt-0.5">For basic store needs.</p>
+              <h3 className="text-slate-900 font-extrabold text-base font-serif">Starter</h3>
+              <p className="text-slate-450 text-[10.5px] font-bold mt-0.5">For basic store needs.</p>
               <div className="my-6">
-                <span className="text-on-surface font-black text-3xl">$19</span>
+                <span className="text-slate-950 font-black text-3xl">$19</span>
                 <span className="text-slate-400 text-xs font-bold ml-1">/ month</span>
               </div>
-              <ul className="space-y-3 border-t border-slate-100 pt-5 text-on-surface-variant text-[11px] font-bold">
+              <ul className="space-y-3.5 border-t border-slate-100 pt-5 text-slate-600 text-[11px] font-bold">
                 <li className="flex items-center gap-2">✔ Up to 100 products</li>
                 <li className="flex items-center gap-2">✔ 1 staff account</li>
                 <li className="flex items-center gap-2">✔ Basic Analytics</li>
                 <li className="flex items-center gap-2">✔ 24/7 Support</li>
               </ul>
             </div>
-            <Link href="/login" className="w-full mt-8 py-3.5 text-center border border-indigo-650 hover:bg-indigo-50 text-indigo-650 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center">
+            <Link href="/login" className="w-full mt-8 py-3 text-center border border-indigo-650 hover:bg-indigo-50 text-indigo-650 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center uppercase tracking-wider">
               Get Started
             </Link>
           </div>
 
           {/* Plan 2: Highlighted */}
-          <div className="bg-white border-2 border-primary rounded-2xl p-6 flex flex-col justify-between text-left relative transition duration-300 shadow-lg shadow-indigo-650/5 hover:translate-y-[-2px]">
+          <div className="card-3d-wedding bg-white border-2 border-indigo-600 rounded-3xl p-6.5 flex flex-col justify-between text-left relative shadow-xl hover:translate-y-[-4px]">
             <span className="absolute top-0 right-6 -translate-y-1/2 bg-indigo-600 text-white text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
               Most Popular
             </span>
             <div>
-              <h3 className="text-on-surface font-black text-base flex justify-between items-baseline">
+              <h3 className="text-slate-950 font-extrabold text-base flex justify-between items-baseline font-serif">
                 <span>Growth</span>
-                <span className="text-[10px] text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.5 rounded-md">Best Value</span>
+                <span className="text-[10px] text-indigo-650 font-bold bg-indigo-50 px-1.5 py-0.5 rounded-md">Best Value</span>
               </h3>
-              <p className="text-slate-400 text-[10.5px] font-bold mt-0.5">For growing businesses.</p>
+              <p className="text-slate-450 text-[10.5px] font-bold mt-0.5">For growing businesses.</p>
               <div className="my-6">
                 <span className="text-slate-950 font-black text-3xl">$49</span>
                 <span className="text-slate-400 text-xs font-bold ml-1">/ month</span>
               </div>
-              <ul className="space-y-3 border-t border-slate-100 pt-5 text-on-surface-variant text-[11px] font-bold">
+              <ul className="space-y-3.5 border-t border-slate-100 pt-5 text-slate-650 text-[11px] font-bold">
                 <li className="flex items-center gap-2">✔ Up to 1,000 products</li>
                 <li className="flex items-center gap-2">✔ 5 staff accounts</li>
                 <li className="flex items-center gap-2">✔ Advanced Analytics</li>
@@ -429,21 +591,21 @@ export default function LandingPage() {
                 <li className="flex items-center gap-2">✔ Priority Support</li>
               </ul>
             </div>
-            <Link href="/login" className="w-full mt-8 py-3.5 text-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black transition shadow-md shadow-indigo-650/10 cursor-pointer flex items-center justify-center">
+            <Link href="/login" className="w-full mt-8 py-3 text-center bg-indigo-600 hover:bg-indigo-750 text-white rounded-xl text-xs font-black transition shadow-md shadow-indigo-600/10 cursor-pointer flex items-center justify-center uppercase tracking-wider">
               Get Started
             </Link>
           </div>
 
           {/* Plan 3 */}
-          <div className="bg-white border border-outline-variant/30 rounded-2xl p-6 flex flex-col justify-between text-left relative transition duration-300 hover:border-slate-300 hover:translate-y-[-2px]">
+          <div className="card-3d-gym bg-white border border-slate-100 rounded-3xl p-6.5 flex flex-col justify-between text-left relative shadow-sm">
             <div>
-              <h3 className="text-on-surface font-black text-base">Pro</h3>
-              <p className="text-slate-400 text-[10.5px] font-bold mt-0.5">For established businesses.</p>
+              <h3 className="text-slate-900 font-extrabold text-base font-serif">Pro</h3>
+              <p className="text-slate-450 text-[10.5px] font-bold mt-0.5">For established businesses.</p>
               <div className="my-6">
                 <span className="text-slate-950 font-black text-3xl">$99</span>
                 <span className="text-slate-400 text-xs font-bold ml-1">/ month</span>
               </div>
-              <ul className="space-y-3 border-t border-slate-100 pt-5 text-on-surface-variant text-[11px] font-bold">
+              <ul className="space-y-3.5 border-t border-slate-100 pt-5 text-slate-600 text-[11px] font-bold">
                 <li className="flex items-center gap-2">✔ Up to 10,000 products</li>
                 <li className="flex items-center gap-2">✔ 15 staff accounts</li>
                 <li className="flex items-center gap-2">✔ Advanced Reporting</li>
@@ -451,27 +613,27 @@ export default function LandingPage() {
                 <li className="flex items-center gap-2">✔ 24/7 Priority Support</li>
               </ul>
             </div>
-            <Link href="/login" className="w-full mt-8 py-3.5 text-center border border-indigo-650 hover:bg-indigo-50 text-indigo-650 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center">
+            <Link href="/login" className="w-full mt-8 py-3 text-center border border-indigo-650 hover:bg-indigo-50 text-indigo-650 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center uppercase tracking-wider">
               Get Started
             </Link>
           </div>
 
           {/* Plan 4 */}
-          <div className="bg-white border border-outline-variant/30 rounded-2xl p-6 flex flex-col justify-between text-left relative transition duration-300 hover:border-slate-300 hover:translate-y-[-2px]">
+          <div className="card-3d-bistro bg-white border border-slate-100 rounded-3xl p-6.5 flex flex-col justify-between text-left relative shadow-sm">
             <div>
-              <h3 className="text-on-surface font-black text-base">Enterprise</h3>
-              <p className="text-slate-400 text-[10.5px] font-bold mt-0.5">For custom store needs.</p>
+              <h3 className="text-slate-900 font-extrabold text-base font-serif">Enterprise</h3>
+              <p className="text-slate-450 text-[10.5px] font-bold mt-0.5">For custom store needs.</p>
               <div className="my-6">
                 <span className="text-slate-950 font-black text-3xl">Custom</span>
               </div>
-              <ul className="space-y-3 border-t border-slate-100 pt-5 text-on-surface-variant text-[11px] font-bold">
+              <ul className="space-y-3.5 border-t border-slate-100 pt-5 text-slate-600 text-[11px] font-bold">
                 <li className="flex items-center gap-2">✔ Everything in Pro</li>
                 <li className="flex items-center gap-2">✔ Custom Integrations</li>
                 <li className="flex items-center gap-2">✔ Dedicated Account Manager</li>
                 <li className="flex items-center gap-2">✔ SLA & Premium Support</li>
               </ul>
             </div>
-            <Link href="/login" className="w-full mt-8 py-3.5 text-center border border-indigo-650 hover:bg-indigo-50 text-indigo-650 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center">
+            <Link href="/login" className="w-full mt-8 py-3 text-center border border-indigo-650 hover:bg-indigo-50 text-indigo-650 rounded-xl text-xs font-black transition cursor-pointer flex items-center justify-center uppercase tracking-wider">
               Contact Sales
             </Link>
           </div>
@@ -484,9 +646,12 @@ export default function LandingPage() {
       </section>
 
       {/* Blog Posts Grid Section ("Latest from Our Blog") */}
-      <section id="blog" className="px-6 md:px-12 lg:px-16 py-20 max-w-6xl mx-auto border-t border-outline-variant/20 scroll-mt-20 text-center">
+      <section className="px-6 md:px-12 lg:px-16 py-24 max-w-6xl mx-auto border-t border-outline-variant/15 text-center relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+          <span className="text-[10px] font-black uppercase tracking-widest text-[#a855f7] bg-[#a855f7]/10 border border-[#a855f7]/20 px-3 py-1.5 rounded-full inline-block mb-3.5">
+            ✦ Knowledge Base
+          </span>
+          <h2 className="text-3.5xl md:text-4.5xl font-black text-slate-900 tracking-tight mb-3 font-serif">
             Latest from Our Blog
           </h2>
           <p className="text-slate-500 text-sm font-semibold max-w-lg mx-auto">
@@ -496,7 +661,7 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left mb-12">
           {/* Blog 1 */}
-          <div className="bg-white border border-outline-variant/20 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between hover:translate-y-[-2px]">
+          <div className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between hover:translate-y-[-2px] group">
             <div>
               {/* Decorative cover with abstract vector styling */}
               <div className="w-full h-44 bg-gradient-to-tr from-indigo-500/10 to-purple-500/20 relative flex items-center justify-center overflow-hidden">
@@ -513,20 +678,20 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="p-5">
-                <span className="text-[9px] font-black bg-indigo-55/60 text-indigo-600 px-2.5 py-0.5 rounded-md uppercase tracking-wider">Store Design</span>
-                <h4 className="text-on-surface font-extrabold text-sm mt-3 leading-snug">How to Set Up Your Online Store for Success</h4>
-                <p className="text-slate-400 text-[10px] font-bold mt-2">May 10, 2026 • 5 min read</p>
+                <span className="text-[9px] font-black bg-indigo-50 text-indigo-650 px-2.5 py-0.5 rounded-md uppercase tracking-wider">Store Design</span>
+                <h4 className="text-on-surface font-extrabold text-sm mt-3 leading-snug group-hover:text-indigo-650 transition">How to Set Up Your Online Store for Success</h4>
+                <p className="text-slate-450 text-[10px] font-bold mt-2">May 10, 2026 • 5 min read</p>
               </div>
             </div>
             <div className="p-5 pt-0 mt-auto">
-              <a href="#blog" className="text-indigo-650 hover:text-indigo-850 text-xs font-black inline-flex items-center gap-1.5">
+              <span className="text-indigo-650 text-xs font-black inline-flex items-center gap-1.5 cursor-pointer">
                 Read More ➔
-              </a>
+              </span>
             </div>
           </div>
 
           {/* Blog 2 */}
-          <div className="bg-white border border-outline-variant/20 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between hover:translate-y-[-2px]">
+          <div className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between hover:translate-y-[-2px] group">
             <div>
               {/* Decorative cover with abstract vector styling */}
               <div className="w-full h-44 bg-gradient-to-tr from-purple-500/10 to-pink-500/20 relative flex items-center justify-center overflow-hidden">
@@ -539,20 +704,20 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="p-5">
-                <span className="text-[9px] font-black bg-purple-55/60 text-purple-650 px-2.5 py-0.5 rounded-md uppercase tracking-wider">Marketing</span>
-                <h4 className="text-on-surface font-extrabold text-sm mt-3 leading-snug">10 Marketing Strategies to Boost Your Sales</h4>
-                <p className="text-slate-400 text-[10px] font-bold mt-2">May 12, 2026 • 7 min read</p>
+                <span className="text-[9px] font-black bg-purple-50 text-purple-650 px-2.5 py-0.5 rounded-md uppercase tracking-wider">Marketing</span>
+                <h4 className="text-on-surface font-extrabold text-sm mt-3 leading-snug group-hover:text-purple-600 transition">10 Marketing Strategies to Boost Your Sales</h4>
+                <p className="text-slate-450 text-[10px] font-bold mt-2">May 12, 2026 • 7 min read</p>
               </div>
             </div>
             <div className="p-5 pt-0 mt-auto">
-              <a href="#blog" className="text-indigo-650 hover:text-indigo-850 text-xs font-black inline-flex items-center gap-1.5">
+              <span className="text-indigo-650 text-xs font-black inline-flex items-center gap-1.5 cursor-pointer">
                 Read More ➔
-              </a>
+              </span>
             </div>
           </div>
 
           {/* Blog 3 */}
-          <div className="bg-white border border-outline-variant/20 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between hover:translate-y-[-2px]">
+          <div className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between hover:translate-y-[-2px] group">
             <div>
               {/* Decorative cover with abstract vector styling */}
               <div className="w-full h-44 bg-gradient-to-tr from-emerald-500/10 to-indigo-500/20 relative flex items-center justify-center overflow-hidden">
@@ -569,14 +734,14 @@ export default function LandingPage() {
               </div>
               <div className="p-5">
                 <span className="text-[9px] font-black bg-emerald-50 text-emerald-650 px-2.5 py-0.5 rounded-md uppercase tracking-wider">Business Growth</span>
-                <h4 className="text-on-surface font-extrabold text-sm mt-3 leading-snug">Scaling Your Business: Tips from Top Entrepreneurs</h4>
-                <p className="text-slate-400 text-[10px] font-bold mt-2">May 15, 2026 • 8 min read</p>
+                <h4 className="text-on-surface font-extrabold text-sm mt-3 leading-snug group-hover:text-emerald-650 transition">Scaling Your Business: Tips from Top Entrepreneurs</h4>
+                <p className="text-slate-450 text-[10px] font-bold mt-2">May 15, 2026 • 8 min read</p>
               </div>
             </div>
             <div className="p-5 pt-0 mt-auto">
-              <a href="#blog" className="text-indigo-650 hover:text-indigo-850 text-xs font-black inline-flex items-center gap-1.5">
+              <span className="text-indigo-650 text-xs font-black inline-flex items-center gap-1.5 cursor-pointer">
                 Read More ➔
-              </a>
+              </span>
             </div>
           </div>
         </div>
@@ -590,17 +755,18 @@ export default function LandingPage() {
       </section>
 
       {/* Full-width Purple CTA Banner */}
-      <section id="footer-cta" className="px-6 md:px-12 lg:px-16 py-12 max-w-6xl mx-auto scroll-mt-16">
-        <div className="w-full bg-gradient-to-r from-purple-500 via-indigo-500 to-indigo-650 rounded-[32px] p-8 md:p-12 lg:p-16 flex flex-col md:flex-row justify-between items-center gap-8 shadow-xl text-white">
-          <div className="text-left max-w-lg">
-            <h2 className="text-3xl md:text-4.5xl font-black mb-3.5 leading-tight tracking-tight">
+      <section id="footer-cta" className="px-6 md:px-12 lg:px-16 py-12 max-w-6xl mx-auto scroll-mt-16 relative z-10">
+        <div className="w-full bg-gradient-to-r from-purple-500 via-indigo-500 to-indigo-650 rounded-[32px] p-8 md:p-12 lg:p-16 flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl text-white relative overflow-hidden group">
+          <div className="absolute right-[-40px] top-[-40px] w-48 h-48 rounded-full bg-white/5 blur-2xl pointer-events-none group-hover:scale-125 transition duration-500" />
+          <div className="text-left max-w-lg relative z-10">
+            <h2 className="text-3xl md:text-4.5xl font-black mb-3.5 leading-tight tracking-tight font-serif">
               Ready to Build, Manage, and Grow Your Business?
             </h2>
             <p className="text-purple-100 text-xs md:text-sm font-semibold">
               Get started today and scale your business to the next level.
             </p>
           </div>
-          <Link href="/login" className="px-7 py-4 bg-white hover:bg-slate-50 text-indigo-650 rounded-xl text-sm font-black transition flex items-center gap-1.5 shadow-lg cursor-pointer flex-shrink-0 hover:translate-y-[-1px]">
+          <Link href="/login" className="px-7 py-4 bg-white hover:bg-slate-50 text-indigo-650 rounded-xl text-sm font-black transition flex items-center gap-1.5 shadow-lg cursor-pointer flex-shrink-0 hover:translate-y-[-1px] relative z-10">
             <span>Start Free Trial</span>
             <svg className="w-3.5 h-3.5 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -610,7 +776,7 @@ export default function LandingPage() {
       </section>
 
       {/* Directory Footer */}
-      <footer className="bg-white border-t border-outline-variant/20 pt-16 pb-8 px-6 md:px-12 lg:px-16 text-xs text-on-surface-variant font-semibold select-none">
+      <footer className="bg-white border-t border-outline-variant/20 pt-16 pb-8 px-6 md:px-12 lg:px-16 text-xs text-on-surface-variant font-semibold select-none relative z-10">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-8 mb-12 text-left">
           
           {/* Logo & Intro column */}

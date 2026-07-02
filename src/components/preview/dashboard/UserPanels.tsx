@@ -169,6 +169,9 @@ export function UserOrdersPanel({
                   <div>
                     <span className="text-xs font-black text-slate-905">Order #{o.id}</span>
                     <span className="text-[10px] font-bold text-slate-400 block mt-0.5">{displayDate}</span>
+                    {o.notes && (
+                      <p className="text-[10px] text-amber-600 italic mt-1 font-semibold">"Instructions: {o.notes}"</p>
+                    )}
                   </div>
                   <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
                     <div className="text-right">

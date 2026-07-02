@@ -19,6 +19,7 @@ interface RestaurantAdminDashboardProps {
   onLogout: () => void;
   companyName: string;
   logoIcon: string;
+  onUpdateRestaurantInfo?: (info: any) => void;
 }
 
 export default function RestaurantAdminDashboard({
@@ -29,6 +30,7 @@ export default function RestaurantAdminDashboard({
   onLogout,
   companyName,
   logoIcon,
+  onUpdateRestaurantInfo,
 }: RestaurantAdminDashboardProps) {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   // Navigation tabs
@@ -76,6 +78,7 @@ export default function RestaurantAdminDashboard({
   const [selectedHomepage, setSelectedHomepage] = useState('menu-grid-focus');
   const [selectedLogin, setSelectedLogin] = useState('left-illustration');
   const [selectedDashboard, setSelectedDashboard] = useState('metric-overview');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   useEffect(() => {
     if (restaurantInfo) {
@@ -685,6 +688,19 @@ export default function RestaurantAdminDashboard({
     await saveCustomDataItem('staff', parsed, item.id);
   };
 
+  const handleEditSalary = async (item: any, currentSalary: number) => {
+    const newSalaryStr = prompt(`Enter new salary for ${JSON.parse(item.dataJson).name}:`, String(currentSalary));
+    if (newSalaryStr === null) return;
+    const newSalary = parseFloat(newSalaryStr);
+    if (isNaN(newSalary) || newSalary < 0) {
+      alert("Invalid salary entered!");
+      return;
+    }
+    const parsed = JSON.parse(item.dataJson);
+    parsed.salary = newSalary;
+    await saveCustomDataItem('staff', parsed, item.id);
+  };
+
   // 11. Coupon Management
   const [couponForm, setCouponForm] = useState({
     code: '',
@@ -1168,9 +1184,28 @@ export default function RestaurantAdminDashboard({
                   <div>
                     <label className="text-[10px] uppercase tracking-widest text-[#c5a880] font-black">Categories List</label>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      <span className="px-3 py-1.5 rounded-lg bg-[#c5a880]/15 text-[#c5a880] text-xs font-bold border border-[#c5a880]/30 cursor-pointer">All Categories</span>
+                      <span 
+                        onClick={() => setSelectedCategory('All')}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold border cursor-pointer transition ${
+                          selectedCategory === 'All' 
+                            ? 'bg-[#c5a880]/15 text-[#c5a880] border-[#c5a880]/30' 
+                            : 'bg-stone-50 text-slate-450 hover:text-slate-800 border-stone-200'
+                        }`}
+                      >
+                        All Categories
+                      </span>
                       {categoriesList.map((cat, idx) => (
-                        <span key={idx} className="px-3 py-1.5 rounded-lg bg-stone-50 text-slate-450 hover:text-slate-800 text-xs font-bold border border-stone-200 cursor-pointer">{cat.name}</span>
+                        <span 
+                          key={idx} 
+                          onClick={() => setSelectedCategory(cat.name)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold border cursor-pointer transition ${
+                            selectedCategory === cat.name 
+                              ? 'bg-[#c5a880]/15 text-[#c5a880] border-[#c5a880]/30' 
+                              : 'bg-stone-50 text-slate-450 hover:text-slate-800 border-stone-200'
+                          }`}
+                        >
+                          {cat.name}
+                        </span>
                       ))}
                     </div>
                   </div>
@@ -1178,7 +1213,9 @@ export default function RestaurantAdminDashboard({
 
                 {/* Items Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {menuItems.map((item) => (
+                  {menuItems
+                    .filter((item) => selectedCategory === 'All' || item.category === selectedCategory)
+                    .map((item) => (
                     <div key={item.id} className="bg-white border border-stone-200/80 rounded-3xl overflow-hidden shadow-lg flex flex-col justify-between text-left group">
                       
                       {/* Image container */}
@@ -1792,10 +1829,20 @@ export default function RestaurantAdminDashboard({
                               </div>
                             </div>
                             
-                            <div className="flex gap-2">
-                              <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 text-[8px] font-black uppercase flex items-center">
-                                {d.status}
-                              </span>
+                             <div className="flex gap-2">
+                              <select
+                                value={d.status || 'Available'}
+                                onChange={async (e) => {
+                                  const updatedStatus = e.target.value;
+                                  const updatedPartner = { ...d, status: updatedStatus };
+                                  await saveCustomDataItem('delivery_partner', updatedPartner, item.id);
+                                }}
+                                className="px-2 py-1 bg-stone-50 border border-stone-200 text-[10px] rounded text-slate-800 outline-none cursor-pointer font-bold"
+                              >
+                                <option value="Available">Available</option>
+                                <option value="Busy">Busy</option>
+                                <option value="Offline">Offline</option>
+                              </select>
                               <button onClick={() => deleteCustomDataItem('delivery_partner', item.id)} className="px-2 py-1.5 bg-rose-950/20 text-rose-400 border border-rose-200 rounded cursor-pointer text-[10px]">Delete</button>
                             </div>
                           </div>
@@ -1850,39 +1897,98 @@ export default function RestaurantAdminDashboard({
                     </form>
                   </div>
 
-                  {/* Staff table */}
-                  <div className="md:col-span-2 bg-white border border-stone-200/80 p-6 rounded-3xl shadow-lg space-y-4">
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-[#c5a880] font-serif">Staff Roster Directory</h3>
-                    
-                    <div className="divide-y divide-slate-850">
-                      {staffList.map((item) => {
-                        const s = JSON.parse(item.dataJson);
-                        return (
-                          <div key={item.id} className="py-4 flex justify-between items-center">
-                            <div>
-                              <h5 className="font-extrabold text-slate-800 text-xs">{s.name}</h5>
-                              <p className="text-[10px] text-slate-500 font-bold mt-0.5">Role: <span className="text-slate-850 font-extrabold">{s.role}</span> | Pay: <span className="text-emerald-500">${s.salary}</span> | {s.email}</p>
-                            </div>
-                            
-                            <div className="flex gap-2">
-                              <button 
-                                onClick={() => toggleStaffAttendance(item)}
-                                className={`px-2.5 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider border cursor-pointer ${
-                                  s.attendance === 'Present' 
-                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25' 
-                                    : 'bg-rose-500/10 text-rose-500 border-rose-500/25'
-                                }`}
-                              >
-                                {s.attendance}
-                              </button>
-                              <button onClick={() => deleteCustomDataItem('staff', item.id)} className="px-2 py-1.5 bg-rose-950/20 text-rose-400 border border-rose-200 rounded cursor-pointer text-[10px]">Delete</button>
-                            </div>
-                          </div>
-                        );
-                      })}
+                  {/* Staff table - PRESENT and ABSENT separate lists */}
+                  <div className="md:col-span-2 space-y-6">
+                    {/* PRESENT STAFF LIST */}
+                    <div className="bg-white border border-stone-200/80 p-6 rounded-3xl shadow-lg space-y-4">
+                      <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-600 font-serif flex items-center gap-2 border-b border-stone-100 pb-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Active Present Staff ({staffList.filter(item => JSON.parse(item.dataJson).attendance === 'Present').length})
+                      </h3>
+                      
+                      <div className="divide-y divide-stone-200/60">
+                        {staffList.filter(item => JSON.parse(item.dataJson).attendance === 'Present').length === 0 ? (
+                          <p className="text-xs text-slate-400 py-4 font-bold text-center">No present staff members.</p>
+                        ) : (
+                          staffList.filter(item => JSON.parse(item.dataJson).attendance === 'Present').map((item) => {
+                            const s = JSON.parse(item.dataJson);
+                            return (
+                              <div key={item.id} className="py-3.5 flex justify-between items-center">
+                                <div>
+                                  <h5 className="font-extrabold text-slate-800 text-xs">{s.name}</h5>
+                                  <p className="text-[10px] text-slate-500 font-bold mt-0.5">
+                                    Role: <span className="text-slate-850 font-extrabold">{s.role}</span> | 
+                                    Pay: <span className="text-emerald-500 font-extrabold">${s.salary}</span> | 
+                                    {s.email}
+                                  </p>
+                                </div>
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={() => handleEditSalary(item, s.salary)}
+                                    className="px-2 py-1 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded cursor-pointer text-[10px] font-bold border border-stone-200"
+                                  >
+                                    ✏️ Edit Salary
+                                  </button>
+                                  <button 
+                                    onClick={() => toggleStaffAttendance(item)}
+                                    className="px-2.5 py-1 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 border border-emerald-500/25 rounded-lg text-[9px] font-black uppercase tracking-wider cursor-pointer"
+                                  >
+                                    Present
+                                  </button>
+                                  <button onClick={() => deleteCustomDataItem('staff', item.id)} className="px-2 py-1 bg-rose-950/20 text-rose-450 hover:bg-rose-900/35 border border-rose-200 rounded cursor-pointer text-[10px]">Delete</button>
+                                </div>
+                              </div>
+                            );
+                          })
+                        )}
+                      </div>
+                    </div>
+
+                    {/* ABSENT STAFF LIST */}
+                    <div className="bg-white border border-stone-200/80 p-6 rounded-3xl shadow-lg space-y-4">
+                      <h3 className="text-sm font-bold uppercase tracking-widest text-rose-500 font-serif flex items-center gap-2 border-b border-stone-100 pb-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                        On Leave / Absent Staff ({staffList.filter(item => JSON.parse(item.dataJson).attendance !== 'Present').length})
+                      </h3>
+                      
+                      <div className="divide-y divide-stone-200/60">
+                        {staffList.filter(item => JSON.parse(item.dataJson).attendance !== 'Present').length === 0 ? (
+                          <p className="text-xs text-slate-455 py-4 font-bold text-center">No absent staff members.</p>
+                        ) : (
+                          staffList.filter(item => JSON.parse(item.dataJson).attendance !== 'Present').map((item) => {
+                            const s = JSON.parse(item.dataJson);
+                            return (
+                              <div key={item.id} className="py-3.5 flex justify-between items-center">
+                                <div>
+                                  <h5 className="font-extrabold text-slate-800 text-xs">{s.name}</h5>
+                                  <p className="text-[10px] text-slate-500 font-bold mt-0.5">
+                                    Role: <span className="text-slate-850 font-extrabold">{s.role}</span> | 
+                                    Pay: <span className="text-emerald-500 font-extrabold">${s.salary}</span> | 
+                                    {s.email}
+                                  </p>
+                                </div>
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={() => handleEditSalary(item, s.salary)}
+                                    className="px-2 py-1 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded cursor-pointer text-[10px] font-bold border border-stone-200"
+                                  >
+                                    ✏️ Edit Salary
+                                  </button>
+                                  <button 
+                                    onClick={() => toggleStaffAttendance(item)}
+                                    className="px-2.5 py-1 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 border border-rose-500/25 rounded-lg text-[9px] font-black uppercase tracking-wider cursor-pointer"
+                                  >
+                                    Absent
+                                  </button>
+                                  <button onClick={() => deleteCustomDataItem('staff', item.id)} className="px-2 py-1 bg-rose-950/20 text-rose-450 hover:bg-rose-900/35 border border-rose-200 rounded cursor-pointer text-[10px]">Delete</button>
+                                </div>
+                              </div>
+                            );
+                          })
+                        )}
+                      </div>
                     </div>
                   </div>
-
                 </div>
               </div>
             )}
@@ -2607,11 +2713,17 @@ export default function RestaurantAdminDashboard({
                         try {
                           const updated = await api.restaurant.update(projectId, payload);
                           setRestaurantInfo(updated);
+                          if (onUpdateRestaurantInfo) {
+                            onUpdateRestaurantInfo(updated);
+                          }
                           triggerAlert('success', 'Layout settings saved successfully! Refresh page to see storefront shifts.');
                         } catch (err: any) {
                           console.error(err);
                           triggerAlert('error', 'Failed to save settings. Simulating offline.');
                           setRestaurantInfo(payload);
+                          if (onUpdateRestaurantInfo) {
+                            onUpdateRestaurantInfo(payload);
+                          }
                         }
                       }}
                       className="px-8 py-3.5 bg-[#c5a880] hover:bg-[#b0936b] text-slate-950 font-black text-xs rounded-xl uppercase tracking-wider cursor-pointer border-none shadow-lg transition"
@@ -2761,6 +2873,142 @@ export default function RestaurantAdminDashboard({
                   className="px-5 py-2.5 rounded-xl bg-[#c5a880] hover:bg-[#b09470] text-[#07080e] text-xs font-black uppercase tracking-wider cursor-pointer border-none"
                 >
                   {editingMenuItem ? 'Save Changes' : 'Publish Dish'}
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: ADD/EDIT EVENT */}
+      {showEventModal && (
+        <div className="fixed inset-0 z-[99] bg-[#faf9f6]/85 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-white border border-stone-200/60 rounded-[32px] p-6 text-left shadow-2xl relative">
+            <h3 className="font-serif text-lg font-extrabold text-slate-800 tracking-wide border-b border-stone-200/80 pb-4">
+              {editingEvent ? 'Edit Event Details' : 'Create New Event'}
+            </h3>
+            
+            <form onSubmit={handleSaveEvent} className="space-y-4 mt-4">
+              
+              <div className="space-y-1">
+                <label className="text-[8px] uppercase tracking-wider text-slate-455 font-black">Event Name</label>
+                <input
+                  type="text"
+                  required
+                  value={eventForm.name}
+                  onChange={(e) => setEventForm({ ...eventForm, name: e.target.value })}
+                  className="w-full rounded-xl bg-stone-50 border border-stone-200 px-3.5 py-2.5 text-xs text-slate-800 outline-none"
+                  placeholder="e.g. Vintage Wine Tasting"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[8px] uppercase tracking-wider text-slate-455 font-black">Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={eventForm.date}
+                    onChange={(e) => setEventForm({ ...eventForm, date: e.target.value })}
+                    className="w-full rounded-xl bg-stone-50 border border-stone-200 px-3.5 py-2.5 text-xs text-slate-800 outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[8px] uppercase tracking-wider text-slate-455 font-black">Time</label>
+                  <input
+                    type="time"
+                    required
+                    value={eventForm.time}
+                    onChange={(e) => setEventForm({ ...eventForm, time: e.target.value })}
+                    className="w-full rounded-xl bg-stone-50 border border-stone-200 px-3.5 py-2.5 text-xs text-slate-800 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[8px] uppercase tracking-wider text-slate-455 font-black">Capacity (Tickets)</label>
+                  <input
+                    type="number"
+                    required
+                    value={eventForm.capacity}
+                    onChange={(e) => setEventForm({ ...eventForm, capacity: e.target.value })}
+                    className="w-full rounded-xl bg-stone-50 border border-stone-200 px-3.5 py-2.5 text-xs text-slate-800 outline-none"
+                    placeholder="100"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[8px] uppercase tracking-wider text-slate-455 font-black">Ticket Price ($)</label>
+                  <input
+                    type="number"
+                    required
+                    value={eventForm.price}
+                    onChange={(e) => setEventForm({ ...eventForm, price: e.target.value })}
+                    className="w-full rounded-xl bg-stone-50 border border-stone-200 px-3.5 py-2.5 text-xs text-slate-800 outline-none"
+                    placeholder="50"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[8px] uppercase tracking-wider text-slate-455 font-black">Guest Artist / Chef</label>
+                  <input
+                    type="text"
+                    value={eventForm.artist}
+                    onChange={(e) => setEventForm({ ...eventForm, artist: e.target.value })}
+                    className="w-full rounded-xl bg-stone-50 border border-stone-200 px-3.5 py-2.5 text-xs text-slate-800 outline-none"
+                    placeholder="Chef Jean-Luc"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[8px] uppercase tracking-wider text-slate-455 font-black">Publishing Status</label>
+                  <select
+                    value={eventForm.status}
+                    onChange={(e) => setEventForm({ ...eventForm, status: e.target.value })}
+                    className="w-full rounded-xl bg-stone-50 border border-stone-200 px-3.5 py-2.5 text-xs text-slate-800 outline-none font-bold"
+                  >
+                    <option value="Draft">Draft</option>
+                    <option value="Published">Published</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[8px] uppercase tracking-wider text-slate-455 font-black">Banner Image URL</label>
+                <input
+                  type="text"
+                  value={eventForm.banner}
+                  onChange={(e) => setEventForm({ ...eventForm, banner: e.target.value })}
+                  className="w-full rounded-xl bg-stone-50 border border-stone-200 px-3.5 py-2.5 text-xs text-slate-800 outline-none"
+                  placeholder="https://images.unsplash.com/..."
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[8px] uppercase tracking-wider text-slate-455 font-black">Description</label>
+                <textarea
+                  value={eventForm.description}
+                  onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })}
+                  className="w-full rounded-xl bg-stone-50 border border-stone-200 px-3.5 py-2.5 text-xs text-slate-800 outline-none resize-none h-16"
+                  placeholder="Join us for an exclusive evening of..."
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-3 border-t border-stone-200/80">
+                <button
+                  type="button"
+                  onClick={() => setShowEventModal(false)}
+                  className="px-4 py-2.5 rounded-xl bg-stone-100 hover:bg-slate-750 text-slate-600 text-xs font-bold cursor-pointer border-none"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 rounded-xl bg-[#c5a880] hover:bg-[#b09470] text-[#07080e] text-xs font-black uppercase tracking-wider cursor-pointer border-none"
+                >
+                  {editingEvent ? 'Save Changes' : 'Create Event'}
                 </button>
               </div>
 
