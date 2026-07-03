@@ -29,6 +29,9 @@ import MedicalShopAdminDashboard from '@/components/preview/templates/medical-sh
 import StorefrontUserDashboard from '@/components/preview/templates/storefront/UserDashboard';
 import StorefrontAdminDashboard from '@/components/preview/templates/storefront/AdminDashboard';
 
+import TravelUserDashboard from '@/components/preview/templates/travel/UserDashboard';
+import TravelAdminDashboard from '@/components/preview/templates/travel/AdminDashboard';
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -247,8 +250,30 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
            projectData.description?.toLowerCase().includes('gym') ||
            projectData.description?.toLowerCase().includes('fitness');
 
-           if (config.businessType === 'hospital' || config.businessType === 'clinic') {
+           const isTravel = config.businessType === 'travel' ||
+                            projectData.name?.toLowerCase().includes('travel') ||
+                            projectData.name?.toLowerCase().includes('itinerary') ||
+                            projectData.name?.toLowerCase().includes('booking') ||
+                            projectData.description?.toLowerCase().includes('travel') ||
+                            blocks.some((b: any) => b.type === 'login_config' && b.content?.title?.toLowerCase().includes('travel')) ||
+                            blocks.some((b: any) => b.type === 'hero' && b.content?.title?.toLowerCase().includes('travel'));
+
+            let hasBackendTravel = false;
+            try {
+              const travelSettings = await api.travel.get(projectId);
+              if (travelSettings && travelSettings.projectId) {
+                hasBackendTravel = true;
+              }
+            } catch (err) {
+              console.log('No backend travel settings:', err);
+            }
+
+            if (hasBackendTravel) {
+               detectedTemplate = 'travel';
+            } else if (config.businessType === 'hospital' || config.businessType === 'clinic') {
               detectedTemplate = 'clinic';
+            } else if (config.businessType === 'travel') {
+              detectedTemplate = 'travel';
             } else if (config.businessType === 'school') {
               detectedTemplate = 'school';
             } else if (config.businessType === 'gym') {
@@ -275,19 +300,21 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
               detectedTemplate = 'wedding';
             } else if (isGym) {
               detectedTemplate = 'gym';
+            } else if (isTravel) {
+              detectedTemplate = 'travel';
             }
 
-          setTemplateId(detectedTemplate);
-        } catch (err) {
-          console.error('Error parsing blocks for template detection:', err);
-        } finally {
+            setTemplateId(detectedTemplate);
+          } catch (err) {
+            console.error('Error parsing blocks for template detection:', err);
+          } finally {
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          console.error('Error loading project details for dashboard:', err);
           setLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.error('Error loading project details for dashboard:', err);
-        setLoading(false);
-      });
+        });
   }, [projectId]);
 
   const handleLogout = () => {
@@ -370,6 +397,12 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
           <GymAdminDashboard {...dashboardProps} />
         ) : (
           <GymUserDashboard {...dashboardProps} />
+        );
+      case 'travel':
+        return isAdmin ? (
+          <TravelAdminDashboard {...dashboardProps} />
+        ) : (
+          <TravelUserDashboard {...dashboardProps} />
         );
       default:
         return isAdmin ? (

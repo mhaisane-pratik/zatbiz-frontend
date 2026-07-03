@@ -233,6 +233,116 @@ export function getThemeColors(themePreset: string | undefined, defaultTheme: an
       btnBorderAccent: 'border-[#c5a880]',
       btnTextAccent: 'text-[#c5a880]',
       btnHoverBgAccent: 'hover:bg-[#c5a880]'
+    },
+    'terracotta-clay': {
+      bgAccent: 'bg-orange-700',
+      textAccent: 'text-orange-600',
+      hoverBgAccent: 'hover:bg-orange-850',
+      borderAccent: 'border-orange-800',
+      hoverBorderAccent: 'hover:border-orange-500',
+      selectionBg: 'selection:bg-orange-700',
+      btnBorderAccent: 'border-orange-700',
+      btnTextAccent: 'text-orange-600',
+      btnHoverBgAccent: 'hover:bg-orange-705'
+    },
+    'cyan-breeze': {
+      bgAccent: 'bg-cyan-600',
+      textAccent: 'text-cyan-500',
+      hoverBgAccent: 'hover:bg-cyan-700',
+      borderAccent: 'border-cyan-800',
+      hoverBorderAccent: 'hover:border-cyan-500',
+      selectionBg: 'selection:bg-cyan-600',
+      btnBorderAccent: 'border-cyan-600',
+      btnTextAccent: 'text-cyan-600',
+      btnHoverBgAccent: 'hover:bg-cyan-600'
+    },
+    'sunset-gold': {
+      bgAccent: 'bg-orange-600',
+      textAccent: 'text-orange-500',
+      hoverBgAccent: 'hover:bg-orange-700',
+      borderAccent: 'border-orange-800',
+      hoverBorderAccent: 'hover:border-orange-500',
+      selectionBg: 'selection:bg-orange-600',
+      btnBorderAccent: 'border-orange-600',
+      btnTextAccent: 'text-orange-600',
+      btnHoverBgAccent: 'hover:bg-orange-600'
+    },
+    'matcha-zen': {
+      bgAccent: 'bg-lime-600',
+      textAccent: 'text-lime-500',
+      hoverBgAccent: 'hover:bg-lime-700',
+      borderAccent: 'border-lime-800',
+      hoverBorderAccent: 'hover:border-lime-500',
+      selectionBg: 'selection:bg-lime-650',
+      btnBorderAccent: 'border-lime-600',
+      btnTextAccent: 'text-lime-600',
+      btnHoverBgAccent: 'hover:bg-lime-600'
+    },
+    'chocolate-truffle': {
+      bgAccent: 'bg-amber-900',
+      textAccent: 'text-amber-805',
+      hoverBgAccent: 'hover:bg-amber-950',
+      borderAccent: 'border-amber-950',
+      hoverBorderAccent: 'hover:border-amber-800',
+      selectionBg: 'selection:bg-amber-900',
+      btnBorderAccent: 'border-amber-900',
+      btnTextAccent: 'text-amber-900',
+      btnHoverBgAccent: 'hover:bg-amber-900'
+    },
+    'lavender-bliss': {
+      bgAccent: 'bg-violet-400',
+      textAccent: 'text-violet-500',
+      hoverBgAccent: 'hover:bg-violet-500',
+      borderAccent: 'border-violet-300',
+      hoverBorderAccent: 'hover:border-violet-500',
+      selectionBg: 'selection:bg-violet-400',
+      btnBorderAccent: 'border-violet-400',
+      btnTextAccent: 'text-violet-500',
+      btnHoverBgAccent: 'hover:bg-violet-405'
+    },
+    'crimson-blaze': {
+      bgAccent: 'bg-red-700',
+      textAccent: 'text-red-650',
+      hoverBgAccent: 'hover:bg-red-800',
+      borderAccent: 'border-red-800',
+      hoverBorderAccent: 'hover:border-red-500',
+      selectionBg: 'selection:bg-red-700',
+      btnBorderAccent: 'border-red-700',
+      btnTextAccent: 'text-red-600',
+      btnHoverBgAccent: 'hover:bg-red-700'
+    },
+    'lemon-zest': {
+      bgAccent: 'bg-yellow-500',
+      textAccent: 'text-yellow-500',
+      hoverBgAccent: 'hover:bg-yellow-600',
+      borderAccent: 'border-yellow-700',
+      hoverBorderAccent: 'hover:border-yellow-500',
+      selectionBg: 'selection:bg-yellow-500',
+      btnBorderAccent: 'border-yellow-500',
+      btnTextAccent: 'text-yellow-605',
+      btnHoverBgAccent: 'hover:bg-yellow-500'
+    },
+    'peach-blossom': {
+      bgAccent: 'bg-orange-400',
+      textAccent: 'text-orange-500',
+      hoverBgAccent: 'hover:bg-orange-500',
+      borderAccent: 'border-orange-300',
+      hoverBorderAccent: 'hover:border-orange-500',
+      selectionBg: 'selection:bg-orange-400',
+      btnBorderAccent: 'border-orange-400',
+      btnTextAccent: 'text-orange-500',
+      btnHoverBgAccent: 'hover:bg-orange-400'
+    },
+    'royal-gold': {
+      bgAccent: 'bg-amber-600',
+      textAccent: 'text-amber-500',
+      hoverBgAccent: 'hover:bg-amber-700',
+      borderAccent: 'border-amber-800',
+      hoverBorderAccent: 'hover:border-amber-500',
+      selectionBg: 'selection:bg-amber-650',
+      btnBorderAccent: 'border-amber-600',
+      btnTextAccent: 'text-amber-600',
+      btnHoverBgAccent: 'hover:bg-amber-600'
     }
   };
   return (themePreset && themes[themePreset]) ? themes[themePreset] : defaultTheme;

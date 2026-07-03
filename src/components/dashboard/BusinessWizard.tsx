@@ -24,7 +24,28 @@ const GLOBAL_THEME_COLORS: Record<string, string> = {
   'realestate-luxe-spaces': '#7c3aed',
   'realestate-nova-smartcity': '#2563eb',
   'realestate-heritage-homes': '#15803d',
-  'realestate-modern-living': '#ea580c'
+  'realestate-modern-living': '#ea580c',
+  // Restaurant Themes
+  'gold-luxury': '#c5a880',
+  'rose-vintage': '#ec4899',
+  'emerald-mint': '#10b981',
+  'ruby-wine': '#e11d48',
+  'amber-spiced': '#d97706',
+  'indigo-ocean': '#4f46e5',
+  'charcoal-slate': '#475569',
+  'tangerine-peel': '#f97316',
+  'forest-herbs': '#047857',
+  'velvet-plum': '#7c3aed',
+  'terracotta-clay': '#c2410c',
+  'cyan-breeze': '#06b6d4',
+  'sunset-gold': '#ea580c',
+  'matcha-zen': '#84cc16',
+  'chocolate-truffle': '#451a03',
+  'lavender-bliss': '#a78bfa',
+  'crimson-blaze': '#b91c1c',
+  'lemon-zest': '#eab308',
+  'peach-blossom': '#fb923c',
+  'royal-gold': '#d97706'
 };
 
 interface NicheSubOption {
@@ -130,6 +151,8 @@ interface BusinessWizardProps {
   initialRestaurantConfig?: any;
   initialGymConfig?: any;
   initialScratchConfig?: any;
+  initialTravelConfig?: any;
+  initialTravelCategory?: string | null;
   onSelectThemeTemplates?: () => void;
   projects?: Project[];
 }
@@ -155,6 +178,8 @@ export default function BusinessWizard({
   initialRestaurantConfig,
   initialGymConfig,
   initialScratchConfig,
+  initialTravelConfig,
+  initialTravelCategory,
   onSelectThemeTemplates,
   projects = []
 }: BusinessWizardProps) {
@@ -205,7 +230,7 @@ export default function BusinessWizard({
   const [brandImageVal, setBrandImageVal] = useState('');
 
   // Step 3: Select Business Type
-  const [businessType, setBusinessType] = useState<'restaurant' | 'shop' | 'school' | 'hospital' | 'fashion' | 'wedding' | 'general' | null>(null);
+  const [businessType, setBusinessType] = useState<'restaurant' | 'shop' | 'school' | 'hospital' | 'fashion' | 'wedding' | 'general' | 'travel' | null>(null);
 
   // E-commerce Niche selection
   const [shopNiche, setShopNiche] = useState<string | null>(null);
@@ -346,6 +371,36 @@ export default function BusinessWizard({
           setLogoIcon('🍕');
           setShopNiche('General');
           setThemePreset('slate');
+        }
+        setStep(1);
+      } else if (initialTemplateId === 'travel') {
+        setBusinessType('travel');
+        if (initialTravelConfig) {
+          setCompanyName(initialTravelConfig.businessName);
+          setSlogan(initialTravelConfig.description);
+          setLogoIcon('✈️');
+          setContactPhone(initialTravelConfig.phoneNo);
+          setContactEmail(initialTravelConfig.email);
+          setOwnerName(initialTravelConfig.ownerName);
+          setAddress(initialTravelConfig.address || '');
+          setCountry(initialTravelConfig.country || 'India');
+          setStateVal(initialTravelConfig.state);
+          setCustomLogoUrl(initialTravelConfig.logoUrl);
+          setGstin(initialTravelConfig.gstNumber);
+          setThemePreset(initialTravelConfig.selectedTheme);
+          setShopNiche(initialTravelConfig.subcategory);
+        } else if (initialTravelCategory) {
+          setCompanyName(initialTravelCategory);
+          setSlogan('Your gateway to unforgettable travel adventures');
+          setLogoIcon('✈️');
+          setShopNiche(initialTravelCategory);
+          setThemePreset('cyan-breeze');
+        } else {
+          setCompanyName('Wanderlust Travels');
+          setSlogan('Unforgettable travel adventures');
+          setLogoIcon('✈️');
+          setShopNiche('Domestic Travel');
+          setThemePreset('cyan-breeze');
         }
         setStep(1);
       } else if (initialTemplateId === 'school') {
@@ -1545,6 +1600,31 @@ export default function BusinessWizard({
           await api.scratch.create(projectId, initialScratchConfig);
         } catch (scratchErr) {
           console.error('Failed to save scratch info:', scratchErr);
+        }
+      }
+
+      if (initialTemplateId === 'travel') {
+        try {
+          const travelConfig = initialTravelConfig || {
+            businessName: companyName,
+            ownerName: ownerName || 'Travel Agent',
+            email: contactEmail || 'agent@wanderlust.com',
+            whatsappNo: whatsappNumber || contactPhone || '',
+            phoneNo: contactPhone || '',
+            gstNumber: gstin || '',
+            websiteName: companyName,
+            country: country || 'India',
+            state: stateVal || 'Delhi',
+            address: address || '',
+            description: slogan,
+            logoUrl: customLogoUrl || '',
+            subcategory: initialTravelCategory || shopNiche || 'Domestic Travel',
+            themeColor: '#06b6d4',
+            selectedTheme: themePreset || 'cyan-breeze'
+          };
+          await api.travel.create(projectId, travelConfig);
+        } catch (travelErr) {
+          console.error('Failed to save travel info:', travelErr);
         }
       }
 

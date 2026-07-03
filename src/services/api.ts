@@ -485,6 +485,136 @@ export const api = {
     },
   },
 
+  // Travel Agency API
+  travel: {
+    get: (projectId: number) => request<any>(`/travel?projectId=${projectId}`),
+    create: (projectId: number, data: any) =>
+      request<any>(`/travel?projectId=${projectId}`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }),
+    update: (projectId: number, data: any) =>
+      request<any>(`/travel?projectId=${projectId}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      }),
+    packages: {
+      list: (projectId: number) => request<any[]>(`/travel/packages?projectId=${projectId}`),
+      create: (projectId: number, data: any) =>
+        request<any>(`/travel/packages?projectId=${projectId}`, {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
+      update: (id: number, projectId: number, data: any) =>
+        request<any>(`/travel/packages/${id}?projectId=${projectId}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        }),
+      delete: (id: number, projectId: number) =>
+        request<{ success: boolean }>(`/travel/packages/${id}?projectId=${projectId}`, {
+          method: 'DELETE',
+        }),
+    },
+    bookings: {
+      list: (projectId: number) => request<any[]>(`/travel/bookings?projectId=${projectId}`),
+      create: (projectId: number, data: any) =>
+        request<any>(`/travel/bookings?projectId=${projectId}`, {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
+      update: (id: number, projectId: number, data: any) =>
+        request<any>(`/travel/bookings/${id}?projectId=${projectId}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        }),
+      delete: (id: number, projectId: number) =>
+        request<{ success: boolean }>(`/travel/bookings/${id}?projectId=${projectId}`, {
+          method: 'DELETE',
+        }),
+    },
+    destinations: {
+      list: (projectId: number) => request<any[]>(`/travel/destinations?projectId=${projectId}`),
+      create: (projectId: number, data: any) =>
+        request<any>(`/travel/destinations?projectId=${projectId}`, {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
+      update: (id: number, projectId: number, data: any) =>
+        request<any>(`/travel/destinations/${id}?projectId=${projectId}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        }),
+      delete: (id: number, projectId: number) =>
+        request<{ success: boolean }>(`/travel/destinations/${id}?projectId=${projectId}`, {
+          method: 'DELETE',
+        }),
+    },
+    hotels: {
+      list: (projectId: number) => request<any[]>(`/travel/hotels?projectId=${projectId}`),
+      create: (projectId: number, data: any) =>
+        request<any>(`/travel/hotels?projectId=${projectId}`, {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
+      update: (id: number, projectId: number, data: any) =>
+        request<any>(`/travel/hotels/${id}?projectId=${projectId}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        }),
+      delete: (id: number, projectId: number) =>
+        request<{ success: boolean }>(`/travel/hotels/${id}?projectId=${projectId}`, {
+          method: 'DELETE',
+        }),
+    },
+    flights: {
+      list: (projectId: number) => request<any[]>(`/travel/flights?projectId=${projectId}`),
+      create: (projectId: number, data: any) =>
+        request<any>(`/travel/flights?projectId=${projectId}`, {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
+      update: (id: number, projectId: number, data: any) =>
+        request<any>(`/travel/flights/${id}?projectId=${projectId}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        }),
+      delete: (id: number, projectId: number) =>
+        request<{ success: boolean }>(`/travel/flights/${id}?projectId=${projectId}`, {
+          method: 'DELETE',
+        }),
+    },
+    visas: {
+      list: (projectId: number) => request<any[]>(`/travel/visas?projectId=${projectId}`),
+      create: (projectId: number, data: any) =>
+        request<any>(`/travel/visas?projectId=${projectId}`, {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
+      update: (id: number, projectId: number, data: any) =>
+        request<any>(`/travel/visas/${id}?projectId=${projectId}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        }),
+      delete: (id: number, projectId: number) =>
+        request<{ success: boolean }>(`/travel/visas/${id}?projectId=${projectId}`, {
+          method: 'DELETE',
+        }),
+    },
+    themeSettings: {
+      get: (projectId: number) => request<any>(`/travel/theme-settings?projectId=${projectId}`),
+      create: (projectId: number, data: any) =>
+        request<any>(`/travel/theme-settings?projectId=${projectId}`, {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
+      update: (projectId: number, data: any) =>
+        request<any>(`/travel/theme-settings?projectId=${projectId}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        }),
+    },
+  },
+
   // Event & Wedding Planner API
   event: {
     getAgencyInfo: (projectId: number) => request<any>(`/event/agency-info?projectId=${projectId}`),

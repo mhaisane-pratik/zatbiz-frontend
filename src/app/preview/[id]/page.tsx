@@ -10,6 +10,7 @@ import FashionStorefront from '@/components/preview/FashionStorefront';
 import RestaurantStorefront from '@/components/preview/restaurant/RestaurantStorefront';
 import WeddingStorefront from '@/components/preview/wedding/WeddingStorefront';
 import ScratchStorefront from '@/components/preview/scratch/ScratchStorefront';
+import TravelStorefront from '@/components/preview/templates/travel/TravelStorefront';
 
 import RestaurantLanding from '@/components/preview/templates/restaurant/Landing';
 import HospitalLanding from '@/components/preview/templates/hospital/Landing';
@@ -60,6 +61,8 @@ function PreviewPageContent({ params }: PageProps) {
   const [restaurantInfo, setRestaurantInfo] = useState<any>(null);
   const [gymInfo, setGymInfo] = useState<any>(null);
   const [scratchInfo, setScratchInfo] = useState<any>(null);
+  const [isTravel, setIsTravel] = useState(false);
+  const [travelInfo, setTravelInfo] = useState<any>(null);
 
   // Query parameter page switching
   const searchParams = useSearchParams();
@@ -190,6 +193,17 @@ function PreviewPageContent({ params }: PageProps) {
       })
       .catch((e) => console.log('Not gym or offline:', e));
 
+    // Fetch travel details
+    api.travel.get(projectId)
+      .then((travelData) => {
+        if (travelData && travelData.projectId) {
+          setIsTravel(true);
+          setTravelInfo(travelData);
+          setPreviewMode('template');
+        }
+      })
+      .catch((e) => console.log('Not travel or offline:', e));
+
     // Fetch project config
     api.projects
       .get(projectId)
@@ -255,7 +269,7 @@ function PreviewPageContent({ params }: PageProps) {
           setPages(newPages);
           setActivePages(activePagesList);
           setProjectConfig(config);
-          if (config.businessType === 'restaurant' || config.businessType === 'hospital' || config.businessType === 'clinic' || config.businessType === 'school' || config.businessType === 'gym' || config.businessType === 'medical-shop' || config.businessType === 'scratch') {
+          if (config.businessType === 'restaurant' || config.businessType === 'hospital' || config.businessType === 'clinic' || config.businessType === 'school' || config.businessType === 'gym' || config.businessType === 'medical-shop' || config.businessType === 'scratch' || config.businessType === 'travel') {
             setPreviewMode('template');
           }
         } catch (e) {
@@ -983,6 +997,17 @@ function PreviewPageContent({ params }: PageProps) {
             };
 
             if (previewMode === 'template') {
+              if (isTravel || travelInfo || projectConfig?.businessType === 'travel') {
+                return (
+                  <TravelStorefront
+                    projectId={projectId}
+                    project={project!}
+                    customerSession={customerSession}
+                    onLogout={handleLogout}
+                    addToast={addToast}
+                  />
+                );
+              }
               if (scratchInfo || projectConfig?.businessType === 'scratch') {
                 return (
                   <ScratchStorefront

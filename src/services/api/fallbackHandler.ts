@@ -1551,6 +1551,498 @@ export async function request<T>(path: string, options?: RequestInit): Promise<T
         return bodyData as unknown as T;
       }
 
+      // Travel Packages Fallbacks
+      if (path.startsWith('/travel/packages')) {
+        const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
+        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        const method = options?.method || 'GET';
+
+        if (method === 'GET') {
+          let list: any[] = [];
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_packages_${projectId}`);
+            if (stored) {
+              try { list = JSON.parse(stored); } catch {}
+            } else {
+              list = [
+                { id: 1, name: 'Ultimate Bali Tropical Paradise', destination: 'Bali / Ubud', price: 42000, duration: '5 Days', status: 'Published', discount: 10, inclusions: 'Flights, Hotel, Tour Guide', exclusions: 'Visa fees, Personal expenses', pickup: 'Airport', dropPoint: 'Resort', meals: 'Breakfast Included', hotel: 'Grand Hyatt Seminyak', flightIncluded: true, guideIncluded: true },
+                { id: 2, name: 'Grand European Tour Explorer', destination: 'Paris / Rome', price: 85000, duration: '7 Days', status: 'Published', discount: 5, inclusions: 'Hotel, Tour Guide', exclusions: 'Flights, Visa', pickup: 'Train Station', dropPoint: 'Hotel lobby', meals: 'All Meals Included', hotel: 'Hotel de Rome', flightIncluded: false, guideIncluded: true },
+                { id: 3, name: 'Swiss Alps Mountaineer Expedition', destination: 'Zermatt / Interlaken', price: 110000, duration: '6 Days', status: 'Draft', discount: 0, inclusions: 'Adventure kit, Tour Guide', exclusions: 'Meals, Flights', pickup: 'Chalet', dropPoint: 'Chalet', meals: 'None', hotel: 'Swiss Chalet Interlaken', flightIncluded: false, guideIncluded: true }
+              ];
+              localStorage.setItem(`zatbiz_offline_travel_packages_${projectId}`, JSON.stringify(list));
+            }
+          }
+          return list as unknown as T;
+        }
+
+        if (method === 'POST') {
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          const newPkg = { id: Date.now(), projectId, ...bodyData };
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_packages_${projectId}`);
+            const list = stored ? JSON.parse(stored) : [];
+            list.push(newPkg);
+            localStorage.setItem(`zatbiz_offline_travel_packages_${projectId}`, JSON.stringify(list));
+          }
+          return newPkg as unknown as T;
+        }
+
+        if (method === 'PUT') {
+          const idMatch = path.match(/\/packages\/(\d+)/);
+          const id = idMatch ? parseInt(idMatch[1], 10) : Date.now();
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_packages_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const idx = list.findIndex(item => String(item.id) === String(id));
+              if (idx !== -1) {
+                list[idx] = { ...list[idx], ...bodyData };
+                localStorage.setItem(`zatbiz_offline_travel_packages_${projectId}`, JSON.stringify(list));
+                return list[idx] as unknown as T;
+              }
+            }
+          }
+          return { id, projectId, ...bodyData } as unknown as T;
+        }
+
+        if (method === 'DELETE') {
+          const idMatch = path.match(/\/packages\/(\d+)/);
+          const id = idMatch ? parseInt(idMatch[1], 10) : 0;
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_packages_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const filtered = list.filter(item => String(item.id) !== String(id));
+              localStorage.setItem(`zatbiz_offline_travel_packages_${projectId}`, JSON.stringify(filtered));
+            }
+          }
+          return { success: true } as unknown as T;
+        }
+      }
+
+      // Travel Bookings Fallbacks
+      if (path.startsWith('/travel/bookings')) {
+        const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
+        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        const method = options?.method || 'GET';
+
+        if (method === 'GET') {
+          let list: any[] = [];
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_bookings_${projectId}`);
+            if (stored) {
+              try { list = JSON.parse(stored); } catch {}
+            } else {
+              list = [
+                { id: 'ZB-TRAV-923847', projectId, customerName: 'Aman Verma', customerEmail: 'aman@gmail.com', customerPhone: '+91 99999 88888', packageId: 1, packageName: 'Ultimate Bali Tropical Paradise', travelDate: '2026-08-12', guestsCount: 2, totalPrice: 84000, paymentStatus: 'Paid', bookingStatus: 'Confirmed', bookingSettings: 'Instant Booking' },
+                { id: 'ZB-TRAV-482019', projectId, customerName: 'Riya Sen', customerEmail: 'riya@gmail.com', customerPhone: '+91 88888 77777', packageId: 2, packageName: 'Grand European Tour Explorer', travelDate: '2026-09-05', guestsCount: 1, totalPrice: 85000, paymentStatus: 'Pending', bookingStatus: 'Pending Approval', bookingSettings: 'Manual Approval' }
+              ];
+              localStorage.setItem(`zatbiz_offline_travel_bookings_${projectId}`, JSON.stringify(list));
+            }
+          }
+          return list as unknown as T;
+        }
+
+        if (method === 'POST') {
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          const newBooking = { id: 'ZB-TRAV-' + Math.floor(100000 + Math.random() * 900000), projectId, ...bodyData, createdAt: new Date().toISOString() };
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_bookings_${projectId}`);
+            const list = stored ? JSON.parse(stored) : [];
+            list.push(newBooking);
+            localStorage.setItem(`zatbiz_offline_travel_bookings_${projectId}`, JSON.stringify(list));
+          }
+          return newBooking as unknown as T;
+        }
+
+        if (method === 'PUT') {
+          const idMatch = path.match(/\/bookings\/([^/?&]+)/);
+          const id = idMatch ? decodeURIComponent(idMatch[1]) : '';
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_bookings_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const idx = list.findIndex(item => String(item.id) === String(id));
+              if (idx !== -1) {
+                list[idx] = { ...list[idx], ...bodyData };
+                localStorage.setItem(`zatbiz_offline_travel_bookings_${projectId}`, JSON.stringify(list));
+                return list[idx] as unknown as T;
+              }
+            }
+          }
+          return { id, projectId, ...bodyData } as unknown as T;
+        }
+
+        if (method === 'DELETE') {
+          const idMatch = path.match(/\/bookings\/([^/?&]+)/);
+          const id = idMatch ? decodeURIComponent(idMatch[1]) : '';
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_bookings_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const filtered = list.filter(item => String(item.id) !== String(id));
+              localStorage.setItem(`zatbiz_offline_travel_bookings_${projectId}`, JSON.stringify(filtered));
+            }
+          }
+          return { success: true } as unknown as T;
+        }
+      }
+
+      // Travel Destinations Fallbacks
+      if (path.startsWith('/travel/destinations')) {
+        const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
+        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        const method = options?.method || 'GET';
+
+        if (method === 'GET') {
+          let list: any[] = [];
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_destinations_${projectId}`);
+            if (stored) {
+              try { list = JSON.parse(stored); } catch {}
+            } else {
+              list = [
+                { id: 1, projectId, country: 'France', city: 'Paris', state: 'Ile-de-France', touristPlaces: 'Louvre Museum, Eiffel Tower', imageUrl: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400', description: 'The romantic city of light.' },
+                { id: 2, projectId, country: 'Indonesia', city: 'Bali', state: 'Badung', touristPlaces: 'Ubud Monkey Forest, Uluwatu Temple', imageUrl: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400', description: 'Stunning tropical paradise.' }
+              ];
+              localStorage.setItem(`zatbiz_offline_travel_destinations_${projectId}`, JSON.stringify(list));
+            }
+          }
+          return list as unknown as T;
+        }
+
+        if (method === 'POST') {
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          const newDest = { id: Date.now(), projectId, ...bodyData };
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_destinations_${projectId}`);
+            const list = stored ? JSON.parse(stored) : [];
+            list.push(newDest);
+            localStorage.setItem(`zatbiz_offline_travel_destinations_${projectId}`, JSON.stringify(list));
+          }
+          return newDest as unknown as T;
+        }
+
+        if (method === 'PUT') {
+          const idMatch = path.match(/\/destinations\/(\d+)/);
+          const id = idMatch ? parseInt(idMatch[1], 10) : Date.now();
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_destinations_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const idx = list.findIndex(item => String(item.id) === String(id));
+              if (idx !== -1) {
+                list[idx] = { ...list[idx], ...bodyData };
+                localStorage.setItem(`zatbiz_offline_travel_destinations_${projectId}`, JSON.stringify(list));
+                return list[idx] as unknown as T;
+              }
+            }
+          }
+          return { id, projectId, ...bodyData } as unknown as T;
+        }
+
+        if (method === 'DELETE') {
+          const idMatch = path.match(/\/destinations\/(\d+)/);
+          const id = idMatch ? parseInt(idMatch[1], 10) : 0;
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_destinations_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const filtered = list.filter(item => String(item.id) !== String(id));
+              localStorage.setItem(`zatbiz_offline_travel_destinations_${projectId}`, JSON.stringify(filtered));
+            }
+          }
+          return { success: true } as unknown as T;
+        }
+      }
+
+      // Travel Hotels Fallbacks
+      if (path.startsWith('/travel/hotels')) {
+        const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
+        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        const method = options?.method || 'GET';
+
+        if (method === 'GET') {
+          let list: any[] = [];
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_hotels_${projectId}`);
+            if (stored) {
+              try { list = JSON.parse(stored); } catch {}
+            } else {
+              list = [
+                { id: 1, projectId, name: 'Grand Hyatt Seminyak', rooms: 'Deluxe Suite, Pool Villa', pricing: '₹9,500/night', availability: 'Available', imagesJson: '["https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500"]' },
+                { id: 2, projectId, name: 'Swiss Chalet Interlaken', rooms: 'Alpine Quad, Standard Lodge', pricing: '₹14,500/night', availability: 'Available', imagesJson: '["https://images.unsplash.com/photo-1582719508461-905c673771fd?w=500"]' }
+              ];
+              localStorage.setItem(`zatbiz_offline_travel_hotels_${projectId}`, JSON.stringify(list));
+            }
+          }
+          return list as unknown as T;
+        }
+
+        if (method === 'POST') {
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          const newHotel = { id: Date.now(), projectId, ...bodyData };
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_hotels_${projectId}`);
+            const list = stored ? JSON.parse(stored) : [];
+            list.push(newHotel);
+            localStorage.setItem(`zatbiz_offline_travel_hotels_${projectId}`, JSON.stringify(list));
+          }
+          return newHotel as unknown as T;
+        }
+
+        if (method === 'PUT') {
+          const idMatch = path.match(/\/hotels\/(\d+)/);
+          const id = idMatch ? parseInt(idMatch[1], 10) : Date.now();
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_hotels_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const idx = list.findIndex(item => String(item.id) === String(id));
+              if (idx !== -1) {
+                list[idx] = { ...list[idx], ...bodyData };
+                localStorage.setItem(`zatbiz_offline_travel_hotels_${projectId}`, JSON.stringify(list));
+                return list[idx] as unknown as T;
+              }
+            }
+          }
+          return { id, projectId, ...bodyData } as unknown as T;
+        }
+
+        if (method === 'DELETE') {
+          const idMatch = path.match(/\/hotels\/(\d+)/);
+          const id = idMatch ? parseInt(idMatch[1], 10) : 0;
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_hotels_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const filtered = list.filter(item => String(item.id) !== String(id));
+              localStorage.setItem(`zatbiz_offline_travel_hotels_${projectId}`, JSON.stringify(filtered));
+            }
+          }
+          return { success: true } as unknown as T;
+        }
+      }
+
+      // Travel Flights Fallbacks
+      if (path.startsWith('/travel/flights')) {
+        const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
+        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        const method = options?.method || 'GET';
+
+        if (method === 'GET') {
+          let list: any[] = [];
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_flights_${projectId}`);
+            if (stored) {
+              try { list = JSON.parse(stored); } catch {}
+            } else {
+              list = [
+                { id: 1, projectId, airline: 'Singapore Airlines', schedule: 'Delhi to Bali, 08:45 AM Daily', availability: 45, pricing: 34500 },
+                { id: 2, projectId, airline: 'Air France', schedule: 'Mumbai to Paris, 11:15 PM Mon/Wed/Fri', availability: 28, pricing: 58000 }
+              ];
+              localStorage.setItem(`zatbiz_offline_travel_flights_${projectId}`, JSON.stringify(list));
+            }
+          }
+          return list as unknown as T;
+        }
+
+        if (method === 'POST') {
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          const newFlight = { id: Date.now(), projectId, ...bodyData };
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_flights_${projectId}`);
+            const list = stored ? JSON.parse(stored) : [];
+            list.push(newFlight);
+            localStorage.setItem(`zatbiz_offline_travel_flights_${projectId}`, JSON.stringify(list));
+          }
+          return newFlight as unknown as T;
+        }
+
+        if (method === 'PUT') {
+          const idMatch = path.match(/\/flights\/(\d+)/);
+          const id = idMatch ? parseInt(idMatch[1], 10) : Date.now();
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_flights_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const idx = list.findIndex(item => String(item.id) === String(id));
+              if (idx !== -1) {
+                list[idx] = { ...list[idx], ...bodyData };
+                localStorage.setItem(`zatbiz_offline_travel_flights_${projectId}`, JSON.stringify(list));
+                return list[idx] as unknown as T;
+              }
+            }
+          }
+          return { id, projectId, ...bodyData } as unknown as T;
+        }
+
+        if (method === 'DELETE') {
+          const idMatch = path.match(/\/flights\/(\d+)/);
+          const id = idMatch ? parseInt(idMatch[1], 10) : 0;
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_flights_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const filtered = list.filter(item => String(item.id) !== String(id));
+              localStorage.setItem(`zatbiz_offline_travel_flights_${projectId}`, JSON.stringify(filtered));
+            }
+          }
+          return { success: true } as unknown as T;
+        }
+      }
+
+      // Travel Visas Fallbacks
+      if (path.startsWith('/travel/visas')) {
+        const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
+        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        const method = options?.method || 'GET';
+
+        if (method === 'GET') {
+          let list: any[] = [];
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_visas_${projectId}`);
+            if (stored) {
+              try { list = JSON.parse(stored); } catch {}
+            } else {
+              list = [
+                { id: 1, projectId, country: 'United States', visaType: 'Tourist B1/B2', documentsRequired: 'Passport, DS-160 Confirmation, Invitation Letter', fees: 15500, approvalStatus: 'Pending Review' },
+                { id: 2, projectId, country: 'France (Schengen)', visaType: 'Tourist short-stay', documentsRequired: 'Passport, Travel Insurance, Hotel Booking, Flight tickets', fees: 8500, approvalStatus: 'Approved' }
+              ];
+              localStorage.setItem(`zatbiz_offline_travel_visas_${projectId}`, JSON.stringify(list));
+            }
+          }
+          return list as unknown as T;
+        }
+
+        if (method === 'POST') {
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          const newVisa = { id: Date.now(), projectId, ...bodyData };
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_visas_${projectId}`);
+            const list = stored ? JSON.parse(stored) : [];
+            list.push(newVisa);
+            localStorage.setItem(`zatbiz_offline_travel_visas_${projectId}`, JSON.stringify(list));
+          }
+          return newVisa as unknown as T;
+        }
+
+        if (method === 'PUT') {
+          const idMatch = path.match(/\/visas\/(\d+)/);
+          const id = idMatch ? parseInt(idMatch[1], 10) : Date.now();
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_visas_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const idx = list.findIndex(item => String(item.id) === String(id));
+              if (idx !== -1) {
+                list[idx] = { ...list[idx], ...bodyData };
+                localStorage.setItem(`zatbiz_offline_travel_visas_${projectId}`, JSON.stringify(list));
+                return list[idx] as unknown as T;
+              }
+            }
+          }
+          return { id, projectId, ...bodyData } as unknown as T;
+        }
+
+        if (method === 'DELETE') {
+          const idMatch = path.match(/\/visas\/(\d+)/);
+          const id = idMatch ? parseInt(idMatch[1], 10) : 0;
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_visas_${projectId}`);
+            if (stored) {
+              const list = JSON.parse(stored) as any[];
+              const filtered = list.filter(item => String(item.id) !== String(id));
+              localStorage.setItem(`zatbiz_offline_travel_visas_${projectId}`, JSON.stringify(filtered));
+            }
+          }
+          return { success: true } as unknown as T;
+        }
+      }
+
+      // Travel Theme Settings Fallbacks
+      if (path.startsWith('/travel/theme-settings')) {
+        const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
+        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        const method = options?.method || 'GET';
+
+        if (method === 'GET') {
+          if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem(`zatbiz_offline_travel_theme_settings_${projectId}`);
+            if (stored) {
+              try { return JSON.parse(stored) as unknown as T; } catch {}
+            }
+          }
+          return {
+            projectId,
+            themeColor: 'Blue',
+            customColorHex: '#06b6d4',
+            logoUrl: '',
+            faviconUrl: '',
+            bannerUrl: '',
+            heroVideoUrl: '',
+            companyImages: '[]',
+            galleryImages: '[]',
+            sectionsLayoutJson: '[]',
+            domainType: 'subdomain',
+            subdomainName: 'wanderlust',
+            customDomainName: '',
+            bookingSettingsJson: '{"approvalMode":"instant"}'
+          } as unknown as T;
+        }
+
+        if (method === 'PUT' || method === 'POST') {
+          const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(`zatbiz_offline_travel_theme_settings_${projectId}`, JSON.stringify(bodyData));
+          }
+          return bodyData as unknown as T;
+        }
+      }
+
+      // Travel Agency Info API fallbacks (Base /travel endpoint)
+      if ((path === '/travel' || path.startsWith('/travel?')) && method === 'GET') {
+        const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
+        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        if (typeof window !== 'undefined') {
+          const stored = localStorage.getItem(`zatbiz_offline_travel_${projectId}`);
+          if (stored) {
+            try { return JSON.parse(stored) as unknown as T; } catch {}
+          }
+        }
+        return {
+          projectId,
+          subcategory: 'Domestic Travel',
+          businessName: 'Wanderlust Travel',
+          description: 'Custom travel experiences and vacation packages.',
+          ownerName: 'Travel Planner',
+          mobileNo: '+91 98765 43210',
+          email: 'planner@wanderlust.com',
+          city: 'Noida',
+          state: 'UP',
+          country: 'India',
+          pincode: '201301',
+          logoUrl: '',
+          themeColor: 'slate'
+        } as unknown as T;
+      }
+
+      if ((path === '/travel' || path.startsWith('/travel?')) && (method === 'PUT' || method === 'POST')) {
+        const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
+        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(`zatbiz_offline_travel_${projectId}`, JSON.stringify(bodyData));
+        }
+        return bodyData as unknown as T;
+      }
+
       // 18. Restaurant Custom Data API fallbacks
       if (path.includes('/restaurant-data')) {
         const projectIdMatch = path.match(/[?&]projectId=(\d+)/);

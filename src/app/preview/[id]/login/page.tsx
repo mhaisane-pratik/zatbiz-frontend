@@ -33,6 +33,7 @@ import WeddingLogin from '@/components/preview/templates/wedding/Login';
 import RealEstateLogin from '@/components/preview/templates/realestate/Login';
 import MedicalShopLogin from '@/components/preview/templates/medical-shop/Login';
 import StorefrontLogin from '@/components/preview/templates/storefront/Login';
+import TravelLogin from '@/components/preview/templates/travel/Login';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -570,9 +571,19 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
             data.description?.toLowerCase().includes('gym') ||
             data.description?.toLowerCase().includes('fitness');
 
+          const isTravel = config.businessType === 'travel' ||
+            blocks.some((b) =>
+              (b.type === 'login_config' && b.content?.title?.toLowerCase().includes('travel')) ||
+              (b.type === 'business_config' && (b.content?.businessType === 'travel' || b.content?.shopNiche === 'travel'))
+            ) ||
+            data.name?.toLowerCase().includes('travel') ||
+            data.description?.toLowerCase().includes('travel');
+
           let detectedTemplate = 'storefront';
           if (config.businessType === 'hospital' || config.businessType === 'clinic') {
             detectedTemplate = 'clinic';
+          } else if (config.businessType === 'travel') {
+            detectedTemplate = 'travel';
           } else if (config.businessType === 'school') {
             detectedTemplate = 'school';
           } else if (config.businessType === 'gym') {
@@ -599,6 +610,8 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
             detectedTemplate = 'wedding';
           } else if (isGym) {
             detectedTemplate = 'gym';
+          } else if (isTravel) {
+            detectedTemplate = 'travel';
           }
 
           setTemplateId(detectedTemplate);
@@ -626,6 +639,21 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
                 }
               })
               .catch((e) => console.log('Not real estate or offline:', e));
+          }
+
+          if (detectedTemplate === 'travel') {
+            api.travel.get(projectId)
+              .then((travelData) => {
+                if (travelData && travelData.projectId) {
+                  if (travelData.customColorHex) {
+                    setTheme(travelData.customColorHex);
+                  }
+                  if (travelData.companyName) setCompanyName(travelData.companyName);
+                  if (travelData.logoUrl) setLogoUrl(travelData.logoUrl);
+                  if (travelData.bannerUrl) setIllustrationUrl(travelData.bannerUrl);
+                }
+              })
+              .catch((e) => console.log('Offline or no travel config:', e));
           }
         } catch {
           setCompanyName(data.name);
@@ -904,6 +932,8 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
       return <RealEstateLogin {...loginProps} />;
     case 'medical-shop':
       return <MedicalShopLogin {...loginProps} />;
+    case 'travel':
+      return <TravelLogin {...loginProps} themePreset={theme} />;
     default:
       return <StorefrontLogin {...loginProps} />;
   }

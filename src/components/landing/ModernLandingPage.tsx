@@ -78,6 +78,7 @@ export default function ModernLandingPage() {
 
           <div className="hidden items-center gap-8 text-sm font-medium text-slate-300 md:flex">
             <a href="#features" className="transition hover:text-white">Features</a>
+            <a href="#options" className="transition hover:text-white">Options</a>
             <a href="#simulator" className="transition hover:text-white">Studio</a>
             <a href="#templates" className="transition hover:text-white">Templates</a>
             <a href="#pricing" className="transition hover:text-white">Pricing</a>
@@ -105,9 +106,9 @@ export default function ModernLandingPage() {
               <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60" />
               <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-fuchsia-500 to-transparent opacity-60" />
               
-              <div className="w-full pt-6">
+              <div className="w-full pt-4">
                 {/* Browser Mock Navigation Bar */}
-                <div className="mx-auto max-w-7xl flex items-center justify-between border-b border-white/10 pb-4 px-6 md:px-10 lg:px-16">
+                <div className="mx-auto max-w-7xl flex items-center justify-between border-b border-white/10 pb-3 px-6 md:px-10 lg:px-16">
                   <div className="flex items-center gap-2">
                     <span className="mockup-dot-red h-3.5 w-3.5 rounded-full" />
                     <span className="mockup-dot-yellow h-3.5 w-3.5 rounded-full" />
@@ -120,7 +121,7 @@ export default function ModernLandingPage() {
                 </div>
 
                 {/* Video container takes full screen width and is completely flush with the sides */}
-                <div className="w-full mt-4">
+                <div className="w-full mt-0">
                   <div className="relative overflow-hidden bg-black aspect-video md:aspect-[21/9] w-full border-t border-white/5">
                     <video
                       src="/ZATBIZ_platform_business_ecosystem_202606301040.mp4"
@@ -134,6 +135,50 @@ export default function ModernLandingPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section id="options" className="mx-auto max-w-7xl px-6 py-20 md:px-10 lg:px-16">
+          <div className="mb-10 max-w-2xl">
+            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-cyan-200">Business options</p>
+            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-white md:text-5xl">Choose the restaurant experience you want to sell.</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-300 md:text-base">
+              The template should not feel locked to one layout. Give users clear paths for dining, delivery, catering, cafe, and event-led businesses.
+            </p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {[
+              {
+                title: 'Fine dining',
+                desc: 'Luxury menus, reservations, and premium storytelling for upscale restaurants.',
+                accent: 'from-amber-300 to-orange-500',
+              },
+              {
+                title: 'Cafe and bakery',
+                desc: 'Warm product cards, daily specials, and fast mobile ordering flows.',
+                accent: 'from-cyan-400 to-blue-500',
+              },
+              {
+                title: 'Catering and events',
+                desc: 'Inquiry forms, packages, venue galleries, and quote-based bookings.',
+                accent: 'from-fuchsia-400 to-rose-500',
+              },
+              {
+                title: 'Delivery first',
+                desc: 'Menus, delivery coverage, and instant call-to-action buttons for orders.',
+                accent: 'from-emerald-400 to-teal-500',
+              },
+            ].map((option) => (
+              <div key={option.title} className="rounded-[28px] border border-white/10 bg-white/5 p-6 backdrop-blur-md transition hover:-translate-y-1 hover:border-white/20">
+                <div className={`h-1.5 w-20 rounded-full bg-gradient-to-r ${option.accent}`} />
+                <h3 className="mt-5 text-xl font-black text-white">{option.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-300">{option.desc}</p>
+                <a href="/login" className="mt-5 inline-flex text-sm font-black uppercase tracking-[0.22em] text-cyan-200 transition hover:text-white">
+                  Explore this option
+                </a>
+              </div>
+            ))}
           </div>
         </section>
 

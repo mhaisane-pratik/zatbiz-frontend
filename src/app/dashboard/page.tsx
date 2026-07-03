@@ -15,6 +15,7 @@ import SuperAdminPanel from '@/components/dashboard/SuperAdminPanel';
 import { THEMES_30, ThemeDef } from './themesData';
 import { generateTemplateBlocks } from '@/services/templates';
 import RestaurantSelectorModal from '@/components/dashboard/RestaurantSelectorModal';
+import TravelSelectorModal from '@/components/dashboard/TravelSelectorModal';
 import HospitalSelectorModal from '@/components/dashboard/HospitalSelectorModal';
 import GymSelectorModal from '@/components/dashboard/GymSelectorModal';
 import RealEstateSelectorModal from '@/components/dashboard/RealEstateSelectorModal';
@@ -229,6 +230,9 @@ export default function DashboardPage() {
   const [selectedRestaurantConfig, setSelectedRestaurantConfig] = useState<any>(null);
   const [isScratchSelectorOpen, setIsScratchSelectorOpen] = useState(false);
   const [selectedScratchConfig, setSelectedScratchConfig] = useState<any>(null);
+  const [isTravelSelectorOpen, setIsTravelSelectorOpen] = useState(false);
+  const [selectedTravelCategory, setSelectedTravelCategory] = useState<string | null>(null);
+  const [selectedTravelConfig, setSelectedTravelConfig] = useState<any>(null);
 
   // Theme selection modal states
   const [isThemeSelectorOpen, setIsThemeSelectorOpen] = useState(false);
@@ -429,6 +433,8 @@ export default function DashboardPage() {
   const handleSelectTemplate = (templateId: string) => {
     if (templateId === 'restaurant') {
       setIsRestaurantSelectorOpen(true);
+    } else if (templateId === 'travel') {
+      setIsTravelSelectorOpen(true);
     } else if (templateId === 'clinic') {
       setIsHospitalSelectorOpen(true);
     } else if (templateId === 'gym') {
@@ -3045,6 +3051,21 @@ export default function DashboardPage() {
         />
       )}
 
+      {/* Travel Category Selector Modal */}
+      {isTravelSelectorOpen && (
+        <TravelSelectorModal
+          isOpen={isTravelSelectorOpen}
+          onClose={() => setIsTravelSelectorOpen(false)}
+          onSelectCategory={(category, configData) => {
+            setIsTravelSelectorOpen(false);
+            setSelectedTemplateId('travel');
+            setSelectedTravelCategory(category);
+            setSelectedTravelConfig(configData);
+            setIsWizardOpen(true);
+          }}
+        />
+      )}
+
       {/* Scratch Category Selector Modal */}
       {isScratchSelectorOpen && (
         <ScratchSelectorModal
@@ -3277,6 +3298,8 @@ export default function DashboardPage() {
           initialRestaurantConfig={selectedRestaurantConfig}
           initialGymConfig={selectedGymConfig}
           initialScratchConfig={selectedScratchConfig}
+          initialTravelConfig={selectedTravelConfig}
+          initialTravelCategory={selectedTravelCategory}
           projects={projects}
           onClose={() => {
             setIsWizardOpen(false);
@@ -3296,6 +3319,8 @@ export default function DashboardPage() {
             setSelectedMedicalShopConfig(null);
             setSelectedRestaurantConfig(null);
             setSelectedScratchConfig(null);
+            setSelectedTravelConfig(null);
+            setSelectedTravelCategory(null);
           }}
           onComplete={(newProj) => {
             setProjects((prev) => [newProj, ...prev]);

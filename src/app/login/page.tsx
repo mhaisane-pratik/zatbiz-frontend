@@ -209,6 +209,32 @@ export default function LoginPage() {
             <h2 className="font-extrabold text-2xl tracking-tight text-white mt-1">
               {isRegisterMode ? 'Create your store' : 'Log in to your store'}
             </h2>
+            <p className="mt-3 max-w-md text-sm leading-6 text-slate-400 text-center lg:text-left">
+              Use the demo flow to enter the dashboard quickly, or switch to registration if you want to create a new business workspace.
+            </p>
+
+            <div className="mt-5 grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsRegisterMode(false);
+                  setEmail('demo@zatbiz.com');
+                  setPassword('password123');
+                }}
+                className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-left transition hover:bg-white/[0.09] cursor-pointer"
+              >
+                <span className="block text-[10px] font-black uppercase tracking-[0.22em] text-cyan-200">Quick start</span>
+                <span className="mt-1 block text-sm font-bold text-white">Load demo login</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsRegisterMode(true)}
+                className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-left transition hover:bg-white/[0.09] cursor-pointer"
+              >
+                <span className="block text-[10px] font-black uppercase tracking-[0.22em] text-fuchsia-200">New workspace</span>
+                <span className="mt-1 block text-sm font-bold text-white">Create a business account</span>
+              </button>
+            </div>
           </div>
 
           {/* Form */}

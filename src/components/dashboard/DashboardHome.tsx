@@ -116,6 +116,20 @@ export default function DashboardHome({
     { name: 'Courses', count: 42, icon: '🎓', color: 'bg-blue-50 border border-blue-100/50 text-blue-650 dark:bg-blue-950/40 dark:border-blue-900/40 dark:text-blue-300' }
   ];
 
+  const quickStats = [
+    { label: 'Wallet balance', value: `$${walletBalance.toFixed(2)}`, hint: 'Live business funds' },
+    { label: 'Wishlist items', value: String(wishlistCount), hint: 'Saved products' },
+    { label: 'Referral code', value: referralCode, hint: 'Shareable growth loop' },
+    { label: 'Support', value: 'Online', hint: 'Help widget available' },
+  ];
+
+  const quickActions = [
+    { label: 'Browse products', tab: 'browse_products', icon: 'fa-bag-shopping' },
+    { label: 'Open categories', tab: 'categories', icon: 'fa-layer-group' },
+    { label: 'View wishlist', tab: 'wishlist', icon: 'fa-heart' },
+    { label: 'Open messages', tab: 'messages', icon: 'fa-comment-dots' },
+  ];
+
   const handleDeposit = (e: React.FormEvent) => {
     e.preventDefault();
     const parsedAmount = parseFloat(depositAmount);
@@ -216,6 +230,34 @@ export default function DashboardHome({
 
         {/* Value Badges Row */}
      
+
+        <div className="grid gap-4 lg:grid-cols-4">
+          {quickStats.map((item) => (
+            <div key={item.label} className="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 p-4 shadow-sm">
+              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{item.label}</p>
+              <p className="mt-2 text-xl font-black text-slate-900 dark:text-white">{item.value}</p>
+              <p className="mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">{item.hint}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {quickActions.map((action) => (
+            <button
+              key={action.label}
+              onClick={() => onNavigateTab(action.tab)}
+              className="flex items-center gap-3 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 px-4 py-4 text-left transition hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
+            >
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-300">
+                <i className={`fa-solid ${action.icon}`} />
+              </span>
+              <span>
+                <span className="block text-sm font-black text-slate-900 dark:text-white">{action.label}</span>
+                <span className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400">Open this section now</span>
+              </span>
+            </button>
+          ))}
+        </div>
 
         {/* Popular Categories */}
         <div className="space-y-4">
