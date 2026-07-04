@@ -141,43 +141,126 @@ export function useBuilderProject({ projectId, showToast, onLoadSuccess }: UseBu
     }, 1500);
   };
 
-  // Sync API PUT request
-  const saveLayout = async (
-    updatedPages: Record<string, Block[]>,
-    activePgs: string[],
-    currPg: string,
-    config: any,
-    name: string,
-    saveStatus: string,
-    isAutoSave = false
-  ) => {
-    if (isNaN(projectId)) return;
-    const payload = {
-      id: projectId,
-      name: name,
-      description: project?.description || '',
-      blocksJson: JSON.stringify({
-        pages: updatedPages,
-        activePages: activePgs,
-        currentPage: currPg,
-        businessConfig: config
-      }),
-      status: saveStatus,
-    };
+function extractTravelInfo(updatedPages: Record<string, Block[]>, config: any) {
+  let logoUrl = '';
+  let businessName = '';
+  let description = '';
+  let bannerUrl = '';
+  let phoneNo = '';
+  let email = '';
+  let address = '';
+  const subcategory = config.shopNiche || 'Domestic Travel';
 
-    try {
-      await api.projects.update(projectId, payload);
-      setStatus(saveStatus);
-      if (!isAutoSave) {
-        showToast(saveStatus === 'Published' ? 'Website Published Live!' : 'Changes Saved Successfully!');
-      }
-    } catch (err) {
-      console.error('Save failed:', err);
-      if (!isAutoSave) {
-        showToast('Failed to save layout content.', true);
-      }
+  const blocks = Object.values(updatedPages).flat();
+
+  // Find logo from login_config or other blocks
+  const loginConfigBlock = blocks.find(b => b.type === 'login_config');
+  if (loginConfigBlock?.content) {
+    if (loginConfigBlock.content.logoUrl) logoUrl = loginConfigBlock.content.logoUrl;
+  }
+
+  // Find hero details
+  const heroBlock = blocks.find(b => b.type === 'hero');
+  if (heroBlock?.content) {
+    if (heroBlock.content.title) {
+      businessName = heroBlock.content.title.replace(/^Embark on Grand Journeys with /i, "");
     }
+    if (heroBlock.content.subtitle) description = heroBlock.content.subtitle;
+    if (heroBlock.content.imageUrl) bannerUrl = heroBlock.content.imageUrl;
+  }
+
+  // Find footer details (phone, email)
+  const footerBlock = blocks.find(b => b.type === 'footer');
+  if (footerBlock?.content?.text) {
+    const text = footerBlock.content.text;
+    const phoneMatch = text.match(/Phone:\s*([^\s|]+)/i);
+    if (phoneMatch) phoneNo = phoneMatch[1].trim();
+
+    const emailMatch = text.match(/Email:\s*([^\s|]+)/i);
+    if (emailMatch) email = emailMatch[1].trim();
+  }
+
+  // Find contact block if exists
+  const contactBlock = blocks.find(b => b.type === 'contact' || b.type === 'contact_info');
+  if (contactBlock?.content) {
+    if (contactBlock.content.address) address = contactBlock.content.address;
+    if (contactBlock.content.phone) phoneNo = contactBlock.content.phone;
+    if (contactBlock.content.email) email = contactBlock.content.email;
+  }
+
+  return {
+    logoUrl,
+    businessName,
+    description,
+    bannerUrl,
+    phoneNo,
+    email,
+    address,
+    subcategory
   };
+}
+
+// Sync API PUT request
+const saveLayout = async (
+  updatedPages: Record<string, Block[]>,
+  activePgs: string[],
+  currPg: string,
+  config: any,
+  name: string,
+  saveStatus: string,
+  isAutoSave = false
+) => {
+  if (isNaN(projectId)) return;
+  const payload = {
+    id: projectId,
+    name: name,
+    description: project?.description || '',
+    blocksJson: JSON.stringify({
+      pages: updatedPages,
+      activePages: activePgs,
+      currentPage: currPg,
+      businessConfig: config
+    }),
+    status: saveStatus,
+  };
+
+  try {
+    await api.projects.update(projectId, payload);
+    setStatus(saveStatus);
+    if (!isAutoSave) {
+      showToast(saveStatus === 'Published' ? 'Website Published Live!' : 'Changes Saved Successfully!');
+    }
+
+    // Sync travel agency database tables if it is a travel project
+    if (config.businessType === 'travel' || project?.description === 'travel') {
+      const travelData = extractTravelInfo(updatedPages, config);
+      const currentTravelInfo = await api.travel.get(projectId).catch(() => null);
+      const travelPayload = {
+        ...(currentTravelInfo || {}),
+        ...travelData,
+        projectId
+      };
+      await api.travel.update(projectId, travelPayload).catch(err => console.error('Failed to sync travel_agency_info:', err));
+
+      // Sync theme settings as well
+      const currentThemeSettings = await api.travel.themeSettings.get(projectId).catch(() => null);
+      const themePayload = {
+        ...(currentThemeSettings || {}),
+        projectId,
+        logoUrl: travelData.logoUrl || currentThemeSettings?.logoUrl || '',
+        bannerUrl: travelData.bannerUrl || currentThemeSettings?.bannerUrl || '',
+        themeColor: config.themePreset || currentThemeSettings?.themeColor || 'Blue',
+        customColorHex: config.customColorHex || currentThemeSettings?.customColorHex || ''
+      };
+      await api.travel.themeSettings.update(projectId, themePayload).catch(err => console.error('Failed to sync travel_theme_settings:', err));
+    }
+  } catch (err) {
+    console.error('Save failed:', err);
+    if (!isAutoSave) {
+      showToast('Failed to save layout content.', true);
+    }
+  }
+};
 
   return {
     project,

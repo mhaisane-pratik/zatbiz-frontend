@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -17,52 +17,11 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Collapsible configuration panel states
-  const [isConfigOpen, setIsConfigOpen] = useState(false);
-  const [apiUrlInput, setApiUrlInput] = useState('');
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('zatbizApiEndpoint');
-      if (saved) {
-        setApiUrlInput(saved);
-      } else if (process.env.NEXT_PUBLIC_API_URL) {
-        setApiUrlInput(process.env.NEXT_PUBLIC_API_URL);
-      } else if (window.location.hostname !== 'localhost') {
-        setApiUrlInput('https://zatbiz-backend.onrender.com');
-      } else {
-        setApiUrlInput('http://localhost:8080');
-      }
-    }
-  }, []);
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const paramToken = params.get('token');
-      const paramEmail = params.get('email');
-      if (paramToken && paramEmail) {
-        localStorage.setItem('authToken', paramToken);
-        localStorage.setItem('userEmail', paramEmail);
-        localStorage.setItem('userName', paramEmail.split('@')[0] || 'Demo User');
-        router.push('/dashboard');
-      }
-    }
-  }, [router]);
-
   const getApiBaseUrl = () => {
-    if (apiUrlInput) {
-      return apiUrlInput.replace(/\/$/, '');
-    }
-    if (process.env.NEXT_PUBLIC_API_URL) {
-      return process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '');
-    }
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('zatbizApiEndpoint');
       if (saved) {
         return saved.replace(/\/$/, '');
-      }
-      if (window.location.hostname !== 'localhost') {
-        return 'https://zatbiz-backend.onrender.com';
       }
     }
     return 'http://localhost:8080';
@@ -73,21 +32,12 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
 
-    // Persist configured API URL to localStorage
-    const trimmedUrl = apiUrlInput.trim();
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('zatbizApiEndpoint', trimmedUrl);
-    }
-
     const baseUrl = getApiBaseUrl();
     const endpoint = isRegisterMode ? '/api/auth/register' : '/api/auth/login';
     const normalizedEmail = email.trim().toLowerCase();
     const payload = isRegisterMode 
       ? { username: username.trim(), email: normalizedEmail, password }
       : { email: normalizedEmail, password };
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     try {
       const response = await fetch(`${baseUrl}${endpoint}`, {
@@ -96,10 +46,8 @@ export default function LoginPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
-        signal: controller.signal,
       });
 
-      clearTimeout(timeoutId);
       const data = await response.json();
 
       if (!response.ok) {
@@ -116,7 +64,6 @@ export default function LoginPage() {
         throw new Error('No authentication token received.');
       }
     } catch (err: any) {
-      clearTimeout(timeoutId);
       console.error('Auth error:', err);
       
       // Extract error message safely
@@ -125,7 +72,6 @@ export default function LoginPage() {
       // Determine if this is a network/fetch failure
       const isNetworkError = 
         !err ||
-        err.name === 'AbortError' ||
         err instanceof TypeError ||
         (typeof errMsg === 'string' && (
           errMsg.toLowerCase().includes('failed to fetch') ||
@@ -138,30 +84,9 @@ export default function LoginPage() {
         ));
 
       if (isNetworkError) {
-        console.warn('Backend server is offline or unreachable. Falling back to local offline sandbox session.');
-        
-        localStorage.setItem('authToken', 'mock-token-xyz');
-        localStorage.setItem('userEmail', normalizedEmail);
-        localStorage.setItem('userName', isRegisterMode ? username.trim() : (normalizedEmail.split('@')[0] || 'Demo User'));
-        localStorage.setItem('zatbiz_offline_mode', 'true');
-        
-        // Seed default projects if none exist
-        const existingProjects = localStorage.getItem('zatbiz_offline_projects');
-        if (!existingProjects || JSON.parse(existingProjects).length === 0) {
-          const defaultProjects = [
-            {
-              id: 1001,
-              name: 'My Gourmet Bistro',
-              description: 'A premium fine dining restaurant website template built with custom food menu items and reservation calendars.',
-              blocksJson: '[]',
-              status: 'Active',
-              updatedAt: new Date().toISOString()
-            }
-          ];
-          localStorage.setItem('zatbiz_offline_projects', JSON.stringify(defaultProjects));
-        }
-
-        router.push('/dashboard');
+        setError(
+          'Cannot reach the Spring Boot API. Start the backend on http://localhost:8080 before logging in so projects are saved to the database.'
+        );
       } else {
         setError(errMsg || 'Something went wrong.');
       }
@@ -180,61 +105,38 @@ export default function LoginPage() {
       <div className="absolute bottom-[-15%] right-[-10%] w-[70%] h-[70%] rounded-full bg-fuchsia-600/25 blur-[160px] pointer-events-none" />
       
       {/* Main Container Card (The Glass Panel) */}
-      <div className="w-full max-w-[1100px] rounded-[36px] overflow-hidden border border-white/10 bg-white/[0.02] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.5)] flex flex-col lg:flex-row items-stretch relative z-10">
+      <div className="w-full max-w-[1100px] rounded-[36px] overflow-hidden border border-white/10 bg-white/[0.02] backdrop-blur-2xl shadow-[0_25px_60px_rgba(0,0,0,0.5)] flex flex-col lg:flex-row p-6 md:p-8 gap-8 items-stretch relative z-10">
         
         {/* Left Side: Cropped Illustration from A_more_advanced_and_modern.jpeg */}
-        <div className="flex-1 relative hidden lg:block rounded-l-[36px] rounded-r-none overflow-hidden min-h-[550px]">
+        <div className="flex-1 relative hidden lg:block rounded-2xl overflow-hidden min-h-[500px]">
           <img
             src="/A_more_advanced_and_modern.jpeg"
             alt="Zatbiz E-commerce Illustration"
             className="absolute inset-0 w-[200%] h-full object-cover object-left"
             style={{ maxWidth: 'none' }}
           />
-          {/* Brand Logo Header overlay - positioned and sized to completely mask the baked-in image logo */}
-          <div className="absolute top-7 left-[28px] z-20 select-none">
-            <div className="inline-flex items-center justify-center w-[236px] h-[48px] border border-white/20 bg-[#1c4fd8] rounded-xl text-white font-black text-sm shadow-md uppercase tracking-wider">
-              <span>ZATBIZ</span>
+          {/* Brand Logo Header overlay */}
+          <div className="absolute top-6 left-6 z-20 select-none">
+            <div className="inline-flex items-center gap-2 px-4 py-2 border border-white/10 bg-white/[0.04] backdrop-blur-md rounded-xl text-white font-extrabold text-lg shadow-sm">
+              <svg className="w-4 h-4 text-white rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+              <span>Zatbiz</span>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Seamless login form, integrated into the main container */}
-        <div className="w-full lg:max-w-[500px] p-8 md:p-14 flex flex-col justify-between min-h-[540px] relative z-20 bg-transparent">
+        {/* Right Side: The overlaid secondary Glass Card */}
+        <div className="w-full lg:max-w-[480px] rounded-[28px] border border-white/15 bg-white/[0.05] backdrop-blur-xl shadow-2xl p-6 md:p-10 flex flex-col justify-between min-h-[540px] relative z-20">
           
           {/* Welcome Text */}
           <div className="flex flex-col items-center lg:items-start select-none">
-            <p className="font-bold text-[10px] tracking-[0.2em] text-slate-450 uppercase">
+            <p className="font-bold text-[10px] tracking-[0.2em] text-slate-455 uppercase">
               {isRegisterMode ? 'Get Started' : 'Welcome Back!'}
             </p>
             <h2 className="font-extrabold text-2xl tracking-tight text-white mt-1">
               {isRegisterMode ? 'Create your store' : 'Log in to your store'}
             </h2>
-            <p className="mt-3 max-w-md text-sm leading-6 text-slate-400 text-center lg:text-left">
-              Use the demo flow to enter the dashboard quickly, or switch to registration if you want to create a new business workspace.
-            </p>
-
-            <div className="mt-5 grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsRegisterMode(false);
-                  setEmail('demo@zatbiz.com');
-                  setPassword('password123');
-                }}
-                className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-left transition hover:bg-white/[0.09] cursor-pointer"
-              >
-                <span className="block text-[10px] font-black uppercase tracking-[0.22em] text-cyan-200">Quick start</span>
-                <span className="mt-1 block text-sm font-bold text-white">Load demo login</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsRegisterMode(true)}
-                className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-left transition hover:bg-white/[0.09] cursor-pointer"
-              >
-                <span className="block text-[10px] font-black uppercase tracking-[0.22em] text-fuchsia-200">New workspace</span>
-                <span className="mt-1 block text-sm font-bold text-white">Create a business account</span>
-              </button>
-            </div>
           </div>
 
           {/* Form */}
@@ -341,37 +243,6 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* Collapsible API Endpoint Configuration for Deployed Environments */}
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={() => setIsConfigOpen(!isConfigOpen)}
-                className="text-[10px] text-slate-400 hover:text-white font-bold uppercase tracking-wider flex items-center gap-1.5 transition cursor-pointer bg-transparent border-0 outline-none"
-              >
-                <i className={`fa-solid ${isConfigOpen ? 'fa-chevron-down' : 'fa-cog'} text-[10px]`} />
-                <span>API Server Settings {apiUrlInput !== 'http://localhost:8080' && apiUrlInput !== '' && ' (Custom)'}</span>
-              </button>
-
-              {isConfigOpen && (
-                <div className="mt-2.5 p-3.5 bg-white/[0.03] border border-white/5 rounded-2xl space-y-2 text-left animate-fade-in">
-                  <label className="block font-bold text-[9px] text-slate-400 uppercase tracking-widest">
-                    Spring Boot API Endpoint
-                  </label>
-                  <input
-                    type="url"
-                    required
-                    value={apiUrlInput}
-                    onChange={(e) => setApiUrlInput(e.target.value)}
-                    className="w-full rounded-xl px-3 py-2 bg-white/[0.05] border border-white/10 text-xs text-white placeholder:text-slate-500 outline-none transition focus:ring-1 focus:ring-primary/40 focus:bg-white/[0.08]"
-                    placeholder="e.g. https://zatbiz-backend.onrender.com"
-                  />
-                  <p className="text-[9px] text-slate-500 leading-relaxed font-semibold">
-                    Set this to your deployed Spring Boot URL (e.g. Render) to load database website layouts.
-                  </p>
-                </div>
-              )}
-            </div>
-
             {/* Submit Button */}
             <button
               type="submit"
@@ -422,7 +293,7 @@ export default function LoginPage() {
           {/* Card Footer Link */}
           <div className="mt-6 text-center select-none">
             <p className="font-bold text-xs text-slate-400">
-              {isRegisterMode ? 'Already have a store?' : 'New to ZATBIZ?'}{' '}
+              {isRegisterMode ? 'Already have a store?' : 'New to Zatbiz?'}{' '}
               <button
                 type="button"
                 onClick={() => {
@@ -441,6 +312,3 @@ export default function LoginPage() {
     </main>
   );
 }
-
-
-

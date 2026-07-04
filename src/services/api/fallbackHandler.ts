@@ -1513,6 +1513,47 @@ export async function request<T>(path: string, options?: RequestInit): Promise<T
         }
       }
 
+      // Scratch Info API fallbacks
+      if (path.startsWith('/scratch') && method === 'GET') {
+        const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
+        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        if (typeof window !== 'undefined') {
+          const stored = localStorage.getItem(`zatbiz_offline_scratch_${projectId}`);
+          if (stored) {
+            try { return JSON.parse(stored) as unknown as T; } catch {}
+          }
+        }
+        return {
+          projectId,
+          name: 'Custom Scratch Project',
+          email: 'admin@scratch.com',
+          password: 'password123',
+          businessType: 'scratch',
+          ownerName: 'Custom Owner',
+          ownerEmail: 'owner@scratch.com',
+          mobileNo: '+91 98765 43210',
+          whatsappNo: '+91 98765 43210',
+          address: 'Noida, UP, India',
+          photoUrl: '',
+          logoUrl: '',
+          bannerUrl: '',
+          selectedTheme: 'modern',
+          selectedHomepageLayout: 'default',
+          selectedLoginLayout: 'default',
+          selectedDashboardLayout: 'default'
+        } as unknown as T;
+      }
+
+      if (path.startsWith('/scratch') && (method === 'PUT' || method === 'POST')) {
+        const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
+        const projectId = projectIdMatch ? parseInt(projectIdMatch[1], 10) : 1;
+        const bodyData = options?.body ? JSON.parse(options.body as string) : {};
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(`zatbiz_offline_scratch_${projectId}`, JSON.stringify(bodyData));
+        }
+        return bodyData as unknown as T;
+      }
+
       // Restaurant Info API fallbacks
       if (path.startsWith('/restaurant') && !path.includes('/restaurant-data') && method === 'GET') {
         const projectIdMatch = path.match(/[?&]projectId=(\d+)/);
@@ -1911,8 +1952,8 @@ export async function request<T>(path: string, options?: RequestInit): Promise<T
               try { list = JSON.parse(stored); } catch {}
             } else {
               list = [
-                { id: 1, projectId, country: 'United States', visaType: 'Tourist B1/B2', documentsRequired: 'Passport, DS-160 Confirmation, Invitation Letter', fees: 15500, approvalStatus: 'Pending Review' },
-                { id: 2, projectId, country: 'France (Schengen)', visaType: 'Tourist short-stay', documentsRequired: 'Passport, Travel Insurance, Hotel Booking, Flight tickets', fees: 8500, approvalStatus: 'Approved' }
+                { id: 1, projectId, country: 'United States', visaType: 'Tourist B1/B2', documentsRequired: 'Passport, DS-160 Confirmation, Invitation Letter', fees: 15500, approvalStatus: 'Pending Review', customer: 'Aman Verma', email: 'aman@gmail.com' },
+                { id: 2, projectId, country: 'France (Schengen)', visaType: 'Tourist short-stay', documentsRequired: 'Passport, Travel Insurance, Hotel Booking, Flight tickets', fees: 8500, approvalStatus: 'Approved', customer: 'Riya Sen', email: 'riya@gmail.com' }
               ];
               localStorage.setItem(`zatbiz_offline_travel_visas_${projectId}`, JSON.stringify(list));
             }
@@ -2029,7 +2070,10 @@ export async function request<T>(path: string, options?: RequestInit): Promise<T
           country: 'India',
           pincode: '201301',
           logoUrl: '',
-          themeColor: 'slate'
+          themeColor: 'slate',
+          bannerUrl: '',
+          heroVideoUrl: '',
+          faviconUrl: '⚡'
         } as unknown as T;
       }
 

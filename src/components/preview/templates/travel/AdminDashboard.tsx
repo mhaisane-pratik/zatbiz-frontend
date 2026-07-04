@@ -1068,23 +1068,115 @@ export default function TravelAdminDashboard({
           {activeTab === 'settings' && (
             <form onSubmit={(e) => {
               e.preventDefault();
-              alert('Travel Settings Profile Saved Successfully!');
+              api.travel.update(projectId, travelConfig)
+                .then((updated) => {
+                  setTravelConfig(updated);
+                  alert('Travel Settings Profile Saved Successfully!');
+                })
+                .catch((err) => {
+                  console.error('Failed to save settings:', err);
+                  alert('Failed to save settings to database.');
+                });
             }} className="bg-white p-6 border border-slate-200/60 rounded-3xl shadow-sm space-y-4 text-left max-w-2xl">
-              <h3 className="font-black text-xs border-b pb-2 mb-3 text-slate-900">General Settings configuration</h3>
+              <h3 className="font-black text-xs border-b pb-2 mb-3 text-slate-900">General Settings Configuration</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase">Primary Currency</label>
-                  <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none cursor-pointer">
-                    <option value="INR">INR (₹)</option>
-                    <option value="USD">USD ($)</option>
+                  <label className="text-[9px] font-bold text-slate-500 uppercase">Agency / Business Name</label>
+                  <input
+                    type="text"
+                    value={travelConfig?.businessName || ''}
+                    onChange={(e) => setTravelConfig({ ...travelConfig, businessName: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none text-xs"
+                    required
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase">Owner Name</label>
+                  <input
+                    type="text"
+                    value={travelConfig?.ownerName || ''}
+                    onChange={(e) => setTravelConfig({ ...travelConfig, ownerName: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none text-xs"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase">Contact Email</label>
+                  <input
+                    type="email"
+                    value={travelConfig?.email || ''}
+                    onChange={(e) => setTravelConfig({ ...travelConfig, email: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none text-xs"
+                    required
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase">Phone Number</label>
+                  <input
+                    type="text"
+                    value={travelConfig?.phoneNo || ''}
+                    onChange={(e) => setTravelConfig({ ...travelConfig, phoneNo: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none text-xs"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase">WhatsApp Number</label>
+                  <input
+                    type="text"
+                    value={travelConfig?.whatsappNo || ''}
+                    onChange={(e) => setTravelConfig({ ...travelConfig, whatsappNo: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none text-xs"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase">GSTIN (GST Number)</label>
+                  <input
+                    type="text"
+                    value={travelConfig?.gstNumber || ''}
+                    onChange={(e) => setTravelConfig({ ...travelConfig, gstNumber: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none text-xs"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase">Travel Niche / Subcategory</label>
+                  <select
+                    value={travelConfig?.subcategory || 'Domestic Travel'}
+                    onChange={(e) => setTravelConfig({ ...travelConfig, subcategory: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none cursor-pointer text-xs"
+                  >
+                    <option value="Domestic Travel">Domestic Travel</option>
+                    <option value="International Holidays">International Holidays</option>
+                    <option value="Adventure Tours">Adventure Tours</option>
+                    <option value="Luxury Travel">Luxury Travel</option>
+                    <option value="Corporate Travel">Corporate Travel</option>
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[9px] font-bold text-slate-500 uppercase">Consular time Zone</label>
-                  <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none cursor-pointer">
-                    <option value="IST">India Standard Time (UTC+5:30)</option>
-                    <option value="GMT">Greenwich Mean Time (UTC+0)</option>
-                  </select>
+                  <label className="text-[9px] font-bold text-slate-500 uppercase">Logo Image URL</label>
+                  <input
+                    type="text"
+                    value={travelConfig?.logoUrl || ''}
+                    onChange={(e) => setTravelConfig({ ...travelConfig, logoUrl: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none text-xs"
+                    placeholder="https://example.com/logo.png"
+                  />
+                </div>
+                <div className="space-y-1 sm:col-span-2">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase">Business Address</label>
+                  <textarea
+                    rows={2}
+                    value={travelConfig?.address || ''}
+                    onChange={(e) => setTravelConfig({ ...travelConfig, address: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none text-xs resize-none"
+                  />
+                </div>
+                <div className="space-y-1 sm:col-span-2">
+                  <label className="text-[9px] font-bold text-slate-500 uppercase">Agency Description / Tagline</label>
+                  <textarea
+                    rows={2}
+                    value={travelConfig?.description || ''}
+                    onChange={(e) => setTravelConfig({ ...travelConfig, description: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none text-xs resize-none"
+                  />
                 </div>
               </div>
               <button type="submit" className="px-6 py-2 text-white font-black rounded-xl transition border-none cursor-pointer text-[10px]" style={{ backgroundColor: customPrimaryColor }}>

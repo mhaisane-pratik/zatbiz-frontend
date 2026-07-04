@@ -17,6 +17,7 @@ import ProductCatalog from '@/components/builder/ProductCatalog';
 import ProductModal from '@/components/builder/ProductModal';
 import ConfigSidebar from '@/components/builder/ConfigSidebar';
 import SiteSettingsPanel from '@/components/builder/SiteSettingsPanel';
+import RestaurantLanding from '@/components/preview/templates/restaurant/Landing';
 
 import { useBuilderProject } from '@/hooks/useBuilderProject';
 import { useBuilderCanvas } from '@/hooks/useBuilderCanvas';
@@ -216,6 +217,7 @@ export default function BuilderPage({ params }: PageProps) {
   const [dbProducts, setDbProducts] = useState<Product[]>([]);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [restaurantInfo, setRestaurantInfo] = useState<any>(null);
 
   // 1. Ref to break the circular dependency loop between useBuilderProject and useBuilderCanvas
   const onLoadSuccessRef = useRef<(
@@ -312,6 +314,15 @@ export default function BuilderPage({ params }: PageProps) {
 
   useEffect(() => {
     fetchDbProducts();
+    if (!isNaN(projectId)) {
+      api.restaurant.get(projectId)
+        .then((restData) => {
+          if (restData && restData.projectId) {
+            setRestaurantInfo(restData);
+          }
+        })
+        .catch((e) => console.log('Not restaurant or offline:', e));
+    }
   }, [projectId]);
 
   useEffect(() => {
@@ -407,6 +418,42 @@ export default function BuilderPage({ params }: PageProps) {
   // Render Page Canvas Inside Simulator
   const renderPageCanvasContent = () => {
     if (activePage === 'landing') {
+      if (projectConfig?.businessType === 'restaurant') {
+        return (
+          <RestaurantLanding
+            projectId={projectId}
+            project={{
+              ...project!,
+              blocksJson: JSON.stringify({
+                pages: pages,
+                activePages: activePages,
+                currentPage: currentPage,
+                businessConfig: projectConfig
+              })
+            }}
+            dbProducts={dbProducts}
+            cartCount={0}
+            cart={[]}
+            onUpdateCartQuantity={() => {}}
+            onRemoveFromCart={() => {}}
+            onCheckout={() => {}}
+            onAddToCart={() => {}}
+            onViewCart={() => {}}
+            onViewMyOrders={() => {}}
+            onProductClick={() => {}}
+            wishlist={[]}
+            onToggleWishlist={() => {}}
+            setIsBookingModalOpen={() => {}}
+            customerSession={null}
+            onLogout={() => {}}
+            shopNiche={projectConfig?.shopNiche || null}
+            restaurantInfo={restaurantInfo}
+            activeBlockId={activeBlockId}
+            setActiveBlockId={setActiveBlockId}
+          />
+        );
+      }
+
       const landingBlocks = blocks.filter(
         (b) => b.type !== 'login_config' && b.type !== 'dashboard_config'
       );
@@ -427,6 +474,9 @@ export default function BuilderPage({ params }: PageProps) {
                 activeBlockId === block.id ? '!border-indigo-500 ring-1 ring-indigo-500/10' : ''
               }`}
             >
+              {/* Transparent Click Intercepting Overlay */}
+              <div className="absolute inset-0 z-10" />
+
               <BlockPreview 
                 block={block} 
                 dbProducts={dbProducts} 

@@ -35,6 +35,8 @@ interface RestaurantStorefrontProps {
   onLogout: () => void;
   shopNiche: string | null;
   restaurantInfo?: any;
+  activeBlockId?: string | null;
+  setActiveBlockId?: (id: string | null) => void;
 }
 
 function extractTemplateCustomizations(project: Project) {
@@ -109,7 +111,9 @@ export default function RestaurantStorefront({
   customerSession,
   onLogout,
   shopNiche,
-  restaurantInfo
+  restaurantInfo,
+  activeBlockId,
+  setActiveBlockId
 }: RestaurantStorefrontProps) {
   const customizations = extractTemplateCustomizations(project);
 
@@ -125,7 +129,7 @@ export default function RestaurantStorefront({
   }, [projectId]);
 
   // Normalize the category name
-  const catLower = (shopNiche || restaurantInfo?.subcategory || '').toLowerCase();
+  const catLower = (shopNiche || restaurantInfo?.subcategory || project?.name || '').toLowerCase();
   const isCustomNiche = catLower.includes('fine dining') || catLower.includes('fast food') || catLower.includes('pizza') || catLower.includes('cafe') || catLower.includes('coffee') || catLower.includes('burger');
 
   let rawHeroTitle = customizations.heroTitle || '';
@@ -159,6 +163,25 @@ export default function RestaurantStorefront({
   const resolvedHeroSubtitle = rawHeroSubtitle || restaurantInfo?.description || '';
   const resolvedThemePreset = customizations.themePreset || restaurantInfo?.themeColor || '';
 
+  // Extract header and hero block ids for builder selection
+  let blocks: any[] = [];
+  if (project?.blocksJson) {
+    try {
+      const parsed = JSON.parse(project.blocksJson);
+      if (parsed && typeof parsed === 'object') {
+        if (Array.isArray(parsed)) {
+          blocks = parsed;
+        } else if (parsed.pages?.home) {
+          blocks = parsed.pages.home;
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  const headerBlock = blocks.find((b: any) => b.type === 'header');
+  const heroBlock = blocks.find((b: any) => b.type === 'hero');
+
   const props = {
     projectId,
     project,
@@ -183,7 +206,11 @@ export default function RestaurantStorefront({
     themePreset: resolvedThemePreset,
     restaurantInfo,
     coupons,
-    offers
+    offers,
+    activeBlockId,
+    setActiveBlockId,
+    headerBlockId: headerBlock?.id || null,
+    heroBlockId: heroBlock?.id || null
   };
 
   const renderCategoryStorefront = () => {

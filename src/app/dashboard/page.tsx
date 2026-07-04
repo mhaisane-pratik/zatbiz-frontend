@@ -333,9 +333,34 @@ export default function DashboardPage() {
   const fetchProjects = async () => {
     try {
       const data = await api.projects.list();
-      setProjects(data);
+      let offlineList: any[] = [];
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('zatbiz_offline_projects');
+        if (stored) {
+          try {
+            offlineList = JSON.parse(stored);
+          } catch {}
+        }
+      }
+      const merged = [...data];
+      offlineList.forEach((op) => {
+        if (!merged.some((p) => String(p.id) === String(op.id) || p.name.trim().toLowerCase() === op.name.trim().toLowerCase())) {
+          merged.push(op);
+        }
+      });
+      setProjects(merged);
     } catch (err) {
       console.error('API Error:', err);
+      let offlineList: any[] = [];
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('zatbiz_offline_projects');
+        if (stored) {
+          try {
+            offlineList = JSON.parse(stored);
+          } catch {}
+        }
+      }
+      setProjects(offlineList);
       showToast(
         `Could not load projects from the database. Ensure Spring Boot is running on ${apiEndpoint} and you are logged in.`,
         true

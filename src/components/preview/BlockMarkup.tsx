@@ -165,10 +165,15 @@ export default function BlockMarkup({
                     (c.title && (c.title.toLowerCase().includes('fitness') || c.title.toLowerCase().includes('strength') || c.title.toLowerCase().includes('gym'))) ||
                     (c.subtitle && (c.subtitle.toLowerCase().includes('gym') || c.subtitle.toLowerCase().includes('fitness') || c.subtitle.toLowerCase().includes('workout')));
 
-      const hasImage = !!c.imageUrl;
+      const isDarkGymTheme = block.theme === 'gym-volt-apex' ||
+                             block.theme === 'gym-stealth-carbon' ||
+                             block.theme === 'gym-iron-forge' ||
+                             block.theme === 'gym-cyberpunk' ||
+                             block.theme === 'gym-royal-martial';
+
       const gymBgImage = gymInfo?.headerBgImage || c.imageUrl;
 
-      if (isGym && gymBgImage) {
+      if (isGym && gymBgImage && isDarkGymTheme) {
         return (
           <div 
             className={`relative py-32 md:py-40 px-6 text-center text-white bg-cover bg-center transition-colors duration-300 ${themeClass}`}
@@ -205,22 +210,56 @@ export default function BlockMarkup({
         );
       }
 
+      const finalHeroImage = c.imageUrl || (isGym ? 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&auto=format&fit=crop&q=80' : '');
+      const hasImage = !!finalHeroImage;
+
+      if (hasImage) {
+        return (
+          <div 
+            className={`relative py-32 md:py-48 px-6 text-center text-white bg-cover bg-center transition-colors duration-300 ${themeClass}`}
+            style={{ 
+              backgroundImage: `linear-gradient(to bottom, rgba(10, 5, 3, 0.45), rgba(10, 5, 3, 0.85)), url(${finalHeroImage})`,
+              backgroundAttachment: 'fixed'
+            }}
+          >
+            <div className="max-w-4xl mx-auto space-y-6 relative z-10">
+              <h1 className="text-4xl md:text-6xl font-black tracking-tight uppercase leading-tight text-white font-serif">
+                {c.title}
+              </h1>
+              <p className="text-amber-100/90 text-sm md:text-base max-w-xl mx-auto leading-relaxed font-medium font-sans">
+                {c.subtitle}
+              </p>
+              <div className="flex justify-center gap-4 pt-4">
+                {c.btn1Text && (
+                  <a
+                    href={c.btn1Url || '#'}
+                    className="px-8 py-3.5 text-xs font-bold rounded-lg shadow-lg transition hover:scale-[1.02] bg-orange-600 hover:bg-orange-700 text-white font-sans uppercase tracking-wider"
+                  >
+                    {c.btn1Text}
+                  </a>
+                )}
+                {c.btn2Text && (
+                  <a
+                    href={c.btn2Url || '#'}
+                    className="px-8 py-3.5 text-xs font-bold rounded-lg bg-transparent border border-white/40 text-white transition hover:bg-white/10 hover:border-white font-sans uppercase tracking-wider"
+                  >
+                    {c.btn2Text}
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className={`py-20 md:py-28 px-6 transition-colors duration-300 ${themeClass}`}>
-          <div
-            className={`max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 ${
-              hasImage ? 'text-left' : 'text-center flex-col justify-center'
-            }`}
-          >
-            <div className={`flex-1 ${hasImage ? '' : 'flex flex-col items-center justify-center'}`}>
+          <div className="max-w-6xl mx-auto flex flex-col justify-center text-center items-center">
+            <div className="flex flex-col items-center justify-center">
               <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight">
                 {c.title}
               </h1>
-              <p
-                className={`muted-text text-sm md:text-base mb-8 leading-relaxed font-medium ${
-                  hasImage ? 'max-w-xl' : 'max-w-2xl'
-                }`}
-              >
+              <p className="muted-text text-sm md:text-base mb-8 leading-relaxed font-medium max-w-2xl">
                 {c.subtitle}
               </p>
               <div className="flex gap-4">
@@ -242,11 +281,6 @@ export default function BlockMarkup({
                 )}
               </div>
             </div>
-            {hasImage && (
-              <div className="flex-1 max-w-md w-full h-64 md:h-80 bg-slate-50 rounded-2xl overflow-hidden shadow-lg border border-slate-200/50">
-                <img src={c.imageUrl} className="w-full h-full object-cover" alt="Hero Banner" />
-              </div>
-            )}
           </div>
         </div>
       );

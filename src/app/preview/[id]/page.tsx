@@ -63,6 +63,7 @@ function PreviewPageContent({ params }: PageProps) {
   const [scratchInfo, setScratchInfo] = useState<any>(null);
   const [isTravel, setIsTravel] = useState(false);
   const [travelInfo, setTravelInfo] = useState<any>(null);
+  const isRestaurantPreview = projectConfig?.businessType === 'restaurant';
 
   // Query parameter page switching
   const searchParams = useSearchParams();
@@ -155,56 +156,7 @@ function PreviewPageContent({ params }: PageProps) {
     if (isNaN(projectId)) return;
     setLoading(true);
 
-    // Fetch real estate
-    api.realEstate.get(projectId)
-      .then((reData) => {
-        if (reData && reData.projectId) {
-          setIsRealEstate(true);
-          setRealEstateInfo(reData);
-        }
-      })
-      .catch((e) => console.log('Not real estate or offline:', e));
-
-    // Fetch restaurant details
-    api.restaurant.get(projectId)
-      .then((restData) => {
-        if (restData && restData.projectId) {
-          setRestaurantInfo(restData);
-        }
-      })
-      .catch((e) => console.log('Not restaurant or offline:', e));
-
-    // Fetch scratch details
-    api.scratch.get(projectId)
-      .then((scratchData) => {
-        if (scratchData && scratchData.projectId) {
-          setScratchInfo(scratchData);
-          setPreviewMode('template');
-        }
-      })
-      .catch((e) => console.log('Not scratch or offline:', e));
-
-    // Fetch gym details
-    api.gym.get(projectId)
-      .then((gymData) => {
-        if (gymData && gymData.projectId) {
-          setGymInfo(gymData);
-        }
-      })
-      .catch((e) => console.log('Not gym or offline:', e));
-
-    // Fetch travel details
-    api.travel.get(projectId)
-      .then((travelData) => {
-        if (travelData && travelData.projectId) {
-          setIsTravel(true);
-          setTravelInfo(travelData);
-          setPreviewMode('template');
-        }
-      })
-      .catch((e) => console.log('Not travel or offline:', e));
-
-    // Fetch project config
+    // Fetch project config first to know the business type
     api.projects
       .get(projectId)
       .then((data) => {
@@ -269,8 +221,70 @@ function PreviewPageContent({ params }: PageProps) {
           setPages(newPages);
           setActivePages(activePagesList);
           setProjectConfig(config);
-          if (config.businessType === 'restaurant' || config.businessType === 'hospital' || config.businessType === 'clinic' || config.businessType === 'school' || config.businessType === 'gym' || config.businessType === 'medical-shop' || config.businessType === 'scratch' || config.businessType === 'travel') {
+
+          const isTravelType = config.businessType === 'travel';
+          const isRestaurantType = config.businessType === 'restaurant';
+          const isScratchType = config.businessType === 'scratch';
+          const isGymType = config.businessType === 'gym' || config.themePreset?.startsWith('gym-') || (typeof config.shopNiche === 'string' && config.shopNiche.includes('gym'));
+          const isRealEstateType = config.shopNiche === 'realestate' || config.businessType === 'realestate' || (typeof config.shopNiche === 'string' && config.shopNiche.includes('realestate'));
+          const isHospitalType = config.businessType === 'hospital' || config.businessType === 'clinic';
+          const isSchoolType = config.businessType === 'school';
+          const isMedicalShopType = config.businessType === 'medical-shop';
+
+          if (isTravelType || isRestaurantType || isScratchType || isGymType || isHospitalType || isSchoolType || isMedicalShopType) {
             setPreviewMode('template');
+          }
+
+          if (isRealEstateType) {
+            api.realEstate.get(projectId)
+              .then((reData) => {
+                if (reData && reData.projectId) {
+                  setIsRealEstate(true);
+                  setRealEstateInfo(reData);
+                }
+              })
+              .catch((e) => console.log('Not real estate or offline:', e));
+          }
+
+          if (isRestaurantType) {
+            api.restaurant.get(projectId)
+              .then((restData) => {
+                if (restData && restData.projectId) {
+                  setRestaurantInfo(restData);
+                }
+              })
+              .catch((e) => console.log('Not restaurant or offline:', e));
+          }
+
+          if (isScratchType) {
+            api.scratch.get(projectId)
+              .then((scratchData) => {
+                if (scratchData && scratchData.projectId) {
+                  setScratchInfo(scratchData);
+                }
+              })
+              .catch((e) => console.log('Not scratch or offline:', e));
+          }
+
+          if (isGymType) {
+            api.gym.get(projectId)
+              .then((gymData) => {
+                if (gymData && gymData.projectId) {
+                  setGymInfo(gymData);
+                }
+              })
+              .catch((e) => console.log('Not gym or offline:', e));
+          }
+
+          if (isTravelType) {
+            api.travel.get(projectId)
+              .then((travelData) => {
+                if (travelData && travelData.projectId) {
+                  setIsTravel(true);
+                  setTravelInfo(travelData);
+                }
+              })
+              .catch((e) => console.log('Not travel or offline:', e));
           }
         } catch (e) {
           console.error('Error parsing blocksJson for preview:', e);
@@ -578,6 +592,18 @@ function PreviewPageContent({ params }: PageProps) {
     setSelectedProduct(product);
     setPdpSize('M');
     setPdpColor('Black');
+  };
+
+  const landingProps = {
+    projectId,
+    project: project!,
+    currentPageBlocks,
+    dbProducts,
+    cartCountQuantity,
+    customerSession,
+    openProductDetail,
+    handleAddToCart,
+    gymInfo,
   };
 
   // Apply discount coupon code
@@ -923,7 +949,7 @@ function PreviewPageContent({ params }: PageProps) {
   const grandTotal = subtotal - discountAmount + tax;
 
   return (
-    <div className="min-h-screen bg-slate-50/50 blueprint-grid relative flex flex-col justify-between overflow-hidden">
+    <div className="min-h-screen bg-slate-50/50 blueprint-grid relative flex flex-col justify-between overflow-x-hidden">
       {/* Dynamic Background Blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 no-print">
         <div className="absolute top-[-100px] left-[-100px] w-[500px] h-[500px] rounded-full filter blur-[100px] opacity-70 blob-violet animate-blob-complex" />
@@ -984,20 +1010,40 @@ function PreviewPageContent({ params }: PageProps) {
         {/* VIEW 1: LANDING CATALOG */}
         {activeView === 'landing' && (
           (() => {
-            const landingProps = {
-              projectId,
-              project: project!,
-              currentPageBlocks,
-              dbProducts,
-              cartCountQuantity,
-              customerSession,
-              openProductDetail,
-              handleAddToCart,
-              gymInfo,
-            };
+            if (isRestaurantPreview) {
+              return (
+                <RestaurantLanding
+                  projectId={projectId}
+                  project={project!}
+                  dbProducts={dbProducts}
+                  cartCount={cartCountQuantity}
+                  cart={cart}
+                  onUpdateCartQuantity={handleUpdateQuantity}
+                  onRemoveFromCart={handleRemoveFromCart}
+                  onCheckout={() => setActiveView('checkout')}
+                  onAddToCart={(p) => handleAddToCart(p, 'M', 'Black', 1)}
+                  onViewCart={() => setActiveView('cart')}
+                  onViewMyOrders={() => {
+                    if (!customerSession) {
+                      addToast('Please login to track your orders', true);
+                    } else {
+                      setActiveView('orders');
+                    }
+                  }}
+                  onProductClick={openProductDetail}
+                  wishlist={wishlist}
+                  onToggleWishlist={handleToggleWishlist}
+                  setIsBookingModalOpen={setIsBookingModalOpen}
+                  customerSession={customerSession}
+                  onLogout={handleLogout}
+                  shopNiche={shopNiche || null}
+                  restaurantInfo={restaurantInfo}
+                />
+              );
+            }
 
             if (previewMode === 'template') {
-              if (isTravel || travelInfo || projectConfig?.businessType === 'travel') {
+              if (projectConfig?.businessType === 'travel') {
                 return (
                   <TravelStorefront
                     projectId={projectId}
@@ -1008,7 +1054,7 @@ function PreviewPageContent({ params }: PageProps) {
                   />
                 );
               }
-              if (scratchInfo || projectConfig?.businessType === 'scratch') {
+              if (projectConfig?.businessType === 'scratch') {
                 return (
                   <ScratchStorefront
                     projectId={projectId}
@@ -1048,7 +1094,7 @@ function PreviewPageContent({ params }: PageProps) {
                   />
                 );
               }
-              if (isWedding) {
+              if (isWedding || projectConfig?.businessType === 'wedding' || projectConfig?.businessType === 'event') {
                 return (
                   <WeddingLanding
                     projectId={projectId}
@@ -1080,10 +1126,10 @@ function PreviewPageContent({ params }: PageProps) {
               if (projectConfig?.businessType === 'school') {
                 return <SchoolLanding {...landingProps} />;
               }
-              if (projectConfig?.businessType === 'gym') {
+              if (projectConfig?.businessType === 'gym' || projectConfig?.themePreset?.startsWith('gym-') || (typeof projectConfig?.shopNiche === 'string' && projectConfig.shopNiche.includes('gym'))) {
                 return <GymLanding {...landingProps} />;
               }
-              if (isRealEstate) {
+              if (projectConfig?.shopNiche === 'realestate' || projectConfig?.businessType === 'realestate') {
                 return <RealEstateLanding {...landingProps} />;
               }
               if (projectConfig?.businessType === 'medical-shop') {
@@ -2232,32 +2278,36 @@ function PreviewPageContent({ params }: PageProps) {
           <span className="text-slate-500 font-semibold">Previewing:</span>
           <span className="text-slate-900 font-bold truncate max-w-[120px]">{project?.name}</span>
         </div>
-        
-        <span className="hidden sm:inline text-slate-200">|</span>
-        
-        {/* Toggle Mode Control */}
-        <div className="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200/50">
-          <button
-            onClick={() => setPreviewMode('blocks')}
-            className={`px-3 py-1.5 rounded-lg font-extrabold transition cursor-pointer border-none text-[10px] uppercase flex items-center gap-1 ${
-              previewMode === 'blocks'
-                ? 'bg-white text-indigo-650 shadow-sm font-sans'
-                : 'text-slate-500 hover:text-slate-800 bg-transparent font-sans'
-            }`}
-          >
-            🛠️ Designer Layout
-          </button>
-          <button
-            onClick={() => setPreviewMode('template')}
-            className={`px-3 py-1.5 rounded-lg font-extrabold transition cursor-pointer border-none text-[10px] uppercase flex items-center gap-1 ${
-              previewMode === 'template'
-                ? 'bg-white text-indigo-650 shadow-sm font-sans'
-                : 'text-slate-500 hover:text-slate-800 bg-transparent font-sans'
-            }`}
-          >
-            🛒 Interactive Storefront
-          </button>
-        </div>
+        {!isRestaurantPreview ? (
+          <>
+            <span className="hidden sm:inline text-slate-200">|</span>
+            {/* Toggle Mode Control */}
+            <div className="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200/50">
+              <button
+                onClick={() => setPreviewMode('blocks')}
+                className={`px-3 py-1.5 rounded-lg font-extrabold transition cursor-pointer border-none text-[10px] uppercase flex items-center gap-1 ${
+                  previewMode === 'blocks'
+                    ? 'bg-white text-indigo-650 shadow-sm font-sans'
+                    : 'text-slate-500 hover:text-slate-800 bg-transparent font-sans'
+                }`}
+              >
+                🛠️ Designer Layout
+              </button>
+              <button
+                onClick={() => setPreviewMode('template')}
+                className={`px-3 py-1.5 rounded-lg font-extrabold transition cursor-pointer border-none text-[10px] uppercase flex items-center gap-1 ${
+                  previewMode === 'template'
+                    ? 'bg-white text-indigo-650 shadow-sm font-sans'
+                    : 'text-slate-500 hover:text-slate-800 bg-transparent font-sans'
+                }`}
+              >
+                🛒 Interactive Storefront
+              </button>
+            </div>
+          </>
+        ) : (
+          <span className="text-slate-500 font-semibold uppercase tracking-wider text-[10px]">Restaurant storefront preview</span>
+        )}
 
         <span className="hidden sm:inline text-slate-200">|</span>
 

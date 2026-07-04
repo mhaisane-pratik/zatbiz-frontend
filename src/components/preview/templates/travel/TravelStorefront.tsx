@@ -358,10 +358,10 @@ export default function TravelStorefront({
   };
 
   return (
-    <div className="bg-slate-55 text-slate-800 min-h-screen flex flex-col font-sans">
+    <div className="bg-slate-50/70 text-slate-800 min-h-screen flex flex-col font-sans">
       
       {/* 1. Header Navigation Bar */}
-      <header className="sticky top-0 z-40 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-900 shadow-sm">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3.5 flex justify-between items-center">
           
           {/* Logo */}
@@ -371,7 +371,7 @@ export default function TravelStorefront({
             ) : (
               <span className="text-2xl">✈️</span>
             )}
-            <span className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
+            <span className="text-lg font-black tracking-tight text-slate-900">
               {travelConfig?.businessName || project.name}
             </span>
           </button>
@@ -387,7 +387,7 @@ export default function TravelStorefront({
                   setPaymentSuccessVoucher(null);
                 }}
                 className={`transition cursor-pointer bg-transparent border-none text-[10px] ${
-                  activeTab === tab ? 'text-slate-900 dark:text-white font-extrabold' : 'hover:text-slate-900 dark:hover:text-white'
+                  activeTab === tab ? 'text-slate-900 font-extrabold' : 'hover:text-slate-900'
                 }`}
                 style={activeTab === tab ? { borderBottom: `2px solid ${activeColor}`, paddingBottom: '2px' } : {}}
               >
@@ -400,8 +400,14 @@ export default function TravelStorefront({
           <div className="flex items-center gap-3">
             {customerSession ? (
               <div className="flex items-center gap-2.5">
-                <span className="text-[10px] font-black uppercase text-slate-500 bg-slate-100 px-2 py-1 rounded">👤 {customerSession.name}</span>
-                <button onClick={onLogout} className="px-3 py-1.5 border border-slate-200 hover:bg-slate-50 rounded-xl text-xs font-bold transition">Logout</button>
+                <a
+                  href={`/preview/${projectId}/dashboard`}
+                  className="px-3.5 py-1.5 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase no-underline transition hover:scale-105 active:scale-95"
+                >
+                  My Dashboard
+                </a>
+                <span className="text-[10px] font-black uppercase text-slate-650 bg-slate-100 px-2 py-1.5 rounded">Member: {customerSession.name}</span>
+                <button onClick={onLogout} className="px-3 py-1.5 border border-slate-250 hover:bg-slate-50 rounded-xl text-xs font-bold transition">Logout</button>
               </div>
             ) : (
               <a
@@ -467,58 +473,60 @@ export default function TravelStorefront({
 
         {/* TAB 1: HOME PAGE */}
         {activeTab === 'home' && (
-          <div className="space-y-12">
+          <div className="space-y-16">
             
-            {/* Banner Video / Hero banner block */}
-            <div className="relative h-[380px] rounded-[32px] overflow-hidden text-white flex items-center justify-start p-8 md:p-16 text-left shadow-2xl">
+            {/* Banner Video / Hero banner block with Premium Overlay */}
+            <div className="relative h-[440px] rounded-[40px] overflow-hidden flex items-center justify-start p-6 md:p-12 text-left shadow-xl">
               {travelConfig?.heroVideoUrl ? (
                 <video src={travelConfig.heroVideoUrl} autoPlay loop muted className="absolute inset-0 w-full h-full object-cover" />
               ) : travelConfig?.bannerUrl ? (
                 <img src={travelConfig.bannerUrl} alt="Banner" className="absolute inset-0 w-full h-full object-cover" />
               ) : (
-                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1000&auto=format&fit=crop&q=80" alt="Hero" className="absolute inset-0 w-full h-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&auto=format&fit=crop&q=80" alt="Hero" className="absolute inset-0 w-full h-full object-cover" />
               )}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent" />
+              {/* Soft overlay */}
+              <div className="absolute inset-0 bg-slate-900/15" />
               
-              <div className="relative space-y-4 max-w-xl">
-                <span className="text-[10px] text-white/90 bg-white/20 backdrop-blur font-black uppercase tracking-widest px-3 py-1 rounded-full border border-white/20">
-                  ⛺ {travelConfig?.subcategory || 'Adventure Tours'}
+              {/* Floating Aesthetic Glass Card on the Left */}
+              <div className="relative bg-white/85 backdrop-blur-xl border border-white/60 p-6 md:p-10 rounded-[32px] max-w-xl text-left shadow-[0_20px_50px_rgba(0,0,0,0.06)] space-y-4">
+                <span className="text-[9px] text-cyan-700 font-extrabold bg-cyan-50 uppercase tracking-wider px-3.5 py-1.5 rounded-full border border-cyan-100 inline-block">
+                  Category: {travelConfig?.subcategory || 'Adventure Tours'}
                 </span>
-                <h1 className="text-3xl md:text-5xl font-black leading-tight drop-shadow-md">
-                  Let's explore the beauty of world together
+                <h1 className="text-3xl md:text-4xl font-extrabold leading-tight tracking-tight text-slate-900">
+                  Let's explore the <br />beauty of world together
                 </h1>
-                <p className="text-xs text-slate-200 max-w-md leading-relaxed font-medium">
+                <p className="text-xs text-slate-650 leading-relaxed font-semibold">
                   {travelConfig?.description || 'Discover customized tropical getaways, guided alpine summits, regional cab bookings, and flight tickets reservations.'}
                 </p>
-                <div className="flex gap-3">
-                  <button onClick={() => setActiveTab('packages')} className="px-6 py-3 text-white text-xs font-black rounded-xl shadow-lg border-none cursor-pointer hover:scale-105 transition" style={{ backgroundColor: activeColor }}>
-                    Explore Tour Packages ➔
+                <div className="flex gap-3 pt-2">
+                  <button onClick={() => setActiveTab('packages')} className="px-5 py-3 text-white text-xs font-black rounded-xl shadow-lg border-none cursor-pointer hover:scale-[1.03] active:scale-95 transition" style={{ backgroundColor: activeColor }}>
+                    Explore Packages
                   </button>
-                  <button onClick={() => setActiveTab('visa')} className="px-5 py-3 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur rounded-xl text-xs font-bold transition">
-                    Visa Consultation
+                  <button onClick={() => setActiveTab('visa')} className="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold transition">
+                    Visa Consulting
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Quick Search bar block */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-xl max-w-4xl mx-auto -mt-16 relative z-10 grid grid-cols-1 sm:grid-cols-4 gap-4 text-left">
-              <div className="space-y-1">
-                <label className="text-[9px] font-black text-slate-500 uppercase">Search Destination</label>
+            {/* Quick Search bar block - Overlapping with card drop shadow */}
+            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_30px_60px_rgba(0,0,0,0.05)] max-w-4xl mx-auto -mt-20 relative z-10 grid grid-cols-1 sm:grid-cols-4 gap-5 text-left">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Search Destination</label>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder="Paris, Bali, Alps..."
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs outline-none dark:bg-slate-950 dark:border-slate-800"
+                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-2.5 text-xs outline-none text-slate-800 focus:border-slate-200 focus:bg-white transition"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="text-[9px] font-black text-slate-500 uppercase">Travel Niche</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Travel Niche</label>
                 <select
                   value={filterNiche}
                   onChange={e => setFilterNiche(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs outline-none dark:bg-slate-950 dark:border-slate-800 cursor-pointer"
+                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-2.5 text-xs outline-none text-slate-800 focus:border-slate-200 focus:bg-white transition cursor-pointer"
                 >
                   <option value="All">All Categories</option>
                   <option value="Domestic Travel">Domestic</option>
@@ -527,8 +535,8 @@ export default function TravelStorefront({
                   <option value="Honeymoon">Honeymoon</option>
                 </select>
               </div>
-              <div className="space-y-1">
-                <label className="text-[9px] font-black text-slate-500 uppercase">Budget Price limit</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Budget Price limit</label>
                 <input
                   type="range"
                   min="20000"
@@ -536,40 +544,64 @@ export default function TravelStorefront({
                   step="5000"
                   value={filterPriceRange}
                   onChange={e => setFilterPriceRange(Number(e.target.value))}
-                  className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-cyan-500 mt-2"
+                  className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-cyan-500 mt-2"
                 />
-                <span className="text-[9px] font-bold block text-slate-500">Up to: ₹{filterPriceRange.toLocaleString()}</span>
+                <span className="text-[10px] font-bold block text-slate-500 mt-1">Up to: INR {filterPriceRange.toLocaleString()}</span>
               </div>
               <div className="flex items-end">
                 <button
                   onClick={() => {
                     setActiveTab('packages');
                   }}
-                  className="w-full py-2.5 text-white text-xs font-black rounded-xl shadow-lg border-none cursor-pointer"
+                  className="w-full py-3 text-white text-xs font-black rounded-xl shadow-lg border-none cursor-pointer hover:scale-[1.02] active:scale-95 transition"
                   style={{ backgroundColor: activeColor }}
                 >
-                  Filter Tours 🔍
+                  Filter Tours
                 </button>
               </div>
             </div>
 
-            {/* Popular Destinations catalog */}
-            <div className="space-y-4">
+            {/* Why Choose Us Features block */}
+            <div className="space-y-8 pt-4">
               <div className="text-center space-y-1">
-                <span className="text-[9px] font-extrabold uppercase tracking-widest" style={{ color: activeColor }}>Scenic Gateways</span>
-                <h2 className="text-xl font-black text-slate-900 dark:text-white">Explore Popular Destinations</h2>
+                <span className="text-[10px] font-extrabold uppercase tracking-widest block" style={{ color: activeColor }}>Our Advantages</span>
+                <h2 className="text-2xl font-black text-slate-900">Why Travel With Us?</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[
+                  { title: 'Best Price Guarantee', desc: 'We match any competitor price for the same flights, lodging, or holiday packages. Travel more for less.', label: 'Best Deals' },
+                  { title: 'Safe & Certified Guides', desc: 'Fully licensed travel curators with verified local support guides, ensuring a secure and rich holiday experience.', label: '100% Secure' },
+                  { title: 'Flexible Bookings', desc: 'Instant voucher generation with 24-hour hassle-free cancellations and easy claim procedures.', label: 'Hassle-Free' }
+                ].map((f, idx) => (
+                  <div key={idx} className="p-6 bg-white border border-slate-100 rounded-3xl text-left space-y-3 shadow-[0_8px_30px_rgb(0,0,0,0.015)]">
+                    <span className="text-xs font-black uppercase text-slate-400 tracking-wider block">{f.label}</span>
+                    <h4 className="text-xs font-black text-slate-900">{f.title}</h4>
+                    <p className="text-[10px] text-slate-500 leading-relaxed font-bold">{f.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Popular Destinations catalog */}
+            <div className="space-y-6">
+              <div className="text-center space-y-1">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest block" style={{ color: activeColor }}>Scenic Gateways</span>
+                <h2 className="text-2xl font-black text-slate-900">Explore Popular Destinations</h2>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {destinations.map(dest => (
-                  <div key={dest.id} className="group relative h-48 rounded-2xl overflow-hidden shadow-md cursor-pointer" onClick={() => {
-                    setSearchQuery(dest.city);
-                    setActiveTab('packages');
-                  }}>
+                {destinations.slice(0, 4).map(dest => (
+                  <div
+                    key={dest.id}
+                    className="h-44 rounded-3xl overflow-hidden relative group cursor-pointer shadow-sm hover:shadow-md transition duration-300"
+                    onClick={() => {
+                      setSearchQuery(dest.city);
+                      setActiveTab('packages');
+                    }}>
                     <img src={dest.image} alt={dest.city} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                    <div className="absolute bottom-3 left-3 text-left">
-                      <span className="text-[8px] bg-white/20 backdrop-blur text-white font-extrabold uppercase px-1.5 py-0.5 rounded">{dest.country}</span>
-                      <h4 className="text-xs font-black text-white mt-1">{dest.city}</h4>
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/20 to-transparent" />
+                    <div className="absolute bottom-4 left-4 text-left">
+                      <span className="text-[8px] bg-white/20 backdrop-blur text-white font-extrabold uppercase px-2 py-0.5 rounded">{dest.country}</span>
+                      <h4 className="text-xs font-black text-white mt-1.5">{dest.city}</h4>
                     </div>
                   </div>
                 ))}
@@ -577,37 +609,37 @@ export default function TravelStorefront({
             </div>
 
             {/* Packages Grid */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div className="text-center space-y-1">
-                <span className="text-[9px] font-extrabold uppercase tracking-widest" style={{ color: activeColor }}>Wanderlust Tours</span>
-                <h2 className="text-xl font-black text-slate-900 dark:text-white">Active Tour Packages</h2>
+                <span className="text-[10px] font-extrabold uppercase tracking-widest block" style={{ color: activeColor }}>Wanderlust Tours</span>
+                <h2 className="text-2xl font-black text-slate-900">Active Tour Packages</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
                 {packages.slice(0, 3).map(pkg => {
                   const discountedPrice = pkg.price * (1 - (pkg.discount / 100));
                   return (
-                    <div key={pkg.id} className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition duration-300 flex flex-col">
-                      <div className="h-44 w-full relative">
+                    <div key={pkg.id} className="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-[0_15px_35px_rgba(0,0,0,0.04)] transition duration-300 flex flex-col justify-between">
+                      <div className="h-48 w-full relative">
                         <img src={pkg.image || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=80'} className="w-full h-full object-cover" />
-                        <span className="absolute top-3 left-3 bg-red-650 text-white text-[8px] font-black uppercase px-2 py-0.5 rounded-full">Save {pkg.discount}%</span>
+                        <span className="absolute top-4 left-4 bg-red-500 text-white text-[8px] font-black uppercase px-2.5 py-1 rounded-full shadow">Save {pkg.discount}%</span>
                       </div>
-                      <div className="p-4 space-y-3 flex-grow flex flex-col justify-between">
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-[9px] font-bold text-slate-400">
-                            <span>📍 {pkg.destination}</span>
-                            <span>⏳ {pkg.duration}</span>
+                      <div className="p-5 space-y-4 flex-grow flex flex-col justify-between">
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">
+                            <span>Dest: {pkg.destination}</span>
+                            <span>Dur: {pkg.duration}</span>
                           </div>
-                          <h4 className="text-[12px] font-black text-slate-900 dark:text-white leading-snug line-clamp-1">{pkg.name}</h4>
-                          <p className="text-[9px] text-slate-500 leading-normal line-clamp-2">{pkg.description}</p>
+                          <h4 className="text-[12px] font-black text-slate-900 leading-snug line-clamp-1">{pkg.name}</h4>
+                          <p className="text-[10px] text-slate-500 leading-relaxed font-bold line-clamp-2">{pkg.description}</p>
                         </div>
-                        <div className="border-t pt-3 flex justify-between items-center">
+                        <div className="border-t border-slate-100 pt-4 flex justify-between items-center">
                           <div>
-                            <span className="text-[8px] text-slate-400 line-through block">₹{pkg.price.toLocaleString()}</span>
-                            <span className="text-xs font-black text-slate-900 dark:text-white">₹{discountedPrice.toLocaleString()}</span>
+                            <span className="text-[9px] text-slate-400 line-through block">INR {pkg.price.toLocaleString()}</span>
+                            <span className="text-sm font-black text-slate-900">INR {discountedPrice.toLocaleString()}</span>
                           </div>
                           <button
                             onClick={() => setSelectedPackage(pkg)}
-                            className="px-3.5 py-1.5 text-white text-[9px] font-black uppercase rounded-lg border-none cursor-pointer"
+                            className="px-4 py-2 text-white text-[10px] font-black uppercase rounded-xl border-none cursor-pointer hover:scale-105 active:scale-95 transition"
                             style={{ backgroundColor: activeColor }}
                           >
                             Details
@@ -621,23 +653,41 @@ export default function TravelStorefront({
             </div>
 
             {/* Testimonials */}
-            <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-6 space-y-4">
+            <div className="bg-white border border-slate-100 rounded-3xl p-8 space-y-6 shadow-[0_8px_30px_rgb(0,0,0,0.015)]">
               <div className="text-center space-y-1">
-                <span className="text-[9px] font-extrabold uppercase tracking-widest" style={{ color: activeColor }}>Client Reviews</span>
-                <h3 className="text-sm font-black">Trusted by Over 10,000+ Travelers</h3>
+                <span className="text-[10px] font-extrabold uppercase tracking-widest block" style={{ color: activeColor }}>Client Reviews</span>
+                <h3 className="text-2xl font-black text-slate-900">Trusted by Over 10,000+ Travelers</h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
                 {[
-                  { name: 'Rohan Sharma', text: 'Outstanding visa consultation service! Guided us through every step and booking Seminyak resort was instant.', rating: '⭐⭐⭐⭐⭐' },
-                  { name: 'Anjali Desai', text: 'Our honeymoon was planned perfectly. The romantic dinner inclusions and boat cruises were absolute highlights.', rating: '⭐⭐⭐⭐⭐' },
-                  { name: 'Kabir Mehta', text: 'Very professional tour guides in Switzerland. We will definitely use ZATBIZ travel services again.', rating: '⭐⭐⭐⭐⭐' }
+                  { name: 'Rohan Sharma', text: 'Outstanding visa consultation service! Guided us through every step and booking Seminyak resort was instant.', rating: '★★★★★' },
+                  { name: 'Anjali Desai', text: 'Our honeymoon was planned perfectly. The romantic dinner inclusions and boat cruises were absolute highlights.', rating: '★★★★★' },
+                  { name: 'Kabir Mehta', text: 'Very professional tour guides in Switzerland. We will definitely use ZATBIZ travel services again.', rating: '★★★★★' }
                 ].map((t, idx) => (
-                  <div key={idx} className="bg-white dark:bg-slate-950 p-4 rounded-2xl border space-y-2">
-                    <span className="text-xs">{t.rating}</span>
-                    <p className="text-[9px] text-slate-500 leading-normal">{t.text}</p>
-                    <h5 className="text-[10px] font-black text-slate-900 dark:text-white">— {t.name}</h5>
+                  <div key={idx} className="bg-slate-50/50 p-5 rounded-2xl border border-slate-100/60 space-y-3">
+                    <span className="text-xs block text-amber-500">{t.rating}</span>
+                    <p className="text-[10px] text-slate-500 leading-relaxed font-bold">{t.text}</p>
+                    <h5 className="text-[10px] font-black text-slate-900">- {t.name}</h5>
                   </div>
                 ))}
+              </div>
+            </div>
+
+            {/* Premium Newsletter Block */}
+            <div className="rounded-[32px] p-8 md:p-12 text-left relative overflow-hidden text-white flex items-center justify-between shadow-lg" style={{ backgroundColor: activeColor }}>
+              <div className="relative z-10 space-y-2 max-w-lg">
+                <h3 className="text-xl md:text-2xl font-black">Subscribe to our newsletter!</h3>
+                <p className="text-[10px] text-white/90 font-bold">Get updates on special deals, custom tropical packages, and seasonal travel vouchers direct to your inbox.</p>
+              </div>
+              <div className="relative z-10 flex gap-2 mt-4 md:mt-0 w-full md:w-auto">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="px-4 py-2.5 rounded-xl text-xs bg-white text-slate-900 placeholder-slate-400 outline-none border-none w-full md:w-60 font-bold"
+                />
+                <button onClick={() => addToast('Subscribed successfully!', false)} className="px-5 py-2.5 bg-slate-950 hover:bg-slate-900 text-white text-xs font-black rounded-xl border-none cursor-pointer transition">
+                  Subscribe
+                </button>
               </div>
             </div>
 

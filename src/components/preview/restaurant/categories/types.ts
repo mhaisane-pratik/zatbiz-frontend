@@ -23,6 +23,10 @@ export interface CategoryProps {
   heroSubtitle?: string;
   themePreset?: string;
   restaurantInfo?: any;
+  activeBlockId?: string | null;
+  setActiveBlockId?: (id: string | null) => void;
+  headerBlockId?: string | null;
+  heroBlockId?: string | null;
 }
 
 export interface CategoryLoginProps {

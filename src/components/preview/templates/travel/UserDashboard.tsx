@@ -31,6 +31,8 @@ export default function TravelUserDashboard({
   const [hotelBookings, setHotelBookings] = useState<any[]>([]);
   const [flightBookings, setFlightBookings] = useState<any[]>([]);
   const [visaApps, setVisaApps] = useState<any[]>([]);
+  const [allHotels, setAllHotels] = useState<any[]>([]);
+  const [allFlights, setAllFlights] = useState<any[]>([]);
 
   const [newVisaCountry, setNewVisaCountry] = useState('United States');
   const [uploadedDocName, setUploadedDocName] = useState<string | null>(null);
@@ -164,6 +166,20 @@ export default function TravelUserDashboard({
         })
         .filter(Boolean);
       setFlightBookings(mappedFlights);
+
+      try {
+        const hotelsData = await api.travel.hotels.list(projectId);
+        setAllHotels(hotelsData || []);
+      } catch (err) {
+        console.error('Error fetching hotels on dashboard:', err);
+      }
+
+      try {
+        const flightsData = await api.travel.flights.list(projectId);
+        setAllFlights(flightsData || []);
+      } catch (err) {
+        console.error('Error fetching flights on dashboard:', err);
+      }
 
       await fetchVisas();
     } catch (err) {
@@ -460,90 +476,152 @@ export default function TravelUserDashboard({
 
           {/* TAB 2: HOTEL STAYS */}
           {activeTab === 'hotels' && (
-            <div className="bg-white border border-slate-200/60 rounded-3xl p-5 shadow-sm space-y-4">
-              <h3 className="font-black text-xs text-slate-900">Hotel Bookings Details</h3>
-              {hotelBookings.length === 0 ? (
-                <div className="p-8 text-center space-y-3">
-                  <span className="text-3xl block">🏢</span>
-                  <h4 className="font-black text-xs text-slate-900">No hotel bookings found</h4>
-                  <p className="text-[10px] text-slate-500">Book a holiday package with lodging details to view hotel reservation info.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {hotelBookings.map((h, idx) => (
-                    <div key={idx} className="p-4 border rounded-2xl bg-slate-50 space-y-3">
-                      <div className="flex justify-between items-center border-b pb-2">
-                        <h4 className="font-black text-xs text-slate-900">{h.hotel}</h4>
-                        <span className="px-2 py-0.5 bg-cyan-50 text-cyan-700 text-[8px] font-black rounded uppercase">{h.status}</span>
+            <div className="space-y-6">
+              <div className="bg-white border border-slate-200/60 rounded-3xl p-5 shadow-sm space-y-4">
+                <h3 className="font-black text-xs text-slate-900">Hotel Bookings Details</h3>
+                {hotelBookings.length === 0 ? (
+                  <div className="p-8 text-center space-y-3">
+                    <span className="text-3xl block">🏢</span>
+                    <h4 className="font-black text-xs text-slate-900">No hotel bookings found</h4>
+                    <p className="text-[10px] text-slate-500">Book a holiday package with lodging details to view hotel reservation info.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {hotelBookings.map((h, idx) => (
+                      <div key={idx} className="p-4 border rounded-2xl bg-slate-50 space-y-3">
+                        <div className="flex justify-between items-center border-b pb-2">
+                          <h4 className="font-black text-xs text-slate-900">{h.hotel}</h4>
+                          <span className="px-2 py-0.5 bg-cyan-50 text-cyan-700 text-[8px] font-black rounded uppercase">{h.status}</span>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold">
+                          <div>
+                            <p className="text-slate-400 text-[8px] uppercase">Room Assigned</p>
+                            <p className="text-slate-900 font-black">{h.room}</p>
+                          </div>
+                          <div>
+                            <p className="text-slate-400 text-[8px] uppercase">Room No</p>
+                            <p className="text-slate-900 font-black">{h.roomNo}</p>
+                          </div>
+                          <div>
+                            <p className="text-slate-400 text-[8px] uppercase">Check-In</p>
+                            <p className="text-slate-800">{h.checkIn}</p>
+                          </div>
+                          <div>
+                            <p className="text-slate-400 text-[8px] uppercase">Check-Out</p>
+                            <p className="text-slate-800">{h.checkOut}</p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold">
-                        <div>
-                          <p className="text-slate-400 text-[8px] uppercase">Room Assigned</p>
-                          <p className="text-slate-900 font-black">{h.room}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* ACTIVE RESORT PARTNERS */}
+              <div className="bg-white border border-slate-200/60 rounded-3xl p-5 shadow-sm space-y-4 text-left">
+                <h3 className="font-black text-xs text-slate-900">Active Lodge & Resort Partners</h3>
+                {allHotels.length === 0 ? (
+                  <div className="p-8 text-center text-slate-400 text-xs">No active resort partners registered yet.</div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {allHotels.map((h, idx) => (
+                      <div key={idx} className="p-4 border border-slate-100 rounded-2xl bg-slate-50/50 space-y-2">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-black text-[11px] text-slate-900">{h.name}</h4>
+                            <p className="text-[9px] text-slate-400 font-semibold">📍 {h.city}</p>
+                          </div>
+                          <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[8px] font-black rounded uppercase">
+                            {h.availability || 'Available'}
+                          </span>
                         </div>
-                        <div>
-                          <p className="text-slate-400 text-[8px] uppercase">Room No</p>
-                          <p className="text-slate-900 font-black">{h.roomNo}</p>
-                        </div>
-                        <div>
-                          <p className="text-slate-400 text-[8px] uppercase">Check-In</p>
-                          <p className="text-slate-800">{h.checkIn}</p>
-                        </div>
-                        <div>
-                          <p className="text-slate-400 text-[8px] uppercase">Check-Out</p>
-                          <p className="text-slate-800">{h.checkOut}</p>
+                        <div className="flex justify-between items-center pt-2 border-t border-slate-100">
+                          <span className="text-[9px] text-slate-500 font-bold">{h.rooms || 'Standard Lodge'}</span>
+                          <span className="text-xs font-black text-cyan-600">
+                            {typeof h.pricing === 'number' ? `₹${h.pricing.toLocaleString()}` : (h.pricing || '₹8,000')}/night
+                          </span>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
           {/* TAB 3: FLIGHT TICKETS */}
           {activeTab === 'flights' && (
-            <div className="bg-white border border-slate-200/60 rounded-3xl p-5 shadow-sm space-y-4">
-              <h3 className="font-black text-xs text-slate-900">Flight Bookings & Tickets</h3>
-              {flightBookings.length === 0 ? (
-                <div className="p-8 text-center space-y-3">
-                  <span className="text-3xl block">🛫</span>
-                  <h4 className="font-black text-xs text-slate-900">No flight tickets booked</h4>
-                  <p className="text-[10px] text-slate-500">Explore packages with flight inclusions to view ticket details.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {flightBookings.map((f, idx) => (
-                    <div key={idx} className="p-4 border border-dashed rounded-2xl bg-slate-50 space-y-3 relative overflow-hidden">
-                      {/* Simulated boarding pass look */}
-                      <div className="absolute right-0 top-0 w-2 h-full bg-cyan-550" style={{ backgroundColor: '#06b6d4' }} />
-                      
-                      <div className="flex justify-between items-center border-b pb-2">
-                        <h4 className="font-black text-xs text-slate-900">{f.airline}</h4>
-                        <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[8px] font-black rounded uppercase">{f.boardingStatus}</span>
+            <div className="space-y-6">
+              <div className="bg-white border border-slate-200/60 rounded-3xl p-5 shadow-sm space-y-4">
+                <h3 className="font-black text-xs text-slate-900">Flight Bookings & Tickets</h3>
+                {flightBookings.length === 0 ? (
+                  <div className="p-8 text-center space-y-3">
+                    <span className="text-3xl block">🛫</span>
+                    <h4 className="font-black text-xs text-slate-900">No flight tickets booked</h4>
+                    <p className="text-[10px] text-slate-500">Explore packages with flight inclusions to view ticket details.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {flightBookings.map((f, idx) => (
+                      <div key={idx} className="p-4 border border-dashed rounded-2xl bg-slate-50 space-y-3 relative overflow-hidden">
+                        <div className="absolute right-0 top-0 w-2 h-full bg-cyan-550" style={{ backgroundColor: '#06b6d4' }} />
+                        <div className="flex justify-between items-center border-b pb-2">
+                          <h4 className="font-black text-xs text-slate-900">{f.airline}</h4>
+                          <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[8px] font-black rounded uppercase">{f.boardingStatus}</span>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold">
+                          <div>
+                            <p className="text-slate-400 text-[8px] uppercase">Route</p>
+                            <p className="text-slate-900 font-black">{f.route}</p>
+                          </div>
+                          <div>
+                            <p className="text-slate-400 text-[8px] uppercase">Time</p>
+                            <p className="text-slate-800">{f.time}</p>
+                          </div>
+                          <div>
+                            <p className="text-slate-400 text-[8px] uppercase">Seat</p>
+                            <p className="text-slate-900 font-black">{f.seat}</p>
+                          </div>
+                          <div>
+                            <p className="text-slate-400 text-[8px] uppercase">Boarding Gate</p>
+                            <p className="text-cyan-600 font-black">{f.gate}</p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-bold">
-                        <div>
-                          <p className="text-slate-400 text-[8px] uppercase">Route</p>
-                          <p className="text-slate-900 font-black">{f.route}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* REGISTERED FLIGHTS */}
+              <div className="bg-white border border-slate-200/60 rounded-3xl p-5 shadow-sm space-y-4 text-left">
+                <h3 className="font-black text-xs text-slate-900">Registered Flights & Schedules</h3>
+                {allFlights.length === 0 ? (
+                  <div className="p-8 text-center text-slate-400 text-xs">No active flight schedules registered yet.</div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {allFlights.map((f, idx) => (
+                      <div key={idx} className="p-4 border border-slate-100 rounded-2xl bg-slate-50/50 space-y-2">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-black text-[11px] text-slate-900">{f.airline}</h4>
+                            <p className="text-[9px] text-slate-450 font-bold">🗓️ {f.schedule || 'Daily Route'}</p>
+                          </div>
+                          <span className="px-2 py-0.5 bg-cyan-50 text-cyan-700 text-[8px] font-black rounded uppercase">
+                            {f.availability || '50'} Seats Left
+                          </span>
                         </div>
-                        <div>
-                          <p className="text-slate-400 text-[8px] uppercase">Time</p>
-                          <p className="text-slate-800">{f.time}</p>
-                        </div>
-                        <div>
-                          <p className="text-slate-400 text-[8px] uppercase">Seat</p>
-                          <p className="text-slate-900 font-black">{f.seat}</p>
-                        </div>
-                        <div>
-                          <p className="text-slate-400 text-[8px] uppercase">Boarding Gate</p>
-                          <p className="text-cyan-600 font-black">{f.gate}</p>
+                        <div className="flex justify-between items-center pt-2 border-t border-slate-100">
+                          <span className="text-[9px] text-slate-500 font-bold">Economy Class</span>
+                          <span className="text-xs font-black text-emerald-600">
+                            {typeof f.pricing === 'number' ? `₹${f.pricing.toLocaleString()}` : (f.pricing || '₹15,000')}
+                          </span>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
