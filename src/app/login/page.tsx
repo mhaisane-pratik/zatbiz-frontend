@@ -84,8 +84,11 @@ export default function LoginPage() {
         ));
 
       if (isNetworkError) {
+        const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
         setError(
-          'Cannot reach the Spring Boot API. Start the backend on http://localhost:8080 before logging in so projects are saved to the database.'
+          isLocal 
+            ? 'Cannot reach the Spring Boot API. Start the backend on http://localhost:8080 before logging in so projects are saved to the database.'
+            : 'Cannot reach the live backend API server (sleeping or offline). You can log in using Offline Demo Mode below to continue.'
         );
       } else {
         setError(errMsg || 'Something went wrong.');
@@ -142,8 +145,22 @@ export default function LoginPage() {
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-4.5 mt-6 flex-grow flex flex-col justify-center">
             {error && (
-              <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 text-rose-350 rounded-2xl text-xs font-semibold text-center select-none">
-                ⚠️ {error}
+              <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 text-rose-355 rounded-2xl text-xs font-semibold text-center select-none space-y-2.5">
+                <div>⚠️ {error}</div>
+                {error.includes('Cannot reach') && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      localStorage.setItem('authToken', 'offline-demo-token');
+                      localStorage.setItem('userEmail', email.trim() || 'demo@zatbiz.com');
+                      localStorage.setItem('userName', username.trim() || 'Offline Demo');
+                      router.push('/dashboard');
+                    }}
+                    className="w-full mt-2.5 py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black transition border-none cursor-pointer"
+                  >
+                    Proceed in Offline Demo Mode
+                  </button>
+                )}
               </div>
             )}
 
