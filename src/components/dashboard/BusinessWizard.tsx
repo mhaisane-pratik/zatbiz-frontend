@@ -1217,165 +1217,433 @@ export default function BusinessWizard({
 
     let blocksJsonStr = '';
 
-    if (isScratchFlow || selectedTemplateId === 'scratch') {
-      const homeBlocks = [
-        {
+    const isEcommerceScratch = selectedTemplateId === 'storefront' && shopNiche === 'scratch';
+
+    if (isScratchFlow || selectedTemplateId === 'scratch' || isEcommerceScratch) {
+      let projectData;
+      if (isEcommerceScratch) {
+        const headerBlock = {
           id: 'header-scratch',
           type: 'header',
           theme: themePreset,
           content: {
             companyName: companyName.trim(),
-            logoIcon: logoIcon || '⚡',
+            logoIcon: logoIcon || '🛍️',
             logoUrl: customLogoUrl || '',
             layout: 'left-logo',
             links: [
               { label: 'Home', url: '?page=home' },
-              { label: 'About', url: '?page=about' },
+              { label: 'Shop', url: '?page=shop' },
+              { label: 'Collections', url: '?page=collections' },
               { label: 'Contact', url: '?page=contact' }
             ]
           }
-        },
-        {
-          id: 'hero-scratch',
-          type: 'hero',
+        };
+        const announcementBlock = {
+          id: 'announcement-bar-scratch',
+          type: 'announcement_bar',
           theme: themePreset,
           content: {
-            title: `Welcome to ${companyName.trim()}`,
-            subtitle: slogan.trim() || 'Custom website created from scratch.',
-            imageUrl: bannerUrl || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=80',
-            btn1Text: 'Explore Products',
-            btn1Url: '?page=shop',
-            btn2Text: 'Learn More',
-            btn2Url: '?page=about'
+            text: 'Welcome to our store! Shop our latest collections.'
           }
-        },
-        {
+        };
+        const footerBlock = {
           id: 'footer-scratch',
           type: 'footer',
           theme: themePreset,
           content: {
-            text: `© 2026 ${companyName.trim()}. All rights reserved. Phone: ${contactPhone} | Email: ${contactEmail}`,
+            text: `© 2026 ${companyName.trim()}. All rights reserved.`,
             layout: 'simple'
           }
-        }
-      ];
-
-      const aboutBlocks = [
-        {
-          id: 'header-scratch-about',
-          type: 'header',
-          theme: themePreset,
-          content: {
-            companyName: companyName.trim(),
-            logoIcon: logoIcon || '⚡',
-            logoUrl: customLogoUrl || '',
-            layout: 'left-logo',
-            links: [
-              { label: 'Home', url: '?page=home' },
-              { label: 'About', url: '?page=about' },
-              { label: 'Contact', url: '?page=contact' }
+        };
+        projectData = {
+          pages: {
+            home: [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'hero-scratch',
+                type: 'hero',
+                theme: themePreset,
+                content: {
+                  title: 'Welcome to My Store',
+                  subtitle: 'Start styling your store canvas. Add banners, categories, and products.',
+                  imageUrl: '',
+                  btn1Text: 'Shop All',
+                  btn1Url: '?page=shop'
+                }
+              },
+              {
+                id: 'categories-scratch',
+                type: 'categories',
+                theme: themePreset,
+                content: {
+                  title: 'Shop by Category',
+                  categories: []
+                }
+              },
+              {
+                id: 'products-scratch',
+                type: 'products',
+                theme: themePreset,
+                content: {
+                  title: 'Featured Products',
+                  products: []
+                }
+              },
+              footerBlock
+            ],
+            shop: [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'shop-grid-scratch',
+                type: 'product_grid',
+                theme: themePreset,
+                content: {
+                  title: 'All Products',
+                  subtitle: 'Browse our complete catalog.'
+                }
+              },
+              footerBlock
+            ],
+            'product-details': [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'product-details-scratch',
+                type: 'product_details',
+                theme: themePreset,
+                content: {}
+              },
+              footerBlock
+            ],
+            collections: [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'collections-scratch',
+                type: 'collections_grid',
+                theme: themePreset,
+                content: {
+                  title: 'Our Collections'
+                }
+              },
+              footerBlock
+            ],
+            cart: [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'cart-scratch',
+                type: 'shopping_cart',
+                theme: themePreset,
+                content: {}
+              },
+              footerBlock
+            ],
+            checkout: [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'checkout-scratch',
+                type: 'checkout_form',
+                theme: themePreset,
+                content: {}
+              },
+              footerBlock
+            ],
+            wishlist: [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'wishlist-scratch',
+                type: 'wishlist_view',
+                theme: themePreset,
+                content: {}
+              },
+              footerBlock
+            ],
+            login: [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'login-scratch',
+                type: 'login_form',
+                theme: themePreset,
+                content: {}
+              },
+              footerBlock
+            ],
+            register: [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'register-scratch',
+                type: 'register_form',
+                theme: themePreset,
+                content: {}
+              },
+              footerBlock
+            ],
+            'my-account': [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'my-account-scratch',
+                type: 'my_account',
+                theme: themePreset,
+                content: {}
+              },
+              footerBlock
+            ],
+            contact: [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'contact-scratch',
+                type: 'contact_form',
+                theme: themePreset,
+                content: {
+                  title: 'Contact Our Support Team'
+                }
+              },
+              footerBlock
+            ],
+            about: [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'about-scratch',
+                type: 'text_block',
+                theme: themePreset,
+                content: {
+                  title: 'About Our Store',
+                  text: 'Tell your customers about your brand story, mission, and vision here.'
+                }
+              },
+              footerBlock
+            ],
+            'privacy-policy': [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'privacy-policy-scratch',
+                type: 'text_block',
+                theme: themePreset,
+                content: {
+                  title: 'Privacy Policy',
+                  text: 'Your privacy policy details go here. Protect user information.'
+                }
+              },
+              footerBlock
+            ],
+            'terms-conditions': [
+              announcementBlock,
+              headerBlock,
+              {
+                id: 'terms-conditions-scratch',
+                type: 'text_block',
+                theme: themePreset,
+                content: {
+                  title: 'Terms & Conditions',
+                  text: 'Your terms and conditions details go here.'
+                }
+              },
+              footerBlock
             ]
+          },
+          activePages: [
+            'home', 'shop', 'product-details', 'collections', 'cart', 'checkout', 
+            'wishlist', 'login', 'register', 'my-account', 'contact', 'about', 
+            'privacy-policy', 'terms-conditions'
+          ],
+          currentPage: 'home',
+          businessConfig: {
+            businessType: 'ecommerce',
+            shopNiche: 'scratch',
+            ownerName,
+            whatsappNumber,
+            address,
+            city,
+            state: stateVal,
+            country,
+            pincode,
+            bannerUrl,
+            faviconUrl,
+            themeColor: themePreset,
+            gstin: gstin.trim(),
+            currency,
+            domainName: domainType === 'subdomain' ? `${subdomainPrefix || 'store'}.zatbiz.site` : customDomainName,
+            paymentGateway,
+            stripeKey,
+            sandboxMode,
+            gstRate,
+            seoTitle: `${companyName} | Blank E-commerce Canvas`,
+            seoDescription: slogan || `Blank custom online store canvas for ${companyName}`,
+            seoKeywords: `ecommerce, custom store, ${companyName}`,
           }
-        },
-        {
-          id: 'hero-scratch-about',
-          type: 'hero',
-          theme: themePreset,
-          content: {
-            title: `About ${companyName.trim()}`,
-            subtitle: slogan.trim() || 'Learn more about our vision, our values, and our story.',
-            imageUrl: bannerUrl || 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&auto=format&fit=crop&q=80',
-            btn1Text: 'Our Services',
-            btn1Url: '?page=services',
-            btn2Text: 'Contact Us',
-            btn2Url: '?page=contact'
+        };
+      } else {
+        const homeBlocks = [
+          {
+            id: 'header-scratch',
+            type: 'header',
+            theme: themePreset,
+            content: {
+              companyName: companyName.trim(),
+              logoIcon: logoIcon || '⚡',
+              logoUrl: customLogoUrl || '',
+              layout: 'left-logo',
+              links: [
+                { label: 'Home', url: '?page=home' },
+                { label: 'About', url: '?page=about' },
+                { label: 'Contact', url: '?page=contact' }
+              ]
+            }
+          },
+          {
+            id: 'hero-scratch',
+            type: 'hero',
+            theme: themePreset,
+            content: {
+              title: `Welcome to ${companyName.trim()}`,
+              subtitle: slogan.trim() || 'Custom website created from scratch.',
+              imageUrl: bannerUrl || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=80',
+              btn1Text: 'Explore Products',
+              btn1Url: '?page=shop',
+              btn2Text: 'Learn More',
+              btn2Url: '?page=about'
+            }
+          },
+          {
+            id: 'footer-scratch',
+            type: 'footer',
+            theme: themePreset,
+            content: {
+              text: `© 2026 ${companyName.trim()}. All rights reserved. Phone: ${contactPhone} | Email: ${contactEmail}`,
+              layout: 'simple'
+            }
           }
-        },
-        {
-          id: 'footer-scratch-about',
-          type: 'footer',
-          theme: themePreset,
-          content: {
-            text: `© 2026 ${companyName.trim()}. All rights reserved. Phone: ${contactPhone} | Email: ${contactEmail}`,
-            layout: 'simple'
-          }
-        }
-      ];
+        ];
 
-      const contactBlocks = [
-        {
-          id: 'header-scratch-contact',
-          type: 'header',
-          theme: themePreset,
-          content: {
-            companyName: companyName.trim(),
-            logoIcon: logoIcon || '⚡',
-            logoUrl: customLogoUrl || '',
-            layout: 'left-logo',
-            links: [
-              { label: 'Home', url: '?page=home' },
-              { label: 'About', url: '?page=about' },
-              { label: 'Contact', url: '?page=contact' }
-            ]
+        const aboutBlocks = [
+          {
+            id: 'header-scratch-about',
+            type: 'header',
+            theme: themePreset,
+            content: {
+              companyName: companyName.trim(),
+              logoIcon: logoIcon || '⚡',
+              logoUrl: customLogoUrl || '',
+              layout: 'left-logo',
+              links: [
+                { label: 'Home', url: '?page=home' },
+                { label: 'About', url: '?page=about' },
+                { label: 'Contact', url: '?page=contact' }
+              ]
+            }
+          },
+          {
+            id: 'hero-scratch-about',
+            type: 'hero',
+            theme: themePreset,
+            content: {
+              title: `About ${companyName.trim()}`,
+              subtitle: slogan.trim() || 'Learn more about our vision, our values, and our story.',
+              imageUrl: bannerUrl || 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&auto=format&fit=crop&q=80',
+              btn1Text: 'Our Services',
+              btn1Url: '?page=services',
+              btn2Text: 'Contact Us',
+              btn2Url: '?page=contact'
+            }
+          },
+          {
+            id: 'footer-scratch-about',
+            type: 'footer',
+            theme: themePreset,
+            content: {
+              text: `© 2026 ${companyName.trim()}. All rights reserved. Phone: ${contactPhone} | Email: ${contactEmail}`,
+              layout: 'simple'
+            }
           }
-        },
-        {
-          id: 'hero-scratch-contact',
-          type: 'hero',
-          theme: themePreset,
-          content: {
-            title: 'Contact Us',
-            subtitle: 'Have questions? We would love to hear from you. Drop us a message below.',
-            imageUrl: bannerUrl || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80',
-            btn1Text: 'Send Message',
-            btn1Url: '#contact-form',
-            btn2Text: 'Call Now',
-            btn2Url: `tel:${contactPhone}`
-          }
-        },
-        {
-          id: 'footer-scratch-contact',
-          type: 'footer',
-          theme: themePreset,
-          content: {
-            text: `© 2026 ${companyName.trim()}. All rights reserved. Phone: ${contactPhone} | Email: ${contactEmail}`,
-            layout: 'simple'
-          }
-        }
-      ];
+        ];
 
-      const projectData = {
-        pages: {
-          home: homeBlocks,
-          about: aboutBlocks,
-          contact: contactBlocks
-        },
-        activePages: ['home', 'about', 'contact'],
-        currentPage: 'home',
-        businessConfig: {
-          businessType,
-          ownerName,
-          whatsappNumber,
-          address,
-          city,
-          state: stateVal,
-          country,
-          pincode,
-          bannerUrl,
-          faviconUrl,
-          themeColor: themePreset,
-          gstin: gstin.trim(),
-          currency,
-          domainName: domainType === 'subdomain' ? `${subdomainPrefix || 'store'}.zatbiz.site` : customDomainName,
-          paymentGateway,
-          stripeKey,
-          sandboxMode,
-          gstRate,
-          seoTitle: `${companyName} | Premium ${businessType}`,
-          seoDescription: slogan || `Custom visual site for ${companyName}`,
-          seoKeywords: `${businessType}, ${companyName}, services`,
-        }
-      };
+        const contactBlocks = [
+          {
+            id: 'header-scratch-contact',
+            type: 'header',
+            theme: themePreset,
+            content: {
+              companyName: companyName.trim(),
+              logoIcon: logoIcon || '⚡',
+              logoUrl: customLogoUrl || '',
+              layout: 'left-logo',
+              links: [
+                { label: 'Home', url: '?page=home' },
+                { label: 'About', url: '?page=about' },
+                { label: 'Contact', url: '?page=contact' }
+              ]
+            }
+          },
+          {
+            id: 'hero-scratch-contact',
+            type: 'hero',
+            theme: themePreset,
+            content: {
+              title: 'Contact Us',
+              subtitle: 'Have questions? We would love to hear from you. Drop us a message below.',
+              imageUrl: bannerUrl || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80',
+              btn1Text: 'Send Message',
+              btn1Url: '#contact-form',
+              btn2Text: 'Call Now',
+              btn2Url: `tel:${contactPhone}`
+            }
+          },
+          {
+            id: 'footer-scratch-contact',
+            type: 'footer',
+            theme: themePreset,
+            content: {
+              text: `© 2026 ${companyName.trim()}. All rights reserved. Phone: ${contactPhone} | Email: ${contactEmail}`,
+              layout: 'simple'
+            }
+          }
+        ];
+
+        projectData = {
+          pages: {
+            home: homeBlocks,
+            about: aboutBlocks,
+            contact: contactBlocks
+          },
+          activePages: ['home', 'about', 'contact'],
+          currentPage: 'home',
+          businessConfig: {
+            businessType,
+            ownerName,
+            whatsappNumber,
+            address,
+            city,
+            state: stateVal,
+            country,
+            pincode,
+            bannerUrl,
+            faviconUrl,
+            themeColor: themePreset,
+            gstin: gstin.trim(),
+            currency,
+            domainName: domainType === 'subdomain' ? `${subdomainPrefix || 'store'}.zatbiz.site` : customDomainName,
+            paymentGateway,
+            stripeKey,
+            sandboxMode,
+            gstRate,
+            seoTitle: `${companyName} | Premium ${businessType}`,
+            seoDescription: slogan || `Custom visual site for ${companyName}`,
+            seoKeywords: `${businessType}, ${companyName}, services`,
+          }
+        };
+      }
       blocksJsonStr = JSON.stringify(projectData);
     } else {
       const blocksList = generateTemplateBlocks({
@@ -1435,6 +1703,24 @@ export default function BusinessWizard({
     try {
       const newProj = await api.projects.create(payload);
       setProjectId(newProj.id);
+      
+      if (isEcommerceScratch) {
+        try {
+          await api.scratchEcommerce.createStore(newProj.id, {
+            storeName: companyName.trim() || 'My Store',
+            status: 'Draft',
+            type: 'Ecommerce',
+            category: 'Scratch',
+            wizardCompleted: false
+          });
+        } catch (scratchErr) {
+          console.error('Failed to create scratch e-commerce store metadata:', scratchErr);
+        }
+        showToast(`Blank E-commerce store initialized!`);
+        onComplete(newProj);
+        return;
+      }
+
       await seedDefaultNicheProducts(newProj.id, initialRestaurantCategory || undefined);
       showToast(`Website project initialized (ID: ${newProj.id})`);
       if (selectedTemplateId === 'medical-shop') {
@@ -1447,6 +1733,19 @@ export default function BusinessWizard({
       // Fallback
       const tempId = Date.now();
       setProjectId(tempId);
+      
+      if (isEcommerceScratch) {
+        showToast('Simulation: Blank E-commerce store generated in sandbox memory.');
+        onComplete({
+          id: tempId,
+          name: companyName.trim() || 'My Store',
+          description: slogan,
+          blocksJson: blocksJsonStr,
+          status: 'Draft'
+        });
+        return;
+      }
+
       await seedDefaultNicheProducts(tempId, initialRestaurantCategory || undefined);
       showToast('Simulation: Project generated in sandbox memory.');
       if (selectedTemplateId === 'medical-shop') {

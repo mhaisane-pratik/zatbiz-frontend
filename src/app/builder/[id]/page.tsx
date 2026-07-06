@@ -218,6 +218,12 @@ export default function BuilderPage({ params }: PageProps) {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [restaurantInfo, setRestaurantInfo] = useState<any>(null);
+  const [scratchEcommerceInfo, setScratchEcommerceInfo] = useState<any>(null);
+  const [loadingScratchInfo, setLoadingScratchInfo] = useState(false);
+  const [wizardStep, setWizardStep] = useState(1);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [isAiGenerating, setIsAiGenerating] = useState(false);
 
   // 1. Ref to break the circular dependency loop between useBuilderProject and useBuilderCanvas
   const onLoadSuccessRef = useRef<(
@@ -303,11 +309,16 @@ export default function BuilderPage({ params }: PageProps) {
     setMockFormSubmissions
   } = useFormBuilderState();
 
+  const isScratchEcommerce = projectConfig?.businessType === 'ecommerce' && projectConfig?.shopNiche === 'scratch';
+
   // Fetch products from backend H2 database
   const fetchDbProducts = () => {
     if (isNaN(projectId)) return;
-    api.products
-      .list(projectId)
+    const listCall = isScratchEcommerce 
+      ? api.scratchEcommerce.products.list(projectId)
+      : api.products.list(projectId);
+      
+    listCall
       .then((data) => setDbProducts(data))
       .catch((err) => console.error('Error loading database products:', err));
   };
@@ -324,6 +335,201 @@ export default function BuilderPage({ params }: PageProps) {
         .catch((e) => console.log('Not restaurant or offline:', e));
     }
   }, [projectId]);
+
+  useEffect(() => {
+    if (isScratchEcommerce && projectId) {
+      setLoadingScratchInfo(true);
+      api.scratchEcommerce.getStore(projectId)
+        .then((data) => {
+          if (data) {
+            setScratchEcommerceInfo(data);
+          }
+        })
+        .catch((err) => {
+          console.error('Failed to load scratch e-commerce store details:', err);
+        })
+        .finally(() => {
+          setLoadingScratchInfo(false);
+        });
+    }
+  }, [isScratchEcommerce, projectId]);
+
+  const handleCompleteSetup = async () => {
+    if (!scratchEcommerceInfo) return;
+    try {
+      const updated = {
+        ...scratchEcommerceInfo,
+        wizardCompleted: true,
+      };
+      const res = await api.scratchEcommerce.updateStore(projectId, updated);
+      setScratchEcommerceInfo(res);
+      showToast('Store Setup Completed! Builder workspace is ready.');
+    } catch (err) {
+      console.error('Failed to complete store setup:', err);
+      showToast('Failed to save store setup. Please try again.', true);
+    }
+  };
+
+  const handleGenerateStoreWithAi = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!aiPrompt.trim()) return;
+
+    setIsAiGenerating(true);
+    // Simulate AI generation with custom delay to give a rich feel
+    setTimeout(async () => {
+      const promptLower = aiPrompt.toLowerCase();
+      let heroTitle = 'Premium Fashion Collection';
+      let heroSubtitle = 'Explore the finest curation of designer outfits and accessories designed for modern lifestyle.';
+      let heroImage = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1000&auto=format&fit=crop&q=80';
+      let cats = [
+        { name: "Men's Wear", image: 'https://images.unsplash.com/photo-1488161628813-04466f872be2?w=300&auto=format&fit=crop&q=80' },
+        { name: "Women's Wear", image: 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?w=300&auto=format&fit=crop&q=80' },
+        { name: 'Accessories', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&auto=format&fit=crop&q=80' }
+      ];
+
+      if (promptLower.includes('elect') || promptLower.includes('tech') || promptLower.includes('phone') || promptLower.includes('gadget')) {
+        heroTitle = 'Next-Gen Tech Gadgets';
+        heroSubtitle = 'Explore state-of-the-art electronics, smart wearables, and premium gaming gear.';
+        heroImage = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1000&auto=format&fit=crop&q=80';
+        cats = [
+          { name: 'Smartphones', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&auto=format&fit=crop&q=80' },
+          { name: 'Audio & Gear', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&auto=format&fit=crop&q=80' },
+          { name: 'Computers', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=300&auto=format&fit=crop&q=80' }
+        ];
+      } else if (promptLower.includes('groc') || promptLower.includes('food') || promptLower.includes('super') || promptLower.includes('market')) {
+        heroTitle = 'Fresh Organic Groceries';
+        heroSubtitle = 'Farm fresh vegetables, organic fruits, daily essentials, and gourmet foods delivered to your door.';
+        heroImage = 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1000&auto=format&fit=crop&q=80';
+        cats = [
+          { name: 'Fresh Fruits', image: 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=300&auto=format&fit=crop&q=80' },
+          { name: 'Vegetables', image: 'https://images.unsplash.com/photo-1566385101042-1a010c159f8a?w=300&auto=format&fit=crop&q=80' },
+          { name: 'Beverages', image: 'https://images.unsplash.com/photo-1527960656366-ee2a999e32e6?w=300&auto=format&fit=crop&q=80' }
+        ];
+      } else if (promptLower.includes('book') || promptLower.includes('novel') || promptLower.includes('read')) {
+        heroTitle = 'The Bookworm Sanctuary';
+        heroSubtitle = 'Discover bestsellers, classic novels, educational textbooks, and curated audiobooks.';
+        heroImage = 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1000&auto=format&fit=crop&q=80';
+        cats = [
+          { name: 'Fiction Novels', image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&auto=format&fit=crop&q=80' },
+          { name: 'Educational', image: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=300&auto=format&fit=crop&q=80' },
+          { name: 'Biographies', image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&auto=format&fit=crop&q=80' }
+        ];
+      }
+
+      // Generate the blocks list
+      const themePreset = projectConfig?.themeColor || 'purple';
+      const generatedBlocks = [
+        {
+          id: 'announcement-bar-scratch',
+          type: 'announcement_bar',
+          theme: themePreset,
+          content: { text: `✨ Special Launch Offer: Get 10% off your first purchase! Use Code: LAUNCH10` }
+        },
+        {
+          id: 'header-scratch',
+          type: 'header',
+          theme: themePreset,
+          content: {
+            companyName: projectName || 'My Store',
+            logoIcon: '🛍️',
+            layout: 'left-logo',
+            links: [
+              { label: 'Home', url: '?page=home' },
+              { label: 'Shop', url: '?page=shop' },
+              { label: 'Collections', url: '?page=collections' },
+              { label: 'Contact', url: '?page=contact' }
+            ]
+          }
+        },
+        {
+          id: 'hero-ai',
+          type: 'hero',
+          theme: themePreset,
+          content: {
+            title: heroTitle,
+            subtitle: heroSubtitle,
+            imageUrl: heroImage,
+            btn1Text: 'Shop All Products',
+            btn1Url: '?page=shop'
+          }
+        },
+        {
+          id: 'categories-ai',
+          type: 'categories',
+          theme: themePreset,
+          content: {
+            title: 'Browse Popular Departments',
+            categories: cats
+          }
+        },
+        {
+          id: 'products-ai',
+          type: 'products',
+          theme: themePreset,
+          content: {
+            title: 'Store Bestsellers',
+            products: []
+          }
+        },
+        {
+          id: 'collections-ai',
+          type: 'collections_grid',
+          theme: themePreset,
+          content: {
+            title: 'Exclusive Curated Collections'
+          }
+        },
+        {
+          id: 'testimonials-ai',
+          type: 'testimonials',
+          theme: themePreset,
+          content: {
+            title: 'Loved By Our Customers',
+            quotes: [
+              { quote: 'Fabulous products and super helpful support. Delivery was extremely fast!', author: 'Sarah Jenkins' },
+              { quote: 'The quality of the items far exceeded my expectations. Highly recommended!', author: 'Daniel Craig' }
+            ]
+          }
+        },
+        {
+          id: 'newsletter-ai',
+          type: 'newsletter',
+          theme: themePreset,
+          content: {
+            title: 'Stay in the Loop',
+            subtitle: 'Subscribe to get notified on secret launches, early sale access, and style lookbooks.'
+          }
+        },
+        {
+          id: 'footer-scratch',
+          type: 'footer',
+          theme: themePreset,
+          content: {
+            text: `© 2026 ${projectName || 'My Store'}. All rights reserved.`,
+            layout: 'simple'
+          }
+        }
+      ];
+
+      // Update blocks and pages state
+      const updatedPages = {
+        ...pages,
+        home: generatedBlocks
+      };
+      setPages(updatedPages);
+      if (currentPage === 'home') {
+        setBlocks(generatedBlocks);
+      }
+      
+      // Save layout changes
+      saveLayout(updatedPages, activePages, currentPage, projectConfig, projectName, status || 'Draft', false);
+      
+      setIsAiGenerating(false);
+      setIsAiModalOpen(false);
+      setAiPrompt('');
+      showToast('Store pages generated successfully with AI! 🚀');
+    }, 2000);
+  };
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -540,6 +746,28 @@ export default function BuilderPage({ params }: PageProps) {
       };
       const lc = loginBlock.content;
 
+      const handleSelectLoginBlock = () => {
+        const exists = blocks.some((b) => b.type === 'login_config');
+        if (!exists) {
+          const newBlock = {
+            id: 'login-' + Date.now(),
+            type: 'login_config',
+            theme: 'slate',
+            content: {
+              title: 'Welcome back',
+              subtitle: 'Enter your credentials',
+              btnText: 'Sign In',
+              logoIcon: '🛍️',
+              illustrationUrl: '/images/login_illustration.png',
+            },
+          };
+          syncBlocks([...blocks, newBlock]);
+          setActiveBlockId(newBlock.id);
+        } else {
+          setActiveBlockId(loginBlock.id);
+        }
+      };
+
       // Dynamic template detection logic matching preview
       let detectedTemplate = 'storefront';
       const isRealEstate = blocks.some((b: any) =>
@@ -719,7 +947,7 @@ export default function BuilderPage({ params }: PageProps) {
         
         return (
           <div 
-            onClick={() => setActiveBlockId(loginBlock.id)}
+            onClick={handleSelectLoginBlock}
             className={`min-h-[500px] w-full flex items-center justify-center p-6 cursor-pointer hover:border-indigo-500/40 border-2 border-transparent transition-all duration-300 ${activeBlockId === loginBlock.id ? '!border-indigo-500 ring-2 ring-indigo-500/10' : ''} bg-slate-900/10`}
           >
             <div className="bg-slate-800 text-white rounded-2xl p-4 text-xs max-w-lg w-full text-center space-y-3 shadow-md border border-slate-700">
@@ -754,7 +982,7 @@ export default function BuilderPage({ params }: PageProps) {
 
       return (
         <div 
-          onClick={() => setActiveBlockId(loginBlock.id)}
+          onClick={handleSelectLoginBlock}
           className={`min-h-[550px] w-full flex items-center justify-center p-4 cursor-pointer hover:border-indigo-500/40 transition-all duration-300 ${activeBlockId === loginBlock.id ? 'ring-2 ring-indigo-500 border-indigo-500' : ''} ${projectConfig.fontStyle || 'font-sans'} ${loginStyle.mainBg}`}
         >
           <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[500px]">
@@ -869,6 +1097,33 @@ export default function BuilderPage({ params }: PageProps) {
         },
       };
       const dc = dashBlock.content;
+
+      const handleSelectDashBlock = () => {
+        const exists = blocks.some((b) => b.type === 'dashboard_config');
+        if (!exists) {
+          const newBlock = {
+            id: 'dashboard-' + Date.now(),
+            type: 'dashboard_config',
+            theme: 'slate',
+            content: {
+              title: 'Admin Summary',
+              metric1Title: 'Revenue',
+              metric1Value: '$0',
+              metric1Trend: 'No dynamic metrics',
+              metric2Title: 'Sales',
+              metric2Value: '0',
+              metric2Trend: 'Ready',
+              metric3Title: 'Alerts',
+              metric3Value: '0',
+              metric3Trend: 'Stable',
+            },
+          };
+          syncBlocks([...blocks, newBlock]);
+          setActiveBlockId(newBlock.id);
+        } else {
+          setActiveBlockId(dashBlock.id);
+        }
+      };
 
       // Dynamic template detection logic matching preview
       let detectedTemplate = 'storefront';
@@ -996,7 +1251,7 @@ export default function BuilderPage({ params }: PageProps) {
 
         return (
           <div 
-            onClick={() => setActiveBlockId(dashBlock.id)}
+            onClick={handleSelectDashBlock}
             className={`flex flex-col min-h-[600px] w-full bg-slate-50 border rounded-2xl cursor-pointer overflow-hidden hover:border-indigo-500/40 transition-colors duration-300 ${activeBlockId === dashBlock.id ? 'ring-2 ring-indigo-500 border-indigo-500' : ''} ${projectConfig.fontStyle || 'font-sans'}`}
           >
             {/* Simulator Controls Strip */}
@@ -1153,7 +1408,7 @@ export default function BuilderPage({ params }: PageProps) {
 
       return (
         <div 
-          onClick={() => setActiveBlockId(dashBlock.id)}
+          onClick={handleSelectDashBlock}
           className={`flex flex-col min-h-[600px] w-full bg-slate-50 border rounded-2xl cursor-pointer overflow-hidden hover:border-indigo-500/40 transition-colors duration-300 ${activeBlockId === dashBlock.id ? 'ring-2 ring-indigo-500 border-indigo-500' : ''} ${projectConfig.fontStyle || 'font-sans'}`}
         >
           {/* Simulator Controls Strip */}
@@ -1497,6 +1752,16 @@ export default function BuilderPage({ params }: PageProps) {
         onChangePage={(page) => {
           setActivePage(page);
           setActiveBlockId(null);
+          if (page === 'landing') {
+            setCurrentPage('home');
+            setBlocks(pages['home'] || []);
+          } else if (page === 'login') {
+            setCurrentPage('login');
+            setBlocks(pages['login'] || []);
+          } else if (page === 'dashboard') {
+            setCurrentPage('my-account');
+            setBlocks(pages['my-account'] || []);
+          }
         }}
         onChangeCanvasWidth={setCanvasWidth}
       />
@@ -1541,6 +1806,16 @@ export default function BuilderPage({ params }: PageProps) {
                     <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Pages Panel</h3>
                     <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Manage existing pages and switch layouts or add new pages.</p>
                   </div>
+
+                  {isScratchEcommerce && (
+                    <button
+                      onClick={() => setIsAiModalOpen(true)}
+                      className="w-full py-3 bg-gradient-to-r from-indigo-650 to-purple-650 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center justify-center gap-2 cursor-pointer border-0"
+                    >
+                      <span>✨</span>
+                      <span>Generate Store with AI</span>
+                    </button>
+                  )}
 
                   {/* Active Page List */}
                   <div className="space-y-1.5">
@@ -1635,7 +1910,7 @@ export default function BuilderPage({ params }: PageProps) {
 
               {sidebarTab === 'components' && (
                 <div className="space-y-6">
-                  <BlockLibrary onAddBlock={handleAddBlock} />
+                  <BlockLibrary onAddBlock={handleAddBlock} isScratchEcommerce={isScratchEcommerce} />
                   <div className="border-t border-slate-105 pt-6" />
                   <PageOutline
                     blocks={blocks}
@@ -2045,6 +2320,287 @@ export default function BuilderPage({ params }: PageProps) {
           }}
           onSubmit={handleProductSubmit}
         />
+      )}
+
+      {/* Scratch E-commerce Store Setup Wizard Overlay */}
+      {isScratchEcommerce && scratchEcommerceInfo && !scratchEcommerceInfo.wizardCompleted && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <div className="w-full max-w-lg bg-slate-900 border border-slate-800 text-white rounded-3xl shadow-2xl p-6 flex flex-col gap-5 max-h-[90vh] overflow-y-auto">
+            
+            {/* Wizard Header Progress */}
+            <div className="space-y-2">
+              <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block">Store Setup Wizard</span>
+              <h2 className="text-base font-black uppercase tracking-tight">Step {wizardStep} of 5: {
+                wizardStep === 1 ? 'Store Information' :
+                wizardStep === 2 ? 'Brand & Design' :
+                wizardStep === 3 ? 'Country & Currency' :
+                wizardStep === 4 ? 'Payment Gateways' :
+                'Shipping Profiles'
+              }</h2>
+              
+              <div className="w-full bg-slate-850 h-1.5 rounded-full overflow-hidden flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <div key={s} className={`flex-1 h-full rounded-full transition-all duration-305 ${wizardStep >= s ? 'bg-gradient-to-r from-indigo-500 to-purple-600' : 'bg-slate-800'}`} />
+                ))}
+              </div>
+            </div>
+
+            {/* Wizard Step Forms */}
+            <div className="flex-grow py-2">
+              {wizardStep === 1 && (
+                <div className="space-y-4">
+                  <p className="text-[11px] text-slate-400 font-semibold mb-2">Tell us about your new online store details.</p>
+                  <div className="grid grid-cols-2 gap-3.5">
+                    <div className="col-span-2">
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Store Name *</label>
+                      <input type="text" value={scratchEcommerceInfo.storeName || ''} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, storeName: e.target.value })} className="w-full bg-slate-950 border border-slate-850 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white outline-none" required />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Business Name</label>
+                      <input type="text" value={scratchEcommerceInfo.businessName || ''} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, businessName: e.target.value })} className="w-full bg-slate-950 border border-slate-855 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white outline-none" />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Owner Name</label>
+                      <input type="text" value={scratchEcommerceInfo.ownerName || ''} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, ownerName: e.target.value })} className="w-full bg-slate-955 border border-slate-850 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white outline-none" />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Support Email Address</label>
+                      <input type="email" value={scratchEcommerceInfo.email || ''} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, email: e.target.value })} className="w-full bg-slate-955 border border-slate-850 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white outline-none" />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Support Phone No</label>
+                      <input type="text" value={scratchEcommerceInfo.phone || ''} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, phone: e.target.value })} className="w-full bg-slate-955 border border-slate-850 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white outline-none" />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {wizardStep === 2 && (
+                <div className="space-y-4">
+                  <p className="text-[11px] text-slate-400 font-semibold mb-2">Configure custom brand details, fonts, and buttons style.</p>
+                  <div className="grid grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Primary Color Hex</label>
+                      <div className="flex gap-2">
+                        <input type="color" value={scratchEcommerceInfo.primaryColor || '#5300b7'} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, primaryColor: e.target.value })} className="w-8 h-8 bg-transparent border-0 cursor-pointer p-0" />
+                        <input type="text" value={scratchEcommerceInfo.primaryColor || '#5300b7'} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, primaryColor: e.target.value })} className="flex-grow bg-slate-955 border border-slate-850 focus:border-indigo-500 rounded-xl px-3 py-1.5 text-xs text-white outline-none" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Secondary Color Hex</label>
+                      <div className="flex gap-2">
+                        <input type="color" value={scratchEcommerceInfo.secondaryColor || '#fea619'} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, secondaryColor: e.target.value })} className="w-8 h-8 bg-transparent border-0 cursor-pointer p-0" />
+                        <input type="text" value={scratchEcommerceInfo.secondaryColor || '#fea619'} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, secondaryColor: e.target.value })} className="flex-grow bg-slate-955 border border-slate-850 focus:border-indigo-500 rounded-xl px-3 py-1.5 text-xs text-white outline-none" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Brand Typography Font</label>
+                      <select value={scratchEcommerceInfo.font || 'Plus Jakarta Sans'} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, font: e.target.value })} className="w-full bg-slate-955 border border-slate-850 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                        <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
+                        <option value="Inter">Inter</option>
+                        <option value="Roboto">Roboto</option>
+                        <option value="Outfit">Outfit</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Button Edges Style</label>
+                      <select value={scratchEcommerceInfo.buttonStyle || 'rounded'} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, buttonStyle: e.target.value })} className="w-full bg-slate-955 border border-slate-855 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                        <option value="rounded">Rounded corners (8px)</option>
+                        <option value="rounded-lg">Sleek rounded-lg (12px)</option>
+                        <option value="rounded-full">Pill rounded-full (99px)</option>
+                        <option value="flat">Sharp flat edges (0px)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {wizardStep === 3 && (
+                <div className="space-y-4">
+                  <p className="text-[11px] text-slate-400 font-semibold mb-2">Set country currency defaults and tax configurations.</p>
+                  <div className="grid grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Country Location</label>
+                      <select value={scratchEcommerceInfo.country || 'United States'} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, country: e.target.value })} className="w-full bg-slate-955 border border-slate-850 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                        <option value="United States">United States</option>
+                        <option value="India">India</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="Australia">Australia</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Store Currency Symbol</label>
+                      <select value={scratchEcommerceInfo.currency || 'USD'} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, currency: e.target.value })} className="w-full bg-slate-955 border border-slate-850 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                        <option value="USD">USD ($)</option>
+                        <option value="INR">INR (₹)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Store Default Language</label>
+                      <select value={scratchEcommerceInfo.language || 'en'} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, language: e.target.value })} className="w-full bg-slate-955 border border-slate-850 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                        <option value="en">English (en)</option>
+                        <option value="hi">Hindi (hi)</option>
+                        <option value="es">Spanish (es)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-455 uppercase mb-1">Tax Rate Percentage (%)</label>
+                      <input type="number" step="0.1" value={scratchEcommerceInfo.taxRate || 0.0} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, taxRate: parseFloat(e.target.value) || 0.0 })} className="w-full bg-slate-955 border border-slate-850 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white outline-none" />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {wizardStep === 4 && (
+                <div className="space-y-3">
+                  <p className="text-[11px] text-slate-400 font-semibold mb-1">Configure supported customer payment gateway channels.</p>
+                  <div className="grid grid-cols-1 gap-2.5 max-w-sm mx-auto">
+                    <label className="flex items-center gap-3 p-3 bg-slate-955 border border-slate-850 rounded-xl hover:border-slate-700 cursor-pointer select-none">
+                      <input type="checkbox" checked={scratchEcommerceInfo.paymentStripe || false} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, paymentStripe: e.target.checked })} className="w-4 h-4 rounded text-indigo-650 focus:ring-0" />
+                      <div>
+                        <span className="text-xs font-bold block text-left">Credit/Debit Cards (Stripe)</span>
+                        <span className="text-[9px] text-slate-400 leading-none">Accept global card transactions instantly.</span>
+                      </div>
+                    </label>
+                    <label className="flex items-center gap-3 p-3 bg-slate-955 border border-slate-850 rounded-xl hover:border-slate-700 cursor-pointer select-none">
+                      <input type="checkbox" checked={scratchEcommerceInfo.paymentRazorpay || false} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, paymentRazorpay: e.target.checked })} className="w-4 h-4 rounded text-indigo-655 focus:ring-0" />
+                      <div>
+                        <span className="text-xs font-bold block text-left">UPI & Net Banking (Razorpay)</span>
+                        <span className="text-[9px] text-slate-400 leading-none">Accept local Indian UPI apps checkout.</span>
+                      </div>
+                    </label>
+                    <label className="flex items-center gap-3 p-3 bg-slate-955 border border-slate-850 rounded-xl hover:border-slate-700 cursor-pointer select-none">
+                      <input type="checkbox" checked={scratchEcommerceInfo.paymentPaypal || false} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, paymentPaypal: e.target.checked })} className="w-4 h-4 rounded text-indigo-650 focus:ring-0" />
+                      <div>
+                        <span className="text-xs font-bold block text-left">PayPal Express checkout</span>
+                        <span className="text-[9px] text-slate-400 leading-none">Standard international PayPal balances checkout.</span>
+                      </div>
+                    </label>
+                    <label className="flex items-center gap-3 p-3 bg-slate-955 border border-slate-850 rounded-xl hover:border-slate-700 cursor-pointer select-none">
+                      <input type="checkbox" checked={scratchEcommerceInfo.paymentCod || false} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, paymentCod: e.target.checked })} className="w-4 h-4 rounded text-indigo-650 focus:ring-0" />
+                      <div>
+                        <span className="text-xs font-bold block text-left">Cash on Delivery (COD)</span>
+                        <span className="text-[9px] text-slate-400 leading-none">Collect payment on physical receipt at doorstep.</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {wizardStep === 5 && (
+                <div className="space-y-3">
+                  <p className="text-[11px] text-slate-400 font-semibold mb-1">Configure default shipping profiles for deliveries.</p>
+                  <div className="grid grid-cols-1 gap-2.5 max-w-sm mx-auto">
+                    <label className="flex items-center gap-3 p-3 bg-slate-955 border border-slate-850 rounded-xl hover:border-slate-700 cursor-pointer select-none">
+                      <input type="checkbox" checked={scratchEcommerceInfo.shippingFlatRate || false} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, shippingFlatRate: e.target.checked })} className="w-4 h-4 rounded text-indigo-650 focus:ring-0" />
+                      <div className="flex-grow">
+                        <span className="text-xs font-bold block text-left">Flat Rate Shipping Fee</span>
+                        <span className="text-[9px] text-slate-450 leading-none block text-left">Charge flat fixed delivery fee on orders.</span>
+                      </div>
+                      {scratchEcommerceInfo.shippingFlatRate && (
+                        <input type="number" value={scratchEcommerceInfo.shippingFlatRateFee || 0} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, shippingFlatRateFee: parseFloat(e.target.value) || 0.0 })} className="w-16 bg-slate-950 border border-slate-850 text-xs px-2 py-1 rounded text-white outline-none" />
+                      )}
+                    </label>
+                    <label className="flex items-center gap-3 p-3 bg-slate-955 border border-slate-850 rounded-xl hover:border-slate-700 cursor-pointer select-none">
+                      <input type="checkbox" checked={scratchEcommerceInfo.shippingFree || false} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, shippingFree: e.target.checked })} className="w-4 h-4 rounded text-indigo-650 focus:ring-0" />
+                      <div>
+                        <span className="text-xs font-bold block text-left">Free Shipping</span>
+                        <span className="text-[9px] text-slate-455 leading-none block text-left">Waive all delivery fees. Free shipping storewide.</span>
+                      </div>
+                    </label>
+                    <label className="flex items-center gap-3 p-3 bg-slate-955 border border-slate-855 rounded-xl hover:border-slate-700 cursor-pointer select-none">
+                      <input type="checkbox" checked={scratchEcommerceInfo.shippingPickup || false} onChange={e => setScratchEcommerceInfo({ ...scratchEcommerceInfo, shippingPickup: e.target.checked })} className="w-4 h-4 rounded text-indigo-650 focus:ring-0" />
+                      <div>
+                        <span className="text-xs font-bold block text-left">Self Pick-up Store</span>
+                        <span className="text-[9px] text-slate-455 leading-none block text-left">Customer picks up items physically at warehouse.</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Wizard Footer Controls */}
+            <div className="flex justify-between pt-3 border-t border-slate-800">
+              <button type="button" onClick={() => wizardStep > 1 && setWizardStep(prev => prev - 1)} disabled={wizardStep === 1} className="px-4 py-2 border border-slate-800 hover:bg-slate-800 rounded-xl text-xs font-bold text-slate-400 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                ← Back
+              </button>
+              
+              {wizardStep < 5 ? (
+                <button type="button" onClick={() => setWizardStep(prev => prev + 1)} className="px-5 py-2 bg-indigo-650 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md transition cursor-pointer">
+                  Next Step ➔
+                </button>
+              ) : (
+                <button type="button" onClick={handleCompleteSetup} className="px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-650 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-lg transition cursor-pointer">
+                  Complete Store Setup 🎉
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* AI Store Generator Modal */}
+      {isAiModalOpen && (
+        <div className="fixed inset-0 bg-slate-955/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <div className="w-full max-w-md bg-slate-900 border border-slate-800 text-white rounded-3xl shadow-2xl p-6 flex flex-col gap-4">
+            <div>
+              <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest block">AI Store Generator</span>
+              <h3 className="text-sm font-black uppercase tracking-tight mt-1">Generate Store Content with AI</h3>
+              <p className="text-[10px] text-slate-400 font-medium leading-relaxed mt-1">
+                Enter a descriptive prompt of the online storefront niche you want to generate. AI will build optimized banners, categories, products grids, testimonials, and footers.
+              </p>
+            </div>
+
+            <form onSubmit={handleGenerateStoreWithAi} className="space-y-4">
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1.5">What are you selling?</label>
+                <textarea
+                  required
+                  value={aiPrompt}
+                  onChange={(e) => setAiPrompt(e.target.value)}
+                  placeholder="e.g. Create a premium fashion store selling designer winter outfits, collections, and catalog."
+                  rows={4}
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl px-4 py-3 text-xs outline-none text-white resize-none transition"
+                  disabled={isAiGenerating}
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsAiModalOpen(false);
+                    setAiPrompt('');
+                  }}
+                  className="px-4 py-2 border border-slate-850 hover:bg-slate-800 rounded-xl text-xs font-bold text-slate-400 transition"
+                  disabled={isAiGenerating}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-650 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed border-0"
+                  disabled={isAiGenerating}
+                >
+                  {isAiGenerating ? (
+                    <>
+                      <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Generating Store...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>✨</span>
+                      <span>Generate Store</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
 
       {/* Toast Alert Log Containers */}

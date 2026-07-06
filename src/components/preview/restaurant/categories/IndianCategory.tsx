@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { CategoryProps } from './types';
+import { CategoryProps, CategoryLoginProps, RestaurantDashboardProps } from './types';
 import { CategoryLoginTemplate } from './CategoryLoginTemplate';
 import { CategoryDashboardTemplate } from './CategoryDashboardTemplate';
 
@@ -555,5 +555,31 @@ export function IndianCategory({
   );
 }
 
-export const IndianCategoryLogin = CategoryLoginTemplate;
-export const IndianCategoryDashboard = CategoryDashboardTemplate;
+export function IndianCategoryLogin(props: CategoryLoginProps) {
+  return (
+    <CategoryLoginTemplate
+      {...props}
+      niche="indian"
+      themeColor="#dc2626"
+      img="https://images.unsplash.com/photo-1585938338392-50a59970d2ee?w=800&auto=format&fit=crop&q=80"
+      desc="Enjoy rich Butter Chicken, Biryani, and Tandoori Naan from the clay oven."
+      emoji="🍛"
+    />
+  );
+}
+
+export function IndianCategoryDashboard(props: RestaurantDashboardProps) {
+  return (
+    <CategoryDashboardTemplate
+      {...props}
+      niche="indian"
+      primaryColor="#dc2626"
+      accentBg="bg-red-50 text-red-700 border-red-100"
+      emoji="🍛"
+      metrics={[
+        { title: 'Curry Orders', value: '36', desc: 'Gravy dishes prep' },
+        { title: 'Tandoori Items', value: '14', desc: 'Clay oven queue' }
+      ]}
+    />
+  );
+}

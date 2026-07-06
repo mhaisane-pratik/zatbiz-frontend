@@ -759,5 +759,42 @@ export const api = {
         body: JSON.stringify({ message, context, activeBlockType }),
       }),
   },
+
+  // Scratch E-commerce API
+  scratchEcommerce: {
+    getStore: (projectId: number) => request<any>(`/scratch-ecommerce?projectId=${projectId}`),
+    createStore: (projectId: number, data: any) =>
+      request<any>(`/scratch-ecommerce?projectId=${projectId}`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }),
+    updateStore: (projectId: number, data: any) =>
+      request<any>(`/scratch-ecommerce?projectId=${projectId}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      }),
+    publishStore: (projectId: number, subdomain?: string) =>
+      request<any>(`/scratch-ecommerce/publish?projectId=${projectId}${subdomain ? `&subdomain=${encodeURIComponent(subdomain)}` : ''}`, {
+        method: 'POST',
+      }),
+    products: {
+      list: (projectId: number) => request<any[]>(`/scratch-ecommerce/products?projectId=${projectId}`),
+      create: (data: any) => request<any>('/scratch-ecommerce/products', { method: 'POST', body: JSON.stringify(data) }),
+      update: (id: number, data: any) => request<any>(`/scratch-ecommerce/products/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+      delete: (id: number) => request<any>(`/scratch-ecommerce/products/${id}`, { method: 'DELETE' }),
+    },
+    categories: {
+      list: (projectId: number) => request<any[]>(`/scratch-ecommerce/categories?projectId=${projectId}`),
+      create: (data: any) => request<any>('/scratch-ecommerce/categories', { method: 'POST', body: JSON.stringify(data) }),
+      delete: (id: number) => request<any>(`/scratch-ecommerce/categories/${id}`, { method: 'DELETE' }),
+    },
+    orders: {
+      list: (projectId: number) => request<any[]>(`/scratch-ecommerce/orders?projectId=${projectId}`),
+      updateStatus: (id: number, status: string) => request<any>(`/scratch-ecommerce/orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }),
+    },
+    customers: {
+      list: (projectId: number) => request<any[]>(`/scratch-ecommerce/customers?projectId=${projectId}`),
+    }
+  },
 };
 

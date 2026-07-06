@@ -268,7 +268,9 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
               console.log('No backend travel settings:', err);
             }
 
-            if (config.businessType === 'hospital' || config.businessType === 'clinic') {
+            if (config.businessType === 'ecommerce') {
+              detectedTemplate = 'storefront';
+            } else if (config.businessType === 'hospital' || config.businessType === 'clinic') {
               detectedTemplate = 'clinic';
             } else if (config.businessType === 'travel') {
               detectedTemplate = 'travel';

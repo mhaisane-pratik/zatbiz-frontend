@@ -580,7 +580,9 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
             data.description?.toLowerCase().includes('travel');
 
           let detectedTemplate = 'storefront';
-          if (config.businessType === 'hospital' || config.businessType === 'clinic') {
+          if (config.businessType === 'ecommerce') {
+            detectedTemplate = 'storefront';
+          } else if (config.businessType === 'hospital' || config.businessType === 'clinic') {
             detectedTemplate = 'clinic';
           } else if (config.businessType === 'travel') {
             detectedTemplate = 'travel';
@@ -778,6 +780,11 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
     errorMessage,
     successMessage,
     handleLoginSubmit,
+    title,
+    subtitle,
+    btnText,
+    illustrationUrl,
+    themePreset: theme,
   };
   if (templateId === 'scratch') {
     const scratchLayout = scratchInfo?.selectedLoginLayout || 'left-illustration';

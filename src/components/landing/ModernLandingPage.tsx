@@ -64,36 +64,7 @@ export default function ModernLandingPage() {
 
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.16),_transparent_28%),radial-gradient(circle_at_75%_25%,_rgba(168,85,247,0.18),_transparent_20%),linear-gradient(180deg,_rgba(8,11,20,0)_0%,_rgba(8,11,20,0.85)_65%,_rgba(5,8,22,1)_100%)]" />
 
-      <nav className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/70 px-6 py-4 backdrop-blur-xl md:px-10 lg:px-16">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-6">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 via-fuchsia-500 to-amber-300 shadow-[0_14px_40px_-14px_rgba(34,211,238,0.75)]">
-              <span className="text-sm font-black text-slate-950">Z</span>
-            </div>
-            <div>
-              <span className="block text-lg font-black tracking-tight text-white">ZatBiz</span>
-              <span className="block text-[10px] uppercase tracking-[0.3em] text-slate-400">Visual business builder</span>
-            </div>
-          </Link>
 
-          <div className="hidden items-center gap-8 text-sm font-medium text-slate-300 md:flex">
-            <a href="#features" className="transition hover:text-white">Features</a>
-            <a href="#options" className="transition hover:text-white">Options</a>
-            <a href="#simulator" className="transition hover:text-white">Studio</a>
-            <a href="#templates" className="transition hover:text-white">Templates</a>
-            <a href="#pricing" className="transition hover:text-white">Pricing</a>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-white/20 hover:bg-white/5">
-              Log in
-            </Link>
-            <Link href="/login" className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-950 transition hover:translate-y-[-1px] hover:bg-cyan-100">
-              Start free
-            </Link>
-          </div>
-        </div>
-      </nav>
 
       <main className="relative z-10">
         <section className="w-full pb-12 pt-0">
@@ -106,31 +77,27 @@ export default function ModernLandingPage() {
               <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60" />
               <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-fuchsia-500 to-transparent opacity-60" />
               
-              <div className="w-full pt-4">
-                {/* Browser Mock Navigation Bar */}
-                <div className="mx-auto max-w-7xl flex items-center justify-between border-b border-white/10 pb-3 px-6 md:px-10 lg:px-16">
-                  <div className="flex items-center gap-2">
-                    <span className="mockup-dot-red h-3.5 w-3.5 rounded-full" />
-                    <span className="mockup-dot-yellow h-3.5 w-3.5 rounded-full" />
-                    <span className="mockup-dot-green h-3.5 w-3.5 rounded-full" />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-slate-400">Live preview</span>
-                  </div>
-                </div>
-
+              <div className="w-full pt-0">
                 {/* Video container takes full screen width and is completely flush with the sides */}
                 <div className="w-full mt-0">
-                  <div className="relative overflow-hidden bg-black aspect-video md:aspect-[21/9] w-full border-t border-white/5">
+                  <div className="relative overflow-hidden bg-black aspect-video w-full border-t border-white/5">
                     <video
-                      src="/ZATBIZ_platform_business_ecosystem_202606301040.mp4"
+                      src="/Business_growth_collage_video_za_202607061245.mp4"
                       autoPlay
                       loop
                       muted
                       playsInline
                       className="h-full w-full object-cover opacity-95"
                     />
+
+                    {/* Watermark Overlay */}
+                    <div className="absolute top-3 right-3 md:top-6 md:right-6 z-10 flex items-center gap-2.5 bg-slate-950/75 backdrop-blur-md px-3.5 py-1.5 md:px-5 md:py-2.5 rounded-full border border-white/10 shadow-2xl select-none">
+                      <span className="text-[9px] md:text-[10px] uppercase font-bold tracking-widest text-slate-350">ZatBiz Studio</span>
+                      <div className="h-3 w-[1px] bg-white/20" />
+                      <Link href="/login" className="text-[10px] md:text-[11px] font-black text-cyan-400 hover:text-cyan-350 transition">
+                        Log in ➔
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

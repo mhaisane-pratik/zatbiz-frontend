@@ -33,6 +33,7 @@ export default function BlockMarkup({
   gymInfo,
 }: BlockMarkupProps) {
   const [selectedCat, setSelectedCat] = useState('All');
+  const productsList = Array.isArray(dbProducts) ? dbProducts : [];
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -373,12 +374,12 @@ export default function BlockMarkup({
       );
 
     case 'products': {
-      const uniqueCategories = ['All', ...Array.from(new Set(dbProducts.map((p) => p.category || 'General')))];
-      const uniqueBrands = Array.from(new Set(dbProducts.map((p) => p.brand || '').filter(Boolean)));
+      const uniqueCategories = ['All', ...Array.from(new Set(productsList.map((p) => p.category || 'General')))];
+      const uniqueBrands = Array.from(new Set(productsList.map((p) => p.brand || '').filter(Boolean)));
       const displayBrands = uniqueBrands.length > 0 ? uniqueBrands : ['Louis Philippe', 'Levis', 'Zara', 'Roadster', 'Allen Solly'];
 
       // Deterministic processing to attach brand, discount, color, rating
-      const processedProducts = dbProducts.map((p) => {
+      const processedProducts = productsList.map((p) => {
         const discountPercent = p.discount ?? (p.id ? (p.id % 3) * 10 + 10 : 15);
         const brandName = p.brand ?? ['Louis Philippe', 'Levis', 'Zara', 'Roadster', 'Allen Solly'][(p.id || 0) % 5];
         const ratingVal = p.rating ?? (4.0 + ((p.id || 0) % 10) / 10);
@@ -593,7 +594,7 @@ export default function BlockMarkup({
               {/* Right Side: Grid */}
               <div className="flex-1 w-full space-y-6">
                 {/* Category Filter Navigation */}
-                {dbProducts && dbProducts.length > 0 && (
+                {productsList.length > 0 && (
                   <div className="flex flex-wrap gap-2 pb-2">
                     {uniqueCategories.map((cat) => {
                       const isActive = selectedCat === cat;
@@ -649,7 +650,7 @@ export default function BlockMarkup({
                 <div className="flex md:flex-col overflow-x-auto md:overflow-visible gap-2 md:gap-1.5 pb-2 md:pb-0 scrollbar-none">
                   {uniqueCategories.map((cat) => {
                     const isActive = selectedCat === cat;
-                    const count = cat === 'All' ? dbProducts.length : dbProducts.filter(p => (p.category || 'General') === cat).length;
+                    const count = cat === 'All' ? productsList.length : productsList.filter(p => (p.category || 'General') === cat).length;
                     
                     let catIcon = '🍽️';
                     const catLower = cat.toLowerCase();
@@ -923,6 +924,202 @@ export default function BlockMarkup({
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      );
+    }
+    case 'categories': {
+      const items = c.categories || [
+        { name: 'Apparel', image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=200&auto=format&fit=crop&q=80' },
+        { name: 'Footwear', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&auto=format&fit=crop&q=80' },
+        { name: 'Accessories', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&auto=format&fit=crop&q=80' }
+      ];
+      return (
+        <div className={`p-10 transition-colors duration-300 ${themeClass}`}>
+          <div className="text-center mb-6">
+            <h2 className="text-lg font-bold">{c.title || 'Shop by Category'}</h2>
+          </div>
+          <div className="flex justify-center gap-6 max-w-4xl mx-auto flex-wrap">
+            {items.map((item: any, idx: number) => (
+              <div key={idx} className="flex flex-col items-center gap-2 cursor-pointer hover:scale-105 transition">
+                <div className="w-16 h-16 rounded-full overflow-hidden border border-slate-200">
+                  <img src={item.image} className="w-full h-full object-cover" alt={item.name} />
+                </div>
+                <span className="text-[10px] font-bold text-slate-800">{item.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    case 'collections_grid': {
+      return (
+        <div className={`p-10 transition-colors duration-300 ${themeClass}`}>
+          <div className="text-center mb-6">
+            <h2 className="text-lg font-bold">{c.title || 'Curated Collections'}</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            <div className="relative h-44 rounded-xl overflow-hidden shadow-sm group cursor-pointer">
+              <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&auto=format&fit=crop&q=80" className="absolute inset-0 w-full h-full object-cover brightness-[0.6] group-hover:scale-105 transition duration-300" alt="collection" />
+              <div className="absolute inset-0 flex items-center justify-center text-white flex-col">
+                <span className="text-xs font-black uppercase tracking-wider">Summer Essentials</span>
+                <span className="text-[9px] underline mt-1">Discover Now</span>
+              </div>
+            </div>
+            <div className="relative h-44 rounded-xl overflow-hidden shadow-sm group cursor-pointer">
+              <img src="https://images.unsplash.com/photo-1490367532201-b9bc1dc483f6?w=400&auto=format&fit=crop&q=80" className="absolute inset-0 w-full h-full object-cover brightness-[0.6] group-hover:scale-105 transition duration-300" alt="collection" />
+              <div className="absolute inset-0 flex items-center justify-center text-white flex-col">
+                <span className="text-xs font-black uppercase tracking-wider">Casual Attire</span>
+                <span className="text-[9px] underline mt-1">Discover Now</span>
+              </div>
+            </div>
+            <div className="relative h-44 rounded-xl overflow-hidden shadow-sm group cursor-pointer col-span-1 sm:col-span-2 md:col-span-1">
+              <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&auto=format&fit=crop&q=80" className="absolute inset-0 w-full h-full object-cover brightness-[0.6] group-hover:scale-105 transition duration-300" alt="collection" />
+              <div className="absolute inset-0 flex items-center justify-center text-white flex-col">
+                <span className="text-xs font-black uppercase tracking-wider">Active Sportswear</span>
+                <span className="text-[9px] underline mt-1">Discover Now</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    case 'flash_sale': {
+      return (
+        <div className={`p-10 transition-colors duration-300 ${themeClass} bg-rose-50/30 border-t border-b border-rose-100`}>
+          <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="text-left space-y-1">
+              <span className="text-[10px] font-black text-rose-650 uppercase tracking-widest block">Limited Offer</span>
+              <h2 className="text-xl font-black uppercase tracking-tight">Flash Sale Live!</h2>
+              <p className="text-[11px] text-slate-500 font-semibold">Get up to 50% discount on select items. Offers end soon!</p>
+            </div>
+            <div className="flex gap-3 text-xs font-black text-white">
+              <div className="bg-rose-600 px-3 py-2 rounded-lg text-center"><span className="block text-base">02</span>Hrs</div>
+              <div className="bg-rose-600 px-3 py-2 rounded-lg text-center"><span className="block text-base">45</span>Min</div>
+              <div className="bg-rose-600 px-3 py-2 rounded-lg text-center"><span className="block text-base">18</span>Sec</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    case 'best_sellers': {
+      return (
+        <div className={`p-10 transition-colors duration-300 ${themeClass}`}>
+          <div className="text-center mb-6">
+            <h2 className="text-lg font-bold">{c.title || 'Store Best Sellers'}</h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            {productsList.slice(0, 4).map((p, idx) => (
+              <ProductCard key={p.id || idx} product={p} onAddToCart={onAddToCart} layout="grid" onProductClick={onProductClick} isWishlisted={wishlist.includes(p.id || 0)} onToggleWishlist={onToggleWishlist} />
+            ))}
+          </div>
+        </div>
+      );
+    }
+    case 'recently_viewed': {
+      return (
+        <div className={`p-10 transition-colors duration-300 ${themeClass}`}>
+          <div className="text-left max-w-4xl mx-auto mb-6 flex items-center gap-2">
+            <span>🕒</span>
+            <h2 className="text-base font-bold">{c.title || 'Recently Viewed'}</h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            {productsList.slice(0, 4).map((p, idx) => (
+              <ProductCard key={p.id || idx} product={p} onAddToCart={onAddToCart} layout="grid" onProductClick={onProductClick} isWishlisted={wishlist.includes(p.id || 0)} onToggleWishlist={onToggleWishlist} />
+            ))}
+          </div>
+        </div>
+      );
+    }
+    case 'brands': {
+      return (
+        <div className={`p-8 transition-colors duration-300 ${themeClass} bg-slate-50/50 border-t border-b border-slate-200/40`}>
+          <div className="flex justify-around max-w-4xl mx-auto items-center flex-wrap gap-4 text-xs font-black text-slate-400 select-none">
+            <span>ZARA</span>
+            <span>NIKE</span>
+            <span>GUCCI</span>
+            <span>H&M</span>
+            <span>LEVIS</span>
+          </div>
+        </div>
+      );
+    }
+    case 'newsletter': {
+      return (
+        <div className={`p-12 transition-colors duration-300 ${themeClass} text-center`}>
+          <div className="max-w-md mx-auto space-y-4">
+            <h2 className="text-xl font-bold">{c.title || 'Subscribe to Our Newsletter'}</h2>
+            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{c.subtitle || 'Sign up to get notified on secret launches, early sale access, and style lookbooks.'}</p>
+            <form onSubmit={e => { e.preventDefault(); alert('Subscribed successfully!'); (e.target as HTMLFormElement).reset(); }} className="flex gap-2">
+              <input required type="email" placeholder="Enter your email address..." className="flex-grow bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs text-slate-905 outline-none focus:border-indigo-500 transition" />
+              <button type="submit" className="px-5 py-2 bg-indigo-650 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition border-0 cursor-pointer">Subscribe</button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+    case 'shopping_cart': {
+      return (
+        <div className={`p-10 transition-colors duration-300 ${themeClass} text-center`}>
+          <div className="max-w-xl mx-auto bg-white border border-slate-200/50 p-6 rounded-2xl shadow-sm space-y-6">
+            <h2 className="text-base font-extrabold text-slate-900">Your Shopping Cart</h2>
+            <p className="text-xs text-slate-500 font-medium">Your cart details and item list will be shown here. Proceed to checkout.</p>
+            <button onClick={onViewCart} className="px-5 py-2.5 bg-indigo-650 hover:bg-indigo-705 text-white font-bold rounded-xl text-xs shadow-sm transition border-0 cursor-pointer">Open Shopping Cart</button>
+          </div>
+        </div>
+      );
+    }
+    case 'checkout_form': {
+      return (
+        <div className={`p-10 transition-colors duration-300 ${themeClass} text-center`}>
+          <div className="max-w-xl mx-auto bg-white border border-slate-200/50 p-6 rounded-2xl shadow-sm space-y-6">
+            <h2 className="text-base font-extrabold text-slate-900">Checkout Billing Details</h2>
+            <p className="text-xs text-slate-500 font-medium">Configure shipping addresses and complete your transaction checkout.</p>
+            <button onClick={onViewCart} className="px-5 py-2.5 bg-indigo-650 hover:bg-indigo-705 text-white font-bold rounded-xl text-xs shadow-sm transition border-0 cursor-pointer">Proceed to Checkout</button>
+          </div>
+        </div>
+      );
+    }
+    case 'login_form': {
+      return (
+        <div className={`p-10 transition-colors duration-300 ${themeClass} text-center`}>
+          <div className="max-w-sm mx-auto bg-white border border-slate-200/50 p-6 rounded-2xl shadow-sm space-y-4 text-left">
+            <h2 className="text-sm font-extrabold text-slate-900 text-center">Customer Sign In</h2>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Email Address</label>
+                <input type="email" placeholder="email@example.com" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-900 outline-none" disabled />
+              </div>
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Password</label>
+                <input type="password" placeholder="••••••••" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-900 outline-none" disabled />
+              </div>
+              <button type="button" className="w-full py-2 bg-indigo-650 text-white font-bold rounded-xl text-[10px] border-0 cursor-pointer">Sign In</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    case 'register_form': {
+      return (
+        <div className={`p-10 transition-colors duration-300 ${themeClass} text-center`}>
+          <div className="max-w-sm mx-auto bg-white border border-slate-200/50 p-6 rounded-2xl shadow-sm space-y-4 text-left">
+            <h2 className="text-sm font-extrabold text-slate-900 text-center">Create Customer Account</h2>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Full Name</label>
+                <input type="text" placeholder="John Doe" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-900 outline-none" disabled />
+              </div>
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Email Address</label>
+                <input type="email" placeholder="email@example.com" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-900 outline-none" disabled />
+              </div>
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Password</label>
+                <input type="password" placeholder="••••••••" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-900 outline-none" disabled />
+              </div>
+              <button type="button" className="w-full py-2 bg-indigo-650 text-white font-bold rounded-xl text-[10px] border-0 cursor-pointer">Create Account</button>
+            </div>
           </div>
         </div>
       );
