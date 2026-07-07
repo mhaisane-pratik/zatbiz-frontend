@@ -6,10 +6,10 @@ import { useSearchParams } from 'next/navigation';
 import { api } from '@/services/api';
 import { Project, Block, Product, Order } from '@/types';
 import BlockMarkup from '@/components/preview/BlockMarkup';
-import FashionStorefront from '@/components/preview/FashionStorefront';
 import RestaurantStorefront from '@/components/preview/restaurant/RestaurantStorefront';
 import WeddingStorefront from '@/components/preview/wedding/WeddingStorefront';
 import ScratchStorefront from '@/components/preview/scratch/ScratchStorefront';
+import EcommerceStorefront from '@/components/preview/ecommerce/EcommerceStorefront';
 
 import RestaurantLanding from '@/components/preview/templates/restaurant/Landing';
 import HospitalLanding from '@/components/preview/templates/hospital/Landing';
@@ -18,7 +18,6 @@ import GymLanding from '@/components/preview/templates/gym/Landing';
 import WeddingLanding from '@/components/preview/templates/wedding/Landing';
 import RealEstateLanding from '@/components/preview/templates/realestate/Landing';
 import MedicalShopLanding from '@/components/preview/templates/medical-shop/Landing';
-import StorefrontLanding from '@/components/preview/templates/storefront/Landing';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -1078,20 +1077,12 @@ function PreviewPageContent({ params }: PageProps) {
               if (projectConfig?.businessType === 'medical-shop') {
                 return <MedicalShopLanding {...landingProps} />;
               }
-              if (isFashion) {
+              if (projectConfig?.businessType === 'ecommerce' || projectConfig?.businessType === 'shop' || isFashion) {
                 return (
-                  <StorefrontLanding
+                  <EcommerceStorefront
                     projectId={projectId}
-                    projectConfig={{ ...projectConfig, shopNiche }}
+                    projectConfig={projectConfig}
                     dbProducts={dbProducts}
-                    wishlist={wishlist}
-                    cartCountQuantity={cartCountQuantity}
-                    customerSession={customerSession}
-                    setActiveView={setActiveView}
-                    openProductDetail={openProductDetail}
-                    handleToggleWishlist={handleToggleWishlist}
-                    handleAddToCart={handleAddToCart}
-                    addToast={addToast}
                   />
                 );
               }

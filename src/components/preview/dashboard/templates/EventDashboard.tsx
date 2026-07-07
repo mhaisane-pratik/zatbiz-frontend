@@ -1397,7 +1397,7 @@ export default function EventDashboard({
 
                     <div className="bg-slate-950 border border-slate-900 p-6 rounded-2xl">
                       <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Refund Status</h4>
-                      <div className="mt-3 p-4 bg-slate-900 rounded-xl text-xs text-slate-355">
+                      <div className="mt-3 p-4 bg-slate-900 rounded-xl text-xs text-slate-300">
                         🛡️ No refund requests logged. All advances are subject to standard cancellation rules guidelines.
                       </div>
                     </div>
@@ -1874,8 +1874,8 @@ export default function EventDashboard({
                   </div>
                   <div className="border-t border-slate-900 pt-4 grid grid-cols-3 gap-4 text-xs">
                     <button onClick={() => alert('CMS services catalog updated.')} className="p-3 bg-slate-900 border border-slate-800 text-slate-350 hover:bg-slate-850 rounded-xl font-bold">Edit Services CMS</button>
-                    <button onClick={() => alert('CMS packages blocks saved.')} className="p-3 bg-slate-900 border border-slate-800 text-slate-355 hover:bg-slate-850 rounded-xl font-bold">Edit Packages Tiering</button>
-                    <button onClick={() => alert('CMS testimonials feed updated.')} className="p-3 bg-slate-900 border border-slate-800 text-slate-355 hover:bg-slate-855 rounded-xl font-bold">Edit Client Testimonials</button>
+                    <button onClick={() => alert('CMS packages blocks saved.')} className="p-3 bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-850 rounded-xl font-bold">Edit Packages Tiering</button>
+                    <button onClick={() => alert('CMS testimonials feed updated.')} className="p-3 bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-855 rounded-xl font-bold">Edit Client Testimonials</button>
                   </div>
                 </div>
               )}
@@ -2503,7 +2503,7 @@ export default function EventDashboard({
                 <span>₹{newInvoice.totalAmount.toLocaleString()}</span>
               </div>
               <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={() => setIsInvoiceModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-355">Cancel</button>
+                <button type="button" onClick={() => setIsInvoiceModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-300">Cancel</button>
                 <button type="submit" className="px-3 py-1.5 bg-indigo-650 text-white rounded-xl text-xs font-bold">Generate</button>
               </div>
             </form>
@@ -2542,7 +2542,7 @@ export default function EventDashboard({
                 </select>
               </div>
               <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={() => setIsPaymentModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-355">Cancel</button>
+                <button type="button" onClick={() => setIsPaymentModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-300">Cancel</button>
                 <button type="submit" className="px-3 py-1.5 bg-indigo-650 text-white rounded-xl text-xs font-bold">Record</button>
               </div>
             </form>
@@ -2580,7 +2580,7 @@ export default function EventDashboard({
                 <input type="text" value={newExpense.description} onChange={(e) => setNewExpense({ ...newExpense, description: e.target.value })} className="w-full bg-slate-955 border border-slate-800 text-xs rounded-xl p-2 text-white" required />
               </div>
               <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={() => setIsExpenseModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-355">Cancel</button>
+                <button type="button" onClick={() => setIsExpenseModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-300">Cancel</button>
                 <button type="submit" className="px-3 py-1.5 bg-indigo-650 text-white rounded-xl text-xs font-bold">Log</button>
               </div>
             </form>
@@ -2634,7 +2634,7 @@ export default function EventDashboard({
                 <input type="text" value={newVendor.address} onChange={(e) => setNewVendor({ ...newVendor, address: e.target.value })} className="w-full bg-slate-955 border border-slate-800 text-xs rounded-xl p-2 text-white" required />
               </div>
               <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={() => setIsVendorModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-355">Cancel</button>
+                <button type="button" onClick={() => setIsVendorModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-300">Cancel</button>
                 <button type="submit" className="px-3 py-1.5 bg-indigo-650 text-white rounded-xl text-xs font-bold">Register</button>
               </div>
             </form>
@@ -2680,7 +2680,7 @@ export default function EventDashboard({
                 <input type="email" value={newTeamMember.email} onChange={(e) => setNewTeamMember({ ...newTeamMember, email: e.target.value })} className="w-full bg-slate-955 border border-slate-800 text-xs rounded-xl p-2 text-white" required />
               </div>
               <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={() => setIsTeamModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-355">Cancel</button>
+                <button type="button" onClick={() => setIsTeamModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-300">Cancel</button>
                 <button type="submit" className="px-3 py-1.5 bg-indigo-650 text-white rounded-xl text-xs font-bold">Register Member</button>
               </div>
             </form>
@@ -2715,7 +2715,7 @@ export default function EventDashboard({
                 <textarea rows={3} value={newQuote.details} onChange={(e) => setNewQuote({ ...newQuote, details: e.target.value })} className="w-full bg-slate-955 border border-slate-800 text-xs rounded-xl p-2 text-white" required />
               </div>
               <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={() => setIsQuoteModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-355">Cancel</button>
+                <button type="button" onClick={() => setIsQuoteModalOpen(false)} className="px-3 py-1.5 border border-slate-850 rounded-xl text-xs text-slate-300">Cancel</button>
                 <button type="submit" className="px-3 py-1.5 bg-indigo-650 text-white rounded-xl text-xs font-bold">Generate proposal</button>
               </div>
             </form>

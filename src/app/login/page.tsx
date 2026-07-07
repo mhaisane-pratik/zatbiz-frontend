@@ -64,8 +64,6 @@ export default function LoginPage() {
         throw new Error('No authentication token received.');
       }
     } catch (err: any) {
-      console.error('Auth error:', err);
-      
       // Extract error message safely
       const errMsg = err && typeof err === 'object' && 'message' in err ? err.message : String(err || '');
       
@@ -84,6 +82,7 @@ export default function LoginPage() {
         ));
 
       if (isNetworkError) {
+        console.warn('Network error: Live backend API server is offline or unreachable. Prompting user to proceed with Offline Demo Mode.');
         const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
         setError(
           isLocal 
@@ -91,6 +90,7 @@ export default function LoginPage() {
             : 'Cannot reach the live backend API server (sleeping or offline). You can log in using Offline Demo Mode below to continue.'
         );
       } else {
+        console.error('Auth error:', err);
         setError(errMsg || 'Something went wrong.');
       }
     } finally {
@@ -134,7 +134,7 @@ export default function LoginPage() {
           
           {/* Welcome Text */}
           <div className="flex flex-col items-center lg:items-start select-none">
-            <p className="font-bold text-[10px] tracking-[0.2em] text-slate-455 uppercase">
+            <p className="font-bold text-[10px] tracking-[0.2em] text-slate-400 uppercase">
               {isRegisterMode ? 'Get Started' : 'Welcome Back!'}
             </p>
             <h2 className="font-extrabold text-2xl tracking-tight text-white mt-1">
@@ -145,7 +145,7 @@ export default function LoginPage() {
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-4.5 mt-6 flex-grow flex flex-col justify-center">
             {error && (
-              <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 text-rose-355 rounded-2xl text-xs font-semibold text-center select-none space-y-2.5">
+              <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 text-rose-300 rounded-2xl text-xs font-semibold text-center select-none space-y-2.5">
                 <div>⚠️ {error}</div>
                 {error.includes('Cannot reach') && (
                   <button
@@ -167,7 +167,7 @@ export default function LoginPage() {
             {/* Username (Only for Registration) */}
             {isRegisterMode && (
               <div className="space-y-1.5 text-left">
-                <label className="block font-bold text-xs text-slate-355">
+                <label className="block font-bold text-xs text-slate-300">
                   Primary Username
                 </label>
                 <div className="relative">
@@ -190,7 +190,7 @@ export default function LoginPage() {
 
             {/* Email Address */}
             <div className="space-y-1.5 text-left">
-              <label className="block font-bold text-xs text-slate-355">
+              <label className="block font-bold text-xs text-slate-300">
                 Email Address
               </label>
               <div className="relative">
@@ -217,7 +217,7 @@ export default function LoginPage() {
 
             {/* Password */}
             <div className="space-y-1.5 text-left">
-              <label className="block font-bold text-xs text-slate-355">
+              <label className="block font-bold text-xs text-slate-300">
                 Password
               </label>
               <div className="relative">
@@ -268,6 +268,21 @@ export default function LoginPage() {
             >
               <span>{loading ? (isRegisterMode ? 'Registering...' : 'Logging in...') : (isRegisterMode ? 'Create store' : 'Log in')}</span>
             </button>
+
+            {!isRegisterMode && (
+              <button
+                type="button"
+                onClick={() => {
+                  localStorage.setItem('authToken', 'offline-demo-token');
+                  localStorage.setItem('userEmail', email.trim() || 'demo@zatbiz.com');
+                  localStorage.setItem('userName', username.trim() || 'Offline Demo');
+                  router.push('/dashboard');
+                }}
+                className="w-full mt-3 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] py-3.5 px-4 text-sm font-bold text-white shadow-md transition hover:scale-[1.01] active:scale-[0.99] cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                Proceed in Offline Demo Mode
+              </button>
+            )}
           </form>
 
           {/* Social Divider */}

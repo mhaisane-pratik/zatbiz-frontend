@@ -533,7 +533,7 @@ export default function ScratchStorefront({
                       <div className="relative z-20 space-y-2">
                         <span className="text-[9px] bg-white/20 backdrop-blur px-2.5 py-1 rounded-full font-black uppercase tracking-wider inline-block">Official Site</span>
                         <h3 className="text-xl font-black uppercase tracking-tight">{resolvedTitle}</h3>
-                        <p className="text-[10px] text-slate-355 leading-relaxed font-semibold">{resolvedDesc}</p>
+                        <p className="text-[10px] text-slate-300 leading-relaxed font-semibold">{resolvedDesc}</p>
                       </div>
                     </div>
                   )}

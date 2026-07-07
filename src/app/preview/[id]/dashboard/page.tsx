@@ -25,10 +25,8 @@ import RealEstateAdminDashboard from '@/components/preview/templates/realestate/
 
 import MedicalShopUserDashboard from '@/components/preview/templates/medical-shop/UserDashboard';
 import MedicalShopAdminDashboard from '@/components/preview/templates/medical-shop/AdminDashboard';
-
-import StorefrontUserDashboard from '@/components/preview/templates/storefront/UserDashboard';
-import StorefrontAdminDashboard from '@/components/preview/templates/storefront/AdminDashboard';
-
+import EcommerceAdminPortal from '@/components/preview/ecommerce/EcommerceAdminPortal';
+import EcommerceUserPortal from '@/components/preview/ecommerce/EcommerceUserPortal';
 import TravelUserDashboard from '@/components/preview/templates/travel/UserDashboard';
 import TravelAdminDashboard from '@/components/preview/templates/travel/AdminDashboard';
 
@@ -51,6 +49,16 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
   const [themeName, setThemeName] = useState('slate');
   const [selectedDashboardOption, setSelectedDashboardOption] = useState<number>(1);
   const [loading, setLoading] = useState(true);
+
+  // Floating toasts state
+  const [toasts, setToasts] = useState<{ id: number; message: string; isError?: boolean }[]>([]);
+  const addToast = (message: string, isError?: boolean) => {
+    const id = Date.now();
+    setToasts((prev) => [...prev, { id, message, isError }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 3000);
+  };
 
   // Dynamic theme colors
   const themeStyles: Record<string, any> = {
@@ -268,7 +276,7 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
               console.log('No backend travel settings:', err);
             }
 
-            if (config.businessType === 'ecommerce') {
+            if (config.businessType === 'ecommerce' || config.businessType === 'shop') {
               detectedTemplate = 'storefront';
             } else if (config.businessType === 'hospital' || config.businessType === 'clinic') {
               detectedTemplate = 'clinic';
@@ -342,10 +350,20 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
   const activeTheme = themeStyles[themeName] || themeStyles.slate;
 
     const isAdmin = clientEmail === 'admin@gmail.com' || clientEmail === 'agent@gmail.com' || clientEmail === 'broker@gmail.com';
+  
+  const savedSessionStr = typeof window !== 'undefined' ? localStorage.getItem(`customer_${projectId}`) : null;
+  const customerSession = savedSessionStr ? JSON.parse(savedSessionStr) : {
+    id: typeof window !== 'undefined' ? (localStorage.getItem('clientId') || 'guest') : 'guest',
+    email: clientEmail,
+    name: typeof window !== 'undefined' ? (localStorage.getItem('clientName') || clientEmail.split('@')[0]) : clientEmail.split('@')[0],
+    role: isAdmin ? 'Admin' : 'Customer'
+  };
+
   const dashboardProps = {
     projectId,
     project,
     clientEmail,
+    customerSession,
     theme: activeTheme,
     onLogout: handleLogout,
     companyName,
@@ -353,7 +371,19 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
     logoIcon,
     logoUrl,
     shopNiche,
-    selectedDashboardOption
+    selectedDashboardOption,
+    addToast,
+    setActiveView: (view: string) => {
+      if (view === 'landing') {
+        router.push(`/preview/${projectId}`);
+      }
+    },
+    projectConfig: {
+      selectedCategory: shopNiche || 'fashion',
+      projectName: companyName,
+      logoIcon: logoIcon,
+      themeColor: '#6366f1'
+    }
   };
 
   const renderDashboardContent = () => {
@@ -406,18 +436,47 @@ export default function UserWebsiteDashboardPage({ params }: PageProps) {
         ) : (
           <TravelUserDashboard {...dashboardProps} />
         );
-      default:
+      case 'storefront':
+      case 'ecommerce':
         return isAdmin ? (
-          <StorefrontAdminDashboard {...dashboardProps} />
+          <EcommerceAdminPortal {...dashboardProps} />
         ) : (
-          <StorefrontUserDashboard {...dashboardProps} />
+          <EcommerceUserPortal {...dashboardProps} />
+        );
+      default:
+        return (
+          <div className="flex min-h-screen items-center justify-center bg-slate-955 text-white p-6 text-center">
+            <div className="max-w-md space-y-4">
+              <span className="text-4xl">📊</span>
+              <h2 className="text-xl font-bold">Portal Dashboard</h2>
+              <p className="text-xs text-slate-400">This template does not support client side customer/admin dashboards.</p>
+              <button onClick={handleLogout} className="px-4 py-2 bg-indigo-650 hover:bg-indigo-705 rounded-xl text-xs font-bold transition cursor-pointer">Logout</button>
+            </div>
+          </div>
         );
     }
   };
 
   return (
-    <div className="dashboard-portal-override min-h-screen">
+    <div className="dashboard-portal-override min-h-screen relative">
       {renderDashboardContent()}
+
+      {/* Floating Toast Notification Feed */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2.5">
+        {toasts.map((toast) => (
+          <div
+            key={toast.id}
+            className={`px-4.5 py-3 rounded-2xl border text-xs font-black tracking-wide shadow-2xl flex items-center gap-2 animate-slide-in backdrop-blur-md ${
+              toast.isError
+                ? 'bg-rose-500/90 border-rose-500 text-white'
+                : 'bg-emerald-500/90 border-emerald-500 text-white'
+            }`}
+          >
+            <span>{toast.isError ? '⚠️' : '✓'}</span>
+            <span>{toast.message}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

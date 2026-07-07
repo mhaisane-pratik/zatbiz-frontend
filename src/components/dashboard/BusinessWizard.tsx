@@ -153,6 +153,7 @@ interface BusinessWizardProps {
   initialScratchConfig?: any;
   initialTravelConfig?: any;
   initialTravelCategory?: string | null;
+  initialEcommerceConfig?: any;
   onSelectThemeTemplates?: () => void;
   projects?: Project[];
 }
@@ -180,6 +181,7 @@ export default function BusinessWizard({
   initialScratchConfig,
   initialTravelConfig,
   initialTravelCategory,
+  initialEcommerceConfig,
   onSelectThemeTemplates,
   projects = []
 }: BusinessWizardProps) {
@@ -328,7 +330,14 @@ export default function BusinessWizard({
         setStep(1);
       } else if (initialTemplateId === 'storefront') {
         setBusinessType('shop');
-        setStep(10); // Start at E-commerce Niche selection grid first!
+        if (initialEcommerceConfig) {
+          setCompanyName(initialEcommerceConfig.companyName || '');
+          setThemePreset(initialEcommerceConfig.themeId || '');
+          setShopNiche(initialEcommerceConfig.categoryName || '');
+          setLogoIcon(initialEcommerceConfig.themeConfig?.icon || '🛍️');
+          setSlogan(initialEcommerceConfig.themeConfig?.tagline || 'Shop premium curated products.');
+        }
+        setStep(1);
       } else if (initialTemplateId === 'scratch') {
         setBusinessType('shop');
         if (initialScratchConfig) {
@@ -990,7 +999,15 @@ export default function BusinessWizard({
     if (businessType !== 'shop' && businessType !== 'restaurant') return;
     
     let defaultProds: any[] = [];
-    if (businessType === 'restaurant') {
+    if (initialEcommerceConfig?.themeConfig?.products) {
+      defaultProds = initialEcommerceConfig.themeConfig.products.map((p: any) => ({
+        name: p.name,
+        price: p.price,
+        category: p.category,
+        imageUrl: p.imageUrl,
+        desc: p.description
+      }));
+    } else if (businessType === 'restaurant') {
       const catLower = (initialRestaurantCategory || '').toLowerCase();
       if (catLower.includes('pizza')) {
         defaultProds = [
@@ -1663,6 +1680,7 @@ export default function BusinessWizard({
         ngoCategory: initialNgoCategory || undefined,
         corporateCategory: initialCorporateCategory || undefined,
         theme: themePreset,
+        selectedThemeData: initialEcommerceConfig?.themeConfig,
       });
 
       // Append custom business config metadata block
@@ -1687,6 +1705,17 @@ export default function BusinessWizard({
             weddingHomeOption: selectedWeddingHomeOption,
             weddingLoginOption: selectedWeddingLoginOption,
             weddingDashboardOption: selectedWeddingDashboardOption,
+          } : {}),
+          ...((businessType === 'shop' || businessType === 'ecommerce') ? {
+            selectedCategory: initialEcommerceConfig?.themeConfig?.category || shopNiche,
+            selectedThemeId: initialEcommerceConfig?.themeId,
+            selectedThemeName: initialEcommerceConfig?.themeConfig?.name,
+            selectedThemeData: initialEcommerceConfig?.themeConfig,
+            themeColor: initialEcommerceConfig?.themeColor || themePreset || '#6366f1',
+            logoIcon: initialEcommerceConfig?.themeConfig?.icon || logoIcon || '🛍️',
+            announceText: initialEcommerceConfig?.themeConfig?.announceText || '✨ FREE EXPRESS SHIPPING ON ALL ORDERS ABOVE ₹1,500! ✨',
+            slogan: initialEcommerceConfig?.themeConfig?.tagline || slogan || 'Shop premium curated products.',
+            bannerUrl: initialEcommerceConfig?.themeConfig?.bannerImageUrl || '',
           } : {}),
         },
       });

@@ -49,7 +49,7 @@ export default function GymLogin({
           <h2 className="text-3xl font-black tracking-tight leading-tight">
             Push Your Limits, Unleash Your Power
           </h2>
-          <p className="text-xs text-slate-355 font-medium leading-relaxed">
+          <p className="text-xs text-slate-300 font-medium leading-relaxed">
             Log in to book fitness classes, browse gym merchandise collections, access trainer-guided workout sheets, and track active memberships.
           </p>
         </div>

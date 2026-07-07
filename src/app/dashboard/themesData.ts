@@ -1313,16 +1313,560 @@ export const THEMES_30: ThemeDef[] = [
     bgColor: '#ffffff',
     textColor: '#1e293b',
     accentBg: '#f5f3ff',
-    gradient: 'from-indigo-500 to-pink-500',
-    bgGradClass: 'from-indigo-950 via-slate-900 to-zinc-950',
-    textColorClass: 'text-indigo-650',
+    gradient: 'from-indigo-600 to-pink-500',
+    bgGradClass: 'from-indigo-950 via-slate-900 to-slate-950',
+    textColorClass: 'text-indigo-600',
     primaryBtnClass: 'bg-indigo-600 hover:bg-indigo-700 text-white',
     sidebarBgClass: 'bg-slate-900 text-slate-100',
-    heroImageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1000',
-    bannerImageUrl: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1000',
+    heroImageUrl: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1000',
+    bannerImageUrl: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1000',
     products: [
-      { name: 'Minimalist Urban 2-BHK Flat', description: 'Sleek design, large balcony windows, modular furniture space, and city-center access.', price: 15000000, category: 'Apartments', icon: '🏢', imageUrl: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=500' },
-      { name: 'Independent Suburban Duplex', description: 'Newly built duplex with a modern facade layout, individual car parking, and terrace garden.', price: 28000000, category: 'Independent House', icon: '🏡', imageUrl: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=500' }
+      { name: 'Luxury Penthouse Suite', description: 'Spacious penthouse with skyline view, private balcony, marble bathrooms, and smart home systems.', price: 85000000, category: 'Penthouse', icon: '🏢', imageUrl: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500' },
+      { name: 'Urban Loft Apartment', description: 'Industrial loft featuring exposed brick walls, high ceilings, large windows, and open concept kitchen.', price: 18000000, category: 'Loft', icon: '🏠', imageUrl: 'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=500' }
     ]
   }
 ];
+
+export interface StoreTheme {
+  id: string;
+  name: string;
+  category: string;
+  thumbnail: string;
+  previewImage: string;
+  primaryColor: string;
+  secondaryColor: string;
+  description: string;
+  isPremium: boolean;
+  icon: string;
+  desc: string;
+  bgColor: string;
+  textColor: string;
+  accentBg: string;
+  gradient: string;
+  bgGradClass: string;
+  textColorClass: string;
+  primaryBtnClass: string;
+  sidebarBgClass: string;
+  heroImageUrl: string;
+  bannerImageUrl: string;
+  tagline: string;
+  products: {
+    name: string;
+    description: string;
+    price: number;
+    category: string;
+    icon: string;
+    imageUrl: string;
+  }[];
+  fontFamily?: string;
+  cardStyle?: string;
+  layoutStyle?: string;
+  buttonRoundness?: string;
+  bannerStyle?: string;
+}
+
+const themeAdjectives = ["Apex", "Zenith", "Vibe", "Classic", "Prime", "Elite", "Urban", "Sleek", "Minimal", "Pulse"];
+
+const categoryColors: Record<string, [string, string][]> = {
+  furniture: [
+    ['#b45309', '#f59e0b'], ['#78350f', '#d97706'], ['#7c2d12', '#ea580c'], ['#1e293b', '#64748b'], ['#15803d', '#4ade80'],
+    ['#0369a1', '#38bdf8'], ['#4338ca', '#818cf8'], ['#6d28d9', '#a78bfa'], ['#be185d', '#f472b6'], ['#0f172a', '#cbd5e1']
+  ],
+  fashion: [
+    ['#ec4899', '#f472b6'], ['#db2777', '#f43f5e'], ['#9333ea', '#c084fc'], ['#be185d', '#fda4af'], ['#4f46e5', '#818cf8'],
+    ['#0f172a', '#e2e8f0'], ['#1e1b4b', '#6366f1'], ['#312e81', '#a5b4fc'], ['#065f46', '#34d399'], ['#111827', '#9ca3af']
+  ],
+  electronics: [
+    ['#3b82f6', '#93c5fd'], ['#2563eb', '#60a5fa'], ['#1d4ed8', '#3b82f6'], ['#06b6d4', '#67e8f9'], ['#0891b2', '#22d3ee'],
+    ['#0f172a', '#94a3b8'], ['#0f766e', '#2dd4bf'], ['#4338ca', '#a5b4fc'], ['#0284c7', '#38bdf8'], ['#1e293b', '#cbd5e1']
+  ],
+  beauty: [
+    ['#f472b6', '#fbcfe8'], ['#db2777', '#f472b6'], ['#be185d', '#fce7f3'], ['#ec4899', '#fda4af'], ['#a855f7', '#d8b4fe'],
+    ['#d97706', '#fef08a'], ['#b45309', '#fde047'], ['#0f172a', '#cbd5e1'], ['#059669', '#6ee7b7'], ['#6366f1', '#c7d2fe']
+  ],
+  jewelry: [
+    ['#d97706', '#fef08a'], ['#b45309', '#fde047'], ['#ca8a04', '#fef9c3'], ['#a16207', '#fde047'], ['#0f172a', '#e2e8f0'],
+    ['#4338ca', '#818cf8'], ['#be185d', '#fbcfe8'], ['#0d9488', '#5eead4'], ['#65a30d', '#bef264'], ['#1e293b', '#94a3b8']
+  ],
+  books: [
+    ['#6366f1', '#a5b4fc'], ['#4f46e5', '#c7d2fe'], ['#3730a3', '#818cf8'], ['#0f172a', '#e2e8f0'], ['#15803d', '#86efac'],
+    ['#0369a1', '#7dd3fc'], ['#b45309', '#fde047'], ['#be185d', '#fbcfe8'], ['#6d28d9', '#c084fc'], ['#1e293b', '#cbd5e1']
+  ],
+  restaurant: [
+    ['#ea580c', '#ffedd5'], ['#dc2626', '#fee2e2'], ['#b91c1c', '#fca5a5'], ['#ca8a04', '#fef9c3'], ['#15803d', '#dcfce7'],
+    ['#0f172a', '#e2e8f0'], ['#4338ca', '#e0e7ff'], ['#0d9488', '#ccfbf1'], ['#65a30d', '#f1f8e9'], ['#1e293b', '#cbd5e1']
+  ],
+  pet: [
+    ['#0284c7', '#e0f2fe'], ['#0369a1', '#bae6fd'], ['#0f766e', '#ccfbf1'], ['#15803d', '#dcfce7'], ['#b45309', '#fef3c7'],
+    ['#d97706', '#ffedd5'], ['#6d28d9', '#f3e8ff'], ['#db2777', '#fce7f3'], ['#0f172a', '#f1f5f9'], ['#1e293b', '#cbd5e1']
+  ],
+  sports: [
+    ['#dc2626', '#fca5a5'], ['#ea580c', '#fdba74'], ['#ca8a04', '#fde047'], ['#16a34a', '#86efac'], ['#2563eb', '#93c5fd'],
+    ['#0f172a', '#e2e8f0'], ['#4338ca', '#c7d2fe'], ['#be185d', '#fda4af'], ['#0d9488', '#99f6e4'], ['#1e293b', '#cbd5e1']
+  ],
+  pharmacy: [
+    ['#0d9488', '#ccfbf1'], ['#0f766e', '#99f6e4'], ['#0284c7', '#e0f2fe'], ['#2563eb', '#dbeafe'], ['#16a34a', '#dcfce7'],
+    ['#0f172a', '#f1f5f9'], ['#4338ca', '#e0e7ff'], ['#6d28d9', '#f3e8ff'], ['#db2777', '#fce7f3'], ['#1e293b', '#cbd5e1']
+  ],
+  bakery: [
+    ['#ca8a04', '#fef9c3'], ['#b45309', '#fef3c7'], ['#d97706', '#ffedd5'], ['#ea580c', '#ffedd5'], ['#be185d', '#fce7f3'],
+    ['#0f172a', '#f1f5f9'], ['#15803d', '#dcfce7'], ['#6d28d9', '#f3e8ff'], ['#4338ca', '#e0e7ff'], ['#1e293b', '#cbd5e1']
+  ],
+  cafe: [
+    ['#b45309', '#fde047'], ['#78350f', '#ffedd5'], ['#7c2d12', '#ffedd5'], ['#ca8a04', '#fef9c3'], ['#0f172a', '#e2e8f0'],
+    ['#15803d', '#dcfce7'], ['#4338ca', '#e0e7ff'], ['#0d9488', '#ccfbf1'], ['#65a30d', '#f1f8e9'], ['#1e293b', '#cbd5e1']
+  ],
+  grocery: [
+    ['#16a34a', '#dcfce7'], ['#15803d', '#bbf7d0'], ['#166534', '#86efac'], ['#65a30d', '#f1f8e9'], ['#ca8a04', '#fef9c3'],
+    ['#0f172a', '#f1f5f9'], ['#0d9488', '#ccfbf1'], ['#0284c7', '#e0f2fe'], ['#4338ca', '#e0e7ff'], ['#1e293b', '#cbd5e1']
+  ],
+  'home-decor': [
+    ['#b45309', '#fde047'], ['#78350f', '#ffedd5'], ['#475569', '#cbd5e1'], ['#0f172a', '#e2e8f0'], ['#15803d', '#dcfce7'],
+    ['#4338ca', '#e0e7ff'], ['#0d9488', '#ccfbf1'], ['#be185d', '#fce7f3'], ['#6d28d9', '#f3e8ff'], ['#1e293b', '#cbd5e1']
+  ],
+  digital: [
+    ['#2563eb', '#dbeafe'], ['#0284c7', '#e0f2fe'], ['#0891b2', '#cffafe'], ['#6d28d9', '#f3e8ff'], ['#4338ca', '#e0e7ff'],
+    ['#0f172a', '#f1f5f9'], ['#16a34a', '#dcfce7'], ['#0d9488', '#ccfbf1'], ['#db2777', '#fce7f3'], ['#1e293b', '#cbd5e1']
+  ],
+  flower: [
+    ['#e11d48', '#fecdd3'], ['#be185d', '#fbcfe8'], ['#059669', '#d1fae5'], ['#ca8a04', '#fef9c3'], ['#8b5cf6', '#ddd6fe'],
+    ['#0f172a', '#e2e8f0'], ['#1e293b', '#cbd5e1'], ['#0891b2', '#cffafe'], ['#b45309', '#fef3c7'], ['#475569', '#e2e8f0']
+  ],
+  gift: [
+    ['#d946ef', '#fdf4ff'], ['#db2777', '#fce7f3'], ['#ca8a04', '#fef9c3'], ['#10b981', '#d1fae5'], ['#2563eb', '#dbeafe'],
+    ['#0f172a', '#f1f5f9'], ['#4f46e5', '#e0e7ff'], ['#e11d48', '#ffe4e6'], ['#7c2d12', '#ffedd5'], ['#3b82f6', '#eff6ff']
+  ],
+  kids: [
+    ['#f43f5e', '#ffe4e6'], ['#06b6d4', '#ecfeff'], ['#eab308', '#fef9c3'], ['#10b981', '#d1fae5'], ['#8b5cf6', '#f3e8ff'],
+    ['#ec4899', '#fdf2f8'], ['#f97316', '#ffedd5'], ['#3b82f6', '#eff6ff'], ['#14b8a6', '#f0fdfa'], ['#6366f1', '#e0e7ff']
+  ],
+  'mobile-accessories': [
+    ['#3b82f6', '#eff6ff'], ['#14b8a6', '#f0fdfa'], ['#f59e0b', '#fef3c7'], ['#ef4444', '#fef2f2'], ['#8b5cf6', '#f3e8ff'],
+    ['#0f172a', '#f8fafc'], ['#1e293b', '#cbd5e1'], ['#4b5563', '#f3f4f6'], ['#06b6d4', '#ecfeff'], ['#0891b2', '#cffafe']
+  ],
+  'computer-store': [
+    ['#1d4ed8', '#dbeafe'], ['#0f766e', '#ccfbf1'], ['#4338ca', '#e0e7ff'], ['#1e293b', '#f3f4f6'], ['#0f172a', '#e2e8f0'],
+    ['#b45309', '#ffedd5'], ['#be185d', '#fce7f3'], ['#0284c7', '#e0f2fe'], ['#6d28d9', '#f3e8ff'], ['#09090b', '#27272a']
+  ],
+  automotive: [
+    ['#dc2626', '#ffe4e6'], ['#2563eb', '#dbeafe'], ['#1e293b', '#f3f4f6'], ['#0f172a', '#e2e8f0'], ['#ca8a04', '#fef9c3'],
+    ['#15803d', '#dcfce7'], ['#475569', '#cbd5e1'], ['#7c2d12', '#ffedd5'], ['#0284c7', '#e0f2fe'], ['#06b6d4', '#ecfeff']
+  ],
+  'home-kitchen': [
+    ['#f97316', '#ffedd5'], ['#ef4444', '#fef2f2'], ['#10b981', '#d1fae5'], ['#3b82f6', '#eff6ff'], ['#6b7280', '#f3f4f6'],
+    ['#0f172a', '#e2e8f0'], ['#7c2d12', '#ffedd5'], ['#ca8a04', '#fef9c3'], ['#4338ca', '#e0e7ff'], ['#0d9488', '#ccfbf1']
+  ],
+  footwear: [
+    ['#1e293b', '#f3f4f6'], ['#dc2626', '#ffe4e6'], ['#2563eb', '#dbeafe'], ['#0f172a', '#e2e8f0'], ['#b45309', '#ffedd5'],
+    ['#db2777', '#fce7f3'], ['#10b981', '#d1fae5'], ['#4f46e5', '#e0e7ff'], ['#0891b2', '#cffafe'], ['#6366f1', '#e0e7ff']
+  ],
+  watches: [
+    ['#b45309', '#fef3c7'], ['#1e293b', '#f3f4f6'], ['#0f172a', '#e2e8f0'], ['#15803d', '#dcfce7'], ['#0369a1', '#e0f2fe'],
+    ['#4f46e5', '#e0e7ff'], ['#be185d', '#fce7f3'], ['#475569', '#cbd5e1'], ['#09090b', '#27272a'], ['#0d9488', '#ccfbf1']
+  ],
+  bags: [
+    ['#7c2d12', '#ffedd5'], ['#b45309', '#fef3c7'], ['#1e293b', '#f3f4f6'], ['#0f172a', '#e2e8f0'], ['#0284c7', '#e0f2fe'],
+    ['#db2777', '#fce7f3'], ['#4f46e5', '#e0e7ff'], ['#10b981', '#d1fae5'], ['#78350f', '#ffedd5'], ['#4b5563', '#f3f4f6']
+  ],
+  musical: [
+    ['#b45309', '#fef3c7'], ['#7c2d12', '#ffedd5'], ['#4338ca', '#e0e7ff'], ['#1e293b', '#f3f4f6'], ['#0f172a', '#e2e8f0'],
+    ['#0d9488', '#ccfbf1'], ['#be185d', '#fce7f3'], ['#10b981', '#d1fae5'], ['#6d28d9', '#f3e8ff'], ['#0891b2', '#cffafe']
+  ],
+  hardware: [
+    ['#f59e0b', '#fef3c7'], ['#ef4444', '#fef2f2'], ['#1e293b', '#f3f4f6'], ['#0f172a', '#e2e8f0'], ['#3b82f6', '#eff6ff'],
+    ['#10b981', '#d1fae5'], ['#6b7280', '#f3f4f6'], ['#7c2d12', '#ffedd5'], ['#0d9488', '#ccfbf1'], ['#4f46e5', '#e0e7ff']
+  ],
+  toys: [
+    ['#f43f5e', '#ffe4e6'], ['#3b82f6', '#eff6ff'], ['#eab308', '#fef9c3'], ['#10b981', '#d1fae5'], ['#8b5cf6', '#f3e8ff'],
+    ['#ec4899', '#fdf2f8'], ['#f97316', '#ffedd5'], ['#06b6d4', '#ecfeff'], ['#14b8a6', '#f0fdfa'], ['#6366f1', '#e0e7ff']
+  ],
+  'furniture-premium': [
+    ['#1e293b', '#f3f4f6'], ['#b45309', '#fef3c7'], ['#7c2d12', '#ffedd5'], ['#0f172a', '#e2e8f0'], ['#4f46e5', '#e0e7ff'],
+    ['#0d9488', '#ccfbf1'], ['#be185d', '#fce7f3'], ['#10b981', '#d1fae5'], ['#78350f', '#ffedd5'], ['#4b5563', '#f3f4f6']
+  ],
+  'organic-farm': [
+    ['#16a34a', '#dcfce7'], ['#15803d', '#bbf7d0'], ['#ca8a04', '#fef9c3'], ['#65a30d', '#f1f8e9'], ['#0d9488', '#ccfbf1'],
+    ['#0f172a', '#f1f5f9'], ['#b45309', '#fef3c7'], ['#e11d48', '#ffe4e6'], ['#7c2d12', '#ffedd5'], ['#3b82f6', '#eff6ff']
+  ],
+  courses: [
+    ['#6366f1', '#e0e7ff'], ['#4f46e5', '#c7d2fe'], ['#06b6d4', '#ecfeff'], ['#1e293b', '#f3f4f6'], ['#0f172a', '#e2e8f0'],
+    ['#10b981', '#d1fae5'], ['#d946ef', '#fdf4ff'], ['#f43f5e', '#ffe4e6'], ['#f59e0b', '#fef3c7'], ['#3b82f6', '#eff6ff']
+  ],
+  pod: [
+    ['#ec4899', '#fdf2f8'], ['#10b981', '#d1fae5'], ['#3b82f6', '#eff6ff'], ['#f97316', '#ffedd5'], ['#8b5cf6', '#f3e8ff'],
+    ['#ef4444', '#fef2f2'], ['#06b6d4', '#ecfeff'], ['#0f172a', '#e2e8f0'], ['#1e293b', '#cbd5e1'], ['#6366f1', '#e0e7ff']
+  ],
+  handmade: [
+    ['#b45309', '#fef3c7'], ['#7c2d12', '#ffedd5'], ['#d97706', '#ffedd5'], ['#10b981', '#d1fae5'], ['#6d28d9', '#f3e8ff'],
+    ['#0f172a', '#f1f5f9'], ['#e11d48', '#ffe4e6'], ['#ca8a04', '#fef9c3'], ['#0891b2', '#cffafe'], ['#475569', '#cbd5e1']
+  ],
+  art: [
+    ['#7f1d1d', '#fca5a5'], ['#4f46e5', '#e0e7ff'], ['#0f172a', '#e2e8f0'], ['#6d28d9', '#f3e8ff'], ['#ca8a04', '#fef9c3'],
+    ['#0d9488', '#ccfbf1'], ['#be185d', '#fce7f3'], ['#1e293b', '#cbd5e1'], ['#09090b', '#27272a'], ['#b45309', '#fef3c7']
+  ],
+  medical: [
+    ['#0284c7', '#e0f2fe'], ['#0d9488', '#ccfbf1'], ['#16a34a', '#dcfce7'], ['#2563eb', '#dbeafe'], ['#0f172a', '#f1f5f9'],
+    ['#4338ca', '#e0e7ff'], ['#6d28d9', '#f3e8ff'], ['#db2777', '#fce7f3'], ['#1e293b', '#cbd5e1'], ['#6366f1', '#e0e7ff']
+  ],
+  wholesale: [
+    ['#1e293b', '#f3f4f6'], ['#475569', '#cbd5e1'], ['#3b82f6', '#eff6ff'], ['#10b981', '#d1fae5'], ['#0f172a', '#e2e8f0'],
+    ['#7c2d12', '#ffedd5'], ['#ca8a04', '#fef9c3'], ['#2563eb', '#dbeafe'], ['#0d9488', '#ccfbf1'], ['#6b7280', '#f3f4f6']
+  ],
+  marketplace: [
+    ['#6366f1', '#e0e7ff'], ['#8b5cf6', '#f3e8ff'], ['#3b82f6', '#eff6ff'], ['#0f172a', '#e2e8f0'], ['#10b981', '#d1fae5'],
+    ['#ec4899', '#fdf2f8'], ['#f97316', '#ffedd5'], ['#0d9488', '#ccfbf1'], ['#1e293b', '#cbd5e1'], ['#ca8a04', '#fef9c3']
+  ],
+  scratch: [
+    ['#475569', '#cbd5e1'], ['#1e293b', '#94a3b8'], ['#0f172a', '#64748b'], ['#334155', '#475569'], ['#000000', '#ffffff'],
+    ['#64748b', '#cbd5e1'], ['#94a3b8', '#e2e8f0'], ['#cbd5e1', '#f1f5f9'], ['#cbd5e1', '#f8fafc'], ['#e2e8f0', '#ffffff']
+  ]
+};
+
+const categoryProducts: Record<string, { name: string; description: string; price: number; category: string; icon: string; imageUrl: string }[]> = {
+  fashion: [
+    { name: 'Oversized Denim Jacket', description: 'Premium heavy washed cotton denim jacket with utility chest pockets.', price: 2499, category: 'Outwear', icon: '🧥', imageUrl: 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=400' },
+    { name: 'Ribbed Knit Midi Dress', description: 'Slim fit stretchy knit fabric dress with an elegant side slit detail.', price: 1899, category: 'Dresses', icon: '👗', imageUrl: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400' },
+    { name: 'Minimalist Leather Sneakers', description: 'Full grain leather sneakers with vulcanized rubber soles.', price: 3499, category: 'Footwear', icon: '👟', imageUrl: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400' }
+  ],
+  electronics: [
+    { name: 'Wireless Noise-Cancelling Headphones', description: 'Smart ambient sound profile, high-res audio drivers.', price: 8999, category: 'Audio', icon: '🎧', imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400' },
+    { name: 'Smart Fitness Band v5', description: 'Tracks oxygen levels, sleep monitoring, heart rate telemetry.', price: 2999, category: 'Wearables', icon: '⌚', imageUrl: 'https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=400' },
+    { name: 'Mechanical Gaming Keyboard', description: 'Cherry MX Red switches, full dynamic RGB backlight layout.', price: 4499, category: 'Peripherals', icon: '⌨️', imageUrl: 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=400' }
+  ],
+  grocery: [
+    { name: 'Organic Raw Honey', description: 'Directly sourced from organic bee farms, unfiltered and raw.', price: 450, category: 'Pantry', icon: '🍯', imageUrl: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400' },
+    { name: 'Fresh Organic Avocados', description: 'Rich in healthy fats, fresh and ready for guacamole dishes.', price: 350, category: 'Produce', icon: '🥑', imageUrl: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=400' },
+    { name: 'Whole Grain Sourdough Bread', description: 'Freshly baked using traditional wild starters, rich texture.', price: 180, category: 'Bakery', icon: '🍞', imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400' }
+  ],
+  furniture: [
+    { name: 'Scandinavian Lounge Chair', description: 'Solid oak wood frame, premium fabric upholstery seat cushions.', price: 8999, category: 'Living Room', icon: '🛋️', imageUrl: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400' },
+    { name: 'Minimalist Wooden Desk', description: 'Sleek tabletop workspace, integrated storage drawer panels.', price: 12999, category: 'Office', icon: '💻', imageUrl: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400' },
+    { name: 'Modern Brass Floor Lamp', description: 'Adjustable light projection angle, heavy marble base.', price: 3499, category: 'Lighting', icon: '💡', imageUrl: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400' }
+  ],
+  jewelry: [
+    { name: 'Solitaire Diamond Ring', price: 49999, description: 'GIA-certified 0.5-carat round brilliant cut diamond on platinum band.', category: 'Rings', icon: '💍', imageUrl: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400' },
+    { name: '18k Gold Chain Necklace', price: 18999, description: 'Classic link chain design in premium solid yellow gold styling.', category: 'Necklaces', icon: '📿', imageUrl: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400' },
+    { name: 'Pearl Drop Earrings', price: 7499, description: 'Cultured fresh-water pearls on sterling silver drop backings.', category: 'Earrings', icon: '💎', imageUrl: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400' }
+  ],
+  beauty: [
+    { name: 'Hydrating Face Serum', price: 1299, description: 'Infused with double hyaluronic acid and vitamin B5 matrices.', category: 'Skincare', icon: '🧴', imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400' },
+    { name: 'Matte Liquid Lipstick', price: 899, description: 'Long-wear transfer-proof formulation in classic rouge pink.', category: 'Makeup', icon: '💄', imageUrl: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400' },
+    { name: 'Clay Detox Face Mask', price: 799, description: 'Bentonite clay and active green tea extracts for pores.', category: 'Skincare', icon: '🧖‍♀️', imageUrl: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400' }
+  ],
+  pharmacy: [
+    { name: 'Premium Multi-Vitamins', price: 950, description: 'Daily organic supplements for general energy and defense support.', category: 'Wellness', icon: '💊', imageUrl: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400' },
+    { name: 'Digital Blood Pressure Monitor', price: 2499, description: 'Fully automatic oscillometric inflation, memory logs.', category: 'Devices', icon: '🩺', imageUrl: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=400' },
+    { name: 'Infrared Thermometer', price: 1899, description: 'Instant forehead non-contact sensor readings.', category: 'Devices', icon: '🌡️', imageUrl: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400' }
+  ],
+  pet: [
+    { name: 'Premium Grain-Free Dog Kibble', price: 1499, description: 'Real deboned chicken recipe, high protein active energy.', category: 'Food', icon: '🍖', imageUrl: 'https://images.unsplash.com/photo-1589722254388-912c70030588?w=400' },
+    { name: 'Interactive Cat Laser Toy', price: 499, description: 'Automated rotation program to keep cats physically active.', category: 'Toys', icon: '🐭', imageUrl: 'https://images.unsplash.com/photo-1548247416-ec66f4900b2e?w=400' },
+    { name: 'Memory Foam Pet Bed', price: 2999, description: 'Pressure-relieving orthopedic foam core with washable cover.', category: 'Beds', icon: '🛏️', imageUrl: 'https://images.unsplash.com/photo-1541599540903-216a46ca1ad0?w=400' }
+  ],
+  books: [
+    { name: 'The Art of Typography', price: 699, description: 'A comprehensive study of editorial layouts and print design history.', category: 'Books', icon: '📖', imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400' },
+    { name: 'Leather Hardcover Journal', price: 499, description: 'Unlined parchment sheets bound in handmade leather wraps.', category: 'Stationery', icon: '📓', imageUrl: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400' },
+    { name: 'Calligraphy Set with Ink', price: 1299, description: 'Handcrafted wood holder, 5 brass nib varieties, black ink.', category: 'Stationery', icon: '✒️', imageUrl: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=400' }
+  ],
+  sports: [
+    { name: 'Smart GPS Sports Watch', price: 14999, description: 'Barometric altimeter, optical heart sensor, dynamic workout tracking.', category: 'Gear', icon: '⌚', imageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=400' },
+    { name: 'Trail Running Shoes', price: 4500, description: 'Waterproof gore-tex membrane, heavy lugged carbon rubber outsoles.', category: 'Footwear', icon: '👟', imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400' },
+    { name: 'Adjustable Dumbbell Pair (20kg)', price: 6999, description: 'Steel plate selectors, textured rubber anti-slip grip handle bar.', category: 'Gear', icon: '🏋️‍♂️', imageUrl: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400' }
+  ],
+  restaurant: [
+    { name: 'Double Cheese Grilled Burger', price: 250, description: 'Flame grilled double chicken patties, premium cheddar cheese, sesame buns.', category: 'Burgers', icon: '🍔', imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400' },
+    { name: 'Wood-fired Pepperoni Pizza', price: 450, description: 'Classic Neapolitan sourdough crust, marinara, beef pepperoni, fresh basil.', category: 'Pizza', icon: '🍕', imageUrl: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400' },
+    { name: 'Crispy Peri Peri Fries', price: 150, description: 'Fresh cut potato wedges fried crisp, tossed in hot peri peri spices.', category: 'Sides', icon: '🍟', imageUrl: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400' }
+  ],
+  bakery: [
+    { name: 'Belgian Chocolate Fudge Cake', price: 850, description: 'Rich layers of dark chocolate sponge and silky chocolate ganache frosting.', category: 'Cakes', icon: '🎂', imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400' },
+    { name: 'Butter Croissants pack', price: 220, description: 'Golden flaky layered puff pastry baked fresh using premium French butter.', category: 'Pastry', icon: '🥐', imageUrl: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400' },
+    { name: 'Red Velvet cupcakes', price: 300, description: 'Classic red cocoa cupcakes topped with silky vanilla cream cheese swirl.', category: 'Cupcakes', icon: '🧁', imageUrl: 'https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=400' }
+  ],
+  cafe: [
+    { name: 'House Blend Espresso Roast', price: 450, description: 'Medium-dark roast whole beans with tasting notes of hazelnut and cacao.', category: 'Beans', icon: '☕', imageUrl: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400' },
+    { name: 'Iced Salted Caramel Latte', price: 280, description: 'Espresso pulled over cold milk and sweet caramel, served over ice.', category: 'Drinks', icon: '🥤', imageUrl: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=400' },
+    { name: 'Ceramic Pour Over Dripper', price: 1200, description: 'Traditional ceramic V60 design for manual slow drip coffee brewing.', category: 'Gear', icon: '🏺', imageUrl: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400' }
+  ],
+  'home-decor': [
+    { name: 'Ceramic Dried Flower Vase', price: 890, description: 'Handcrafted stoneware vase with a rustic textured white glaze.', category: 'Vases', icon: '🏺', imageUrl: 'https://images.unsplash.com/photo-1581781870027-04212e231e96?w=400' },
+    { name: 'Geometric Throw Cushion', price: 450, description: 'Cotton linen cushion cover featuring minimalist modern print panels.', category: 'Cushions', icon: '🛋️', imageUrl: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=400' },
+    { name: 'Scented Soy Wax Candle', price: 650, description: 'Natural soy wax candle infused with lavender and amber essential oils.', category: 'Candles', icon: '🕯️', imageUrl: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?w=400' }
+  ],
+  flower: [
+    { name: 'Red Rose Romance Bouquet', price: 999, description: 'A bouquet of 12 fresh premium red roses wrapped in dynamic mesh.', category: 'Bouquets', icon: '🌹', imageUrl: 'https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=500' },
+    { name: 'Desert Succulent Garden', price: 599, description: 'Pre-assembled miniature indoor desert succulents in a marble bowl.', category: 'Plants', icon: '🌵', imageUrl: 'https://images.unsplash.com/photo-1545241047-6083a3684587?w=500' },
+    { name: 'White Lily Glass Vase', price: 1299, description: 'Stunning white lilies set in a transparent hand-blown glass vase.', category: 'Vases', icon: '🏺', imageUrl: 'https://images.unsplash.com/photo-1581781870027-04212e231e96?w=500' }
+  ],
+  gift: [
+    { name: 'Gourmet Chocolate Basket', price: 1999, description: 'Curated premium chocolates, wafers, and nuts in a woven wicker basket.', category: 'Baskets', icon: '🧺', imageUrl: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=500' },
+    { name: 'Customized Ceramic Mug Set', price: 799, description: 'Pair of custom monogrammed matte finish coffee mugs.', category: 'Mugs', icon: '☕', imageUrl: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500' },
+    { name: 'Amber Glow Scented Candle Set', price: 1499, description: 'Three organic soy wax candles infused with premium botanical oils.', category: 'Candles', icon: '🕯️', imageUrl: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?w=500' }
+  ],
+  kids: [
+    { name: 'Baby Cotton Bodysuit Pack', price: 899, description: 'Three breathable organic cotton bodysuits with lap shoulders.', category: 'Apparel', icon: '👶', imageUrl: 'https://images.unsplash.com/photo-1519689680058-324335c77ebe?w=500' },
+    { name: 'Wooden Rainbow Stacking Toy', price: 699, description: 'Safe non-toxic wooden stacking arches for cognitive coordination.', category: 'Toys', icon: '🧸', imageUrl: 'https://images.unsplash.com/photo-1515488042361-404e9250afef?w=500' },
+    { name: 'Stars & Clouds Crib Sheets', price: 1299, description: 'Soft, fitted cotton sheets designed for standard nursery crib sizes.', category: 'Nursery', icon: '🛏️', imageUrl: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=500' }
+  ],
+  'mobile-accessories': [
+    { name: 'Clear Magnetic Phone Case', price: 999, description: 'High-impact clear case with integrated magnets for wireless charging.', category: 'Cases', icon: '📱', imageUrl: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500' },
+    { name: 'Fast Auto-Clamp Car Charger', price: 1899, description: 'Dashboard mounted wireless charging dock with automatic locking sensor.', category: 'Chargers', icon: '🔌', imageUrl: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=500' },
+    { name: 'Pro LED Ring Light Tripod', price: 2499, description: '10-inch desktop ring light with 3 modes and an adjustable tripod stand.', category: 'Studio', icon: '📸', imageUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500' }
+  ],
+  'computer-store': [
+    { name: 'Ultra-Wide Curved IPS Monitor', price: 28999, description: '34-inch curved screen featuring 144Hz refresh rate and HDR10 support.', category: 'Monitors', icon: '🖥️', imageUrl: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500' },
+    { name: 'Ergonomic Mesh Task Chair', price: 14999, description: 'Adjustable 3D lumbar support, mesh backing, and padded headrest.', category: 'Furniture', icon: '🪑', imageUrl: 'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=500' },
+    { name: 'Dual-Screen USB-C Docking Station', price: 4999, description: 'Aluminum hub with dual HDMI ports, Ethernet, and card reader.', category: 'Hubs', icon: '💻', imageUrl: 'https://images.unsplash.com/photo-1468436139062-f60a71c5c892?w=500' }
+  ],
+  automotive: [
+    { name: 'Elite Carnauba Liquid Wax', price: 799, description: 'Premium grade carnauba wax providing long-lasting mirror shine.', category: 'Care', icon: '🧼', imageUrl: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=500' },
+    { name: 'OBD2 Pro Diagnostic Scanner', price: 3499, description: 'Reads and clears engine trouble codes, checks emission readiness.', category: 'Tools', icon: '⚙️', imageUrl: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=500' },
+    { name: 'HEPA Smart Car Air Purifier', price: 1899, description: 'Compact cup-holder size purifier with active carbon odor filters.', category: 'Accessories', icon: '🍃', imageUrl: 'https://images.unsplash.com/photo-1504215680048-db15dd059536?w=500' }
+  ],
+  'home-kitchen': [
+    { name: 'Smart Digital XL Air Fryer', price: 7999, description: '6-liter capacity with 8 one-touch cooking presets and recipe books.', category: 'Appliances', icon: '🍳', imageUrl: 'https://images.unsplash.com/photo-1621972750749-0fbb1abb7736?w=500' },
+    { name: 'Ceramic Non-Stick Fry Pan', price: 1899, description: 'Eco-friendly chemical-free ceramic non-stick layer on aluminum core.', category: 'Cookware', icon: '🍳', imageUrl: 'https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=500' },
+    { name: 'Damascus Steel Chef Knife Set', price: 4499, description: 'Three piece razor-sharp professional knives with pakkawood handles.', category: 'Cutlery', icon: '🔪', imageUrl: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=500' }
+  ],
+  footwear: [
+    { name: 'AeroCushion Running Sneakers', price: 3999, description: 'Breathable knit mesh upper, thick responsive foam footbed.', category: 'Athletic', icon: '👟', imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500' },
+    { name: 'Premium Leather Penny Loafers', price: 4999, description: 'Hand-stitched genuine leather loafers with cushioned orthotic soles.', category: 'Formal', icon: '👞', imageUrl: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=500' },
+    { name: 'Urban Trail Comfort Sandals', price: 1899, description: 'Adjustable velcro straps, contoured rubber grip sole panels.', category: 'Casual', icon: '👡', imageUrl: 'https://images.unsplash.com/photo-1603487988353-c8e4b3e68a9a?w=500' }
+  ],
+  watches: [
+    { name: 'Chronograph Leather Sport Watch', price: 7999, description: 'Waterproof tachymeter watch with genuine calfskin strap loops.', category: 'Sports', icon: '⌚', imageUrl: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500' },
+    { name: 'Classic Minimalist Quartz Watch', price: 4599, description: 'Sleek white dial watch with mesh stainless steel strap design.', category: 'Classic', icon: '⌚', imageUrl: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500' },
+    { name: 'Skeleton Automatic Mechanical Watch', price: 18999, description: 'Intricate visible gear movement, self-winding premium luxury.', category: 'Luxury', icon: '⌚', imageUrl: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=500' }
+  ],
+  bags: [
+    { name: 'Vintage Leather Travel Duffle', price: 5499, description: 'Spacious main compartment made from full-grain vegetable-tanned leather.', category: 'Travel', icon: '💼', imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500' },
+    { name: 'Anti-Theft Laptop Backpack', price: 2999, description: 'Hidden zipper layouts, TSA locks, built-in USB portal access.', category: 'Backpacks', icon: '🎒', imageUrl: 'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=500' },
+    { name: 'Minimalist Saffiano Crossbody', price: 3499, description: 'Textured scratch-resistant leather bag with adjustable gold chain.', category: 'Handbags', icon: '👜', imageUrl: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500' }
+  ],
+  musical: [
+    { name: 'Solid Spruce Acoustic Guitar', price: 8999, description: 'Dreadnought body shape with spruce top, rich warm acoustic resonance.', category: 'String', icon: '🎸', imageUrl: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=500' },
+    { name: '61-Key Digital Arranger Keyboard', price: 12999, description: 'Touch sensitive keys, 400 tones, built-in lesson interfaces.', category: 'Keyboards', icon: '🎹', imageUrl: 'https://images.unsplash.com/photo-1552422535-c45813c61732?w=500' },
+    { name: 'Mahogany Concert Ukulele Kit', price: 2499, description: 'Includes tuner, gig bag, and learning booklet, mahogany body.', category: 'String', icon: '🎻', imageUrl: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500' }
+  ],
+  hardware: [
+    { name: '20V Max Cordless Drill Set', price: 4499, description: 'Variable speed trigger, 22 torque configurations, two batteries.', category: 'Power Tools', icon: '🛠️', imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=500' },
+    { name: 'Steel Heavy-Duty Tool Chest', price: 2999, description: 'Multi-compartment locking toolbox with comfortable grip metal handle.', category: 'Storage', icon: '🧰', imageUrl: 'https://images.unsplash.com/photo-1530124560072-aae937ad8ff3?w=500' },
+    { name: 'Precision Magnetic Screwdriver Kit', price: 999, description: '60 alloy steel bits in a sleek push-to-open locking case.', category: 'Hand Tools', icon: '🪛', imageUrl: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=500' }
+  ],
+  toys: [
+    { name: 'Smart STEM Coding Robot', price: 3499, description: 'App-controlled robot kit teaching graphical coding logic structures.', category: 'STEM', icon: '🤖', imageUrl: 'https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=500' },
+    { name: 'Wooden Animal Stacking Puzzle', price: 599, description: 'Eco-friendly wooden shapes in bright non-toxic paint layers.', category: 'Wooden', icon: '🧩', imageUrl: 'https://images.unsplash.com/photo-1515488042361-404e9250afef?w=500' },
+    { name: 'High-Speed Offroad RC Buggy', price: 2499, description: '2.4GHz control system, independent shock suspensions, 20km/h speed.', category: 'RC', icon: '🚗', imageUrl: 'https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=500' }
+  ],
+  'furniture-premium': [
+    { name: 'Velvet Mid-Century Accent Sofa', price: 34999, description: 'Rich velvet upholstery, solid eucalyptus wood frame, tapered gold legs.', category: 'Living Room', icon: '🛋️', imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500' },
+    { name: 'Carrara Marble Coffee Table', price: 14999, description: 'Hexagonal polished marble tabletop on black steel geometric cage.', category: 'Living Room', icon: '🪑', imageUrl: 'https://images.unsplash.com/photo-1577140917170-285929fb55b7?w=500' },
+    { name: 'Orthopedic Leather Recliner Chair', price: 18999, description: 'Full grain leather recliner with massage nodes and footrest.', category: 'Office', icon: '🪑', imageUrl: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=500' }
+  ],
+  'organic-farm': [
+    { name: 'Fresh Farm Strawberry Basket', price: 350, description: 'Sweet, organic strawberries harvested at sunrise from eco-farm fields.', category: 'Produce', icon: '🍓', imageUrl: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=500' },
+    { name: 'Artisanal Fresh Goat Cheese', price: 490, description: 'Creamy, log-shaped goat cheese made using traditional farm recipes.', category: 'Dairy', icon: '🧀', imageUrl: 'https://images.unsplash.com/photo-1486887396153-fa416525c108?w=500' },
+    { name: 'Raw Clover Honeycomb Block', price: 650, description: 'Pure, unprocessed honey sealed in its original wax comb cells.', category: 'Pantry', icon: '🍯', imageUrl: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=500' }
+  ],
+  digital: [
+    { name: 'Lightroom Pro Presets Pack', price: 1500, description: '10 custom professional presets for clean lifestyle and portrait color tones.', category: 'Presets', icon: '📸', imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400' },
+    { name: 'React Next.js Admin Boilerplate', price: 2999, description: 'Tailwind and React dashboard framework containing 30 prebuilt layouts.', category: 'Templates', icon: '📊', imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400' },
+    { name: 'SaaS Figma UI Landing Kit', price: 4500, description: 'Complete Figma design library for modern multi-purpose homepages.', category: 'Kits', icon: '🎨', imageUrl: 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=400' }
+  ],
+  courses: [
+    { name: 'React Next.js Masterclass Bootcamp', price: 4999, description: '12-week immersive course covering server components, authentication, and SSR.', category: 'Development', icon: '🎓', imageUrl: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500' },
+    { name: 'Advanced Digital Marketing Strategy', price: 3499, description: 'Master SEO, meta pixel configurations, email outreach, and conversion analysis.', category: 'Marketing', icon: '📈', imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500' },
+    { name: 'Figma UI/UX Design System Guide', price: 2499, description: 'Build responsive web design systems from auto-layout grids to prototypes.', category: 'Design', icon: '🎨', imageUrl: 'https://images.unsplash.com/photo-1581291518655-9523c932ded7?w=500' }
+  ],
+  pod: [
+    { name: 'Custom Graphic Urban Hoodie', price: 2299, description: 'Premium heavyweight cotton hoodie printed with customizable graphics.', category: 'Hoodies', icon: '🧥', imageUrl: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500' },
+    { name: 'Printed Ceramic Tea Mug', price: 499, description: 'Matte black ceramic mug with custom sublimation wrap design options.', category: 'Mugs', icon: '☕', imageUrl: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500' },
+    { name: 'Embroidered Heavy Canvas Tote', price: 899, description: 'Thick canvas tote bag featuring high-density custom embroidery.', category: 'Bags', icon: '👜', imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=500' }
+  ],
+  handmade: [
+    { name: 'Hand-Woven Sunset Tapestry', price: 3499, description: 'Minimalist geometric wall art woven from organic wool and cotton.', category: 'Decor', icon: '🖼️', imageUrl: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500' },
+    { name: 'Hand-Carved Walnut Salad Bowl', price: 1899, description: 'Food-safe carved wooden bowl treated with organic linseed oils.', category: 'Kitchen', icon: '🥣', imageUrl: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=500' },
+    { name: 'Hand-Thrown Ceramic Coffee Mug', price: 799, description: 'Stoneware mug with a beautiful glossy running glaze texture.', category: 'Mugs', icon: '☕', imageUrl: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=500' }
+  ],
+  art: [
+    { name: 'Oil Landscape Painting Canvas', price: 14999, description: 'Original textured oil painting depicting mountain ridges at sunset.', category: 'Paintings', icon: '🎨', imageUrl: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=500' },
+    { name: 'Abstract Stone Table Sculpture', price: 8999, description: 'Handcrafted abstract sculpture made from premium white limestone.', category: 'Sculptures', icon: '🗿', imageUrl: 'https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=500' },
+    { name: 'Fine Art Photography Print', price: 2499, description: 'Archival quality print of a misty forest landscape, unframed.', category: 'Prints', icon: '🖼️', imageUrl: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500' }
+  ],
+  medical: [
+    { name: 'Digital Fingertip Pulse Oximeter', price: 1499, description: 'Accurately monitors SpO2 levels and pulse rate, LED screen.', category: 'Devices', icon: '🩺', imageUrl: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=500' },
+    { name: 'Graduated Compression Leg Socks', price: 799, description: 'Promotes leg circulation and reduces swelling during recovery.', category: 'Wellness', icon: '🧦', imageUrl: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=500' },
+    { name: 'Pro First Aid Emergency Box', price: 2999, description: 'Complete 150-piece medical kit in a secure red steel locking box.', category: 'Wellness', icon: '📦', imageUrl: 'https://images.unsplash.com/photo-1603398938378-e54eab446ddd?w=500' }
+  ],
+  wholesale: [
+    { name: 'Bulk Cotton Blank Tees (50-Pack)', price: 18999, description: 'Pack of 50 wholesale preshrunk cotton t-shirts in mixed sizes.', category: 'Apparel', icon: '📦', imageUrl: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500' },
+    { name: 'Wholesale Kraft Shopping Bags (500-Pack)', price: 4499, description: 'Box of 500 recyclable brown kraft paper bags with handles.', category: 'Packaging', icon: '🛍️', imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=500' },
+    { name: 'Bulk LED E27 Light Bulbs (100-Pack)', price: 7999, description: 'Pack of 100 energy saving daylight white LED bulbs.', category: 'Lighting', icon: '💡', imageUrl: 'https://images.unsplash.com/photo-1565814636199-ae8133055c1c?w=500' }
+  ],
+  marketplace: [
+    { name: 'Multi-Vendor Smart Tech Bundle', price: 18999, description: 'Curated audio and wearable gadgets from multiple certified vendor partners.', category: 'Electronics', icon: '📦', imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500' },
+    { name: 'Marketplace Boutique Collection Pack', price: 9999, description: 'A mixed box of accessories and apparel curated from local boutiques.', category: 'Fashion', icon: '🛍️', imageUrl: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500' },
+    { name: 'Gourmet Artisan Food Box', price: 3499, description: 'Direct marketplace farm products, cheeses, honey, and snacks.', category: 'Grocery', icon: '🍇', imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=500' }
+  ],
+  scratch: [
+    { name: 'Blank Custom Product A', price: 100, description: 'Customize pricing, categories, and images inside the admin manager panel.', category: 'Custom', icon: '📦', imageUrl: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400' },
+    { name: 'Blank Custom Product B', price: 200, description: 'Customize pricing, categories, and images inside the admin manager panel.', category: 'Custom', icon: '📦', imageUrl: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400' },
+    { name: 'Blank Custom Product C', price: 300, description: 'Customize pricing, categories, and images inside the admin manager panel.', category: 'Custom', icon: '📦', imageUrl: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400' }
+  ]
+};
+
+const categoryIcons: Record<string, string> = {
+  furniture: '🛋️', fashion: '👗', electronics: '💻', beauty: '💄', jewelry: '💍',
+  books: '📚', restaurant: '🍔', pet: '🐕', sports: '🚴', pharmacy: '⚕️',
+  bakery: '🍰', cafe: '☕', grocery: '🍎', 'home-decor': '🖼️', digital: '💾',
+  flower: '💐', gift: '🎁', kids: '🧸', 'mobile-accessories': '📱', 'computer-store': '🖥️',
+  automotive: '🚗', 'home-kitchen': '🍳', footwear: '👟', watches: '⌚', bags: '👜',
+  musical: '🎸', hardware: '🛠️', toys: '🤖', 'furniture-premium': '🛋️', 'organic-farm': '🚜',
+  courses: '🎓', pod: '👕', handmade: '🏺', art: '🎨', medical: '🩺', wholesale: '🏢',
+  marketplace: '🌐', scratch: '🛠'
+};
+
+export const ALL_THEMES_160: StoreTheme[] = [];
+
+// Custom typography selection matching adjectives
+const themeFonts = [
+  "Plus Jakarta Sans", "Outfit", "Sora", "Syne", "Playfair Display", 
+  "Cinzel", "Montserrat", "Inter", "Cabinet Grotesk", "Satoshi"
+];
+
+// Custom card styling matching adjectives
+const themeCardStyles = [
+  "classic-bordered", "glassmorphic", "bold-shadow", "minimalist",
+  "classic-bordered", "glassmorphic", "bold-shadow", "minimalist",
+  "classic-bordered", "glassmorphic"
+];
+
+// Custom layout styling matching adjectives
+const themeLayoutStyles = [
+  "modern-grid", "asymmetric-split", "editorial-carousel", "minimal-masonry",
+  "modern-grid", "asymmetric-split", "editorial-carousel", "minimal-masonry",
+  "modern-grid", "asymmetric-split"
+];
+
+// Button roundness matching adjectives
+const themeButtonRoundness = [
+  "rounded-lg", "rounded-2xl", "rounded-full", "rounded-none",
+  "rounded-lg", "rounded-2xl", "rounded-full", "rounded-none",
+  "rounded-lg", "rounded-2xl"
+];
+
+// Hero banner styling matching adjectives
+const themeBannerStyles = [
+  "gradient-mesh", "editorial-split", "minimal-outline", "glass-card",
+  "gradient-mesh", "editorial-split", "minimal-outline", "glass-card",
+  "gradient-mesh", "editorial-split"
+];
+
+Object.keys(categoryColors).forEach((cat) => {
+  const colorsList = categoryColors[cat];
+  const capitalizedCat = cat.charAt(0).toUpperCase() + cat.slice(1).replace(/-./g, x => ' ' + x[1].toUpperCase());
+  const icon = categoryIcons[cat] || '🛍️';
+  
+  for (let i = 0; i < 10; i++) {
+    const adj = themeAdjectives[i];
+    const [primary, secondary] = colorsList[i] || ['#6366f1', '#a5b4fc'];
+    const id = `${cat}-${i + 1}`;
+    
+    // Assign professional stock images matching category
+    let img = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&auto=format&fit=crop&q=80';
+    if (cat === 'fashion') {
+      img = `https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'electronics') {
+      img = `https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'grocery') {
+      img = `https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'furniture' || cat === 'furniture-premium') {
+      img = `https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'jewelry') {
+      img = `https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'beauty') {
+      img = `https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'pharmacy' || cat === 'medical') {
+      img = `https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'pet') {
+      img = `https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'books') {
+      img = `https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'sports') {
+      img = `https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'restaurant') {
+      img = `https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'bakery') {
+      img = `https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'cafe') {
+      img = `https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'home-decor' || cat === 'handmade') {
+      img = `https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'digital' || cat === 'courses') {
+      img = `https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'flower') {
+      img = `https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'gift') {
+      img = `https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'kids' || cat === 'toys') {
+      img = `https://images.unsplash.com/photo-1515488042361-404e9250afef?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'mobile-accessories') {
+      img = `https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'computer-store') {
+      img = `https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'automotive') {
+      img = `https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'home-kitchen') {
+      img = `https://images.unsplash.com/photo-1621972750749-0fbb1abb7736?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'footwear') {
+      img = `https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'watches') {
+      img = `https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'bags' || cat === 'pod' || cat === 'wholesale') {
+      img = `https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'musical') {
+      img = `https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'hardware') {
+      img = `https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'organic-farm') {
+      img = `https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'art') {
+      img = `https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'marketplace') {
+      img = `https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&auto=format&fit=crop&q=80`;
+    } else if (cat === 'scratch') {
+      img = `https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format&fit=crop&q=80`;
+    }
+
+    ALL_THEMES_160.push({
+      id,
+      name: `${capitalizedCat} ${adj}`,
+      category: cat,
+      thumbnail: img,
+      previewImage: img,
+      primaryColor: primary,
+      secondaryColor: secondary,
+      description: `A premium professional theme preset designed for ${cat} retail stores.`,
+      isPremium: i % 3 === 0,
+      icon,
+      desc: `Elegant and modern ${cat} layout featuring responsive headers, catalog builders, and checkout workflows.`,
+      bgColor: '#0f172a',
+      textColor: '#ffffff',
+      accentBg: `${primary}15`,
+      gradient: `from-[${primary}] to-[${secondary}]`,
+      bgGradClass: `from-slate-900 via-slate-900 to-slate-950`,
+      textColorClass: `text-[${primary}]`,
+      primaryBtnClass: `bg-[${primary}] hover:scale-105 text-white`,
+      sidebarBgClass: 'bg-slate-900 text-slate-100',
+      heroImageUrl: img,
+      bannerImageUrl: img,
+      tagline: `Powering ${capitalizedCat} digital commerce.`,
+      products: categoryProducts[cat] || [],
+      fontFamily: themeFonts[i],
+      cardStyle: themeCardStyles[i],
+      layoutStyle: themeLayoutStyles[i],
+      buttonRoundness: themeButtonRoundness[i],
+      bannerStyle: themeBannerStyles[i]
+    });
+  }
+});

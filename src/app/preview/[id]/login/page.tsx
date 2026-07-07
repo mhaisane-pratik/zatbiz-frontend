@@ -32,7 +32,7 @@ import GymLogin from '@/components/preview/templates/gym/Login';
 import WeddingLogin from '@/components/preview/templates/wedding/Login';
 import RealEstateLogin from '@/components/preview/templates/realestate/Login';
 import MedicalShopLogin from '@/components/preview/templates/medical-shop/Login';
-import StorefrontLogin from '@/components/preview/templates/storefront/Login';
+import EcommerceLogin from '@/components/preview/ecommerce/EcommerceLogin';
 import TravelLogin from '@/components/preview/templates/travel/Login';
 
 interface PageProps {
@@ -346,31 +346,6 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
   useEffect(() => {
     if (isNaN(projectId)) return;
 
-    // Fetch gym custom layouts
-    api.gym.get(projectId)
-      .then((gymData) => {
-        if (gymData && gymData.projectId) {
-          setGymInfo(gymData);
-        }
-      })
-      .catch((e) => console.log('Not gym or offline:', e));
-    api.scratch.get(projectId)
-      .then((scratchData) => {
-        if (scratchData && scratchData.projectId) {
-          setScratchInfo(scratchData);
-        }
-      })
-      .catch((e) => console.log('Not scratch or offline:', e));
-
-    // Fetch restaurant custom layouts
-    api.restaurant.get(projectId)
-      .then((restData) => {
-        if (restData) {
-          setRestaurantInfo(restData);
-        }
-      })
-      .catch((e) => console.log('Not restaurant or offline:', e));
-
     api.projects
       .get(projectId)
       .then((data: Project) => {
@@ -580,7 +555,7 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
             data.description?.toLowerCase().includes('travel');
 
           let detectedTemplate = 'storefront';
-          if (config.businessType === 'ecommerce') {
+          if (config.businessType === 'ecommerce' || config.businessType === 'shop') {
             detectedTemplate = 'storefront';
           } else if (config.businessType === 'hospital' || config.businessType === 'clinic') {
             detectedTemplate = 'clinic';
@@ -617,6 +592,36 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
           }
 
           setTemplateId(detectedTemplate);
+
+          if (detectedTemplate === 'scratch') {
+            api.scratch.get(projectId)
+              .then((scratchData) => {
+                if (scratchData && scratchData.projectId) {
+                  setScratchInfo(scratchData);
+                }
+              })
+              .catch((e) => console.log('Not scratch or offline:', e));
+          }
+
+          if (detectedTemplate === 'restaurant') {
+            api.restaurant.get(projectId)
+              .then((restData) => {
+                if (restData) {
+                  setRestaurantInfo(restData);
+                }
+              })
+              .catch((e) => console.log('Not restaurant or offline:', e));
+          }
+
+          if (detectedTemplate === 'gym') {
+            api.gym.get(projectId)
+              .then((gymData) => {
+                if (gymData && gymData.projectId) {
+                  setGymInfo(gymData);
+                }
+              })
+              .catch((e) => console.log('Not gym or offline:', e));
+          }
 
           setIllustrationUrl((prev) => {
             if (!prev || prev === '/images/login_illustration.png' || prev.startsWith('/images/')) {
@@ -785,6 +790,12 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
     btnText,
     illustrationUrl,
     themePreset: theme,
+    projectConfig: {
+      selectedCategory: shopNiche || 'fashion',
+      projectName: companyName,
+      logoIcon: logoIcon,
+      themeColor: GLOBAL_THEME_COLORS[theme] || '#6366f1'
+    }
   };
   if (templateId === 'scratch') {
     const scratchLayout = scratchInfo?.selectedLoginLayout || 'left-illustration';
@@ -941,7 +952,18 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
       return <MedicalShopLogin {...loginProps} />;
     case 'travel':
       return <TravelLogin {...loginProps} themePreset={theme} />;
+    case 'storefront':
+    case 'ecommerce':
+      return <EcommerceLogin {...loginProps} />;
     default:
-      return <StorefrontLogin {...loginProps} />;
+      return (
+        <div className="flex min-h-screen items-center justify-center bg-slate-955 text-white p-6 text-center">
+          <div className="max-w-md space-y-4">
+            <span className="text-4xl">🔐</span>
+            <h2 className="text-xl font-bold">Secure Portal</h2>
+            <p className="text-xs text-slate-400">This template does not support client side customer login.</p>
+          </div>
+        </div>
+      );
   }
 }

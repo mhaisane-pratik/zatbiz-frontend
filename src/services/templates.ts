@@ -476,6 +476,7 @@ export function generateTemplateBlocks(params: {
   weddingHomeOption?: number;
   weddingLoginOption?: number;
   weddingDashboardOption?: number;
+  selectedThemeData?: any;
 }) {
   const {
     selectedTemplateId,
@@ -498,6 +499,7 @@ export function generateTemplateBlocks(params: {
     weddingHomeOption,
     weddingLoginOption,
     weddingDashboardOption,
+    selectedThemeData,
   } = params;
 
   const blocksList: any[] = [];
@@ -1128,20 +1130,19 @@ export function generateTemplateBlocks(params: {
     });
   } else if (selectedTemplateId === 'storefront') {
     const nicheInfo = shopNiche ? NICHE_DETAILS[shopNiche] : null;
-    const storefrontTheme = nicheInfo ? nicheInfo.theme : 'deepblue';
+    const storefrontTheme = selectedThemeData ? (selectedThemeData.primaryColor || 'deepblue') : (nicheInfo ? nicheInfo.theme : 'deepblue');
+    const heroImg = selectedThemeData ? (selectedThemeData.previewImage || customHero) : customHero;
+    const heroTitle = selectedThemeData ? `${brandName} ${selectedThemeData.name}` : (nicheInfo ? `${brandName} ${nicheInfo.title}` : `${brandName} Storefront`);
+    const heroSubtitle = slogan || (selectedThemeData ? selectedThemeData.description : (nicheInfo ? nicheInfo.subtitle : `Welcome to the global commerce catalog of ${brandName}. Handcrafted items designed to elevate your visual lifestyle.`));
 
     blocksList.push({
       id: Date.now() + '-hero',
       type: 'hero',
       theme: storefrontTheme,
       content: {
-        title: nicheInfo ? `${brandName} ${nicheInfo.title}` : `${brandName} Storefront`,
-        subtitle:
-          slogan ||
-          (nicheInfo
-            ? nicheInfo.subtitle
-            : `Welcome to the global commerce catalog of ${brandName}. Handcrafted items designed to elevate your visual lifestyle.`),
-        imageUrl: customHero,
+        title: heroTitle,
+        subtitle: heroSubtitle,
+        imageUrl: heroImg,
         btn1Text: 'Shop Catalog',
         btn2Text: 'Explore Collections',
       },
@@ -1149,10 +1150,10 @@ export function generateTemplateBlocks(params: {
     blocksList.push({
       id: Date.now() + '-products',
       type: 'products',
-      theme: nicheInfo ? nicheInfo.theme : 'slate',
+      theme: storefrontTheme,
       content: {
-        title: nicheInfo ? `${nicheInfo.title} Catalog` : 'Featured Products Catalog',
-        subtitle: nicheInfo ? `Explore our curated selection of premium ${shopNiche} products.` : 'Explore our latest releases and premium essentials.',
+        title: selectedThemeData ? `${selectedThemeData.name} Catalog` : (nicheInfo ? `${nicheInfo.title} Catalog` : 'Featured Products Catalog'),
+        subtitle: selectedThemeData ? `Explore our curated selection of premium ${selectedThemeData.category} products.` : (nicheInfo ? `Explore our curated selection of premium ${shopNiche} products.` : 'Explore our latest releases and premium essentials.'),
       },
     });
     blocksList.push({

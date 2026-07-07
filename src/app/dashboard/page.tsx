@@ -15,6 +15,7 @@ import SuperAdminPanel from '@/components/dashboard/SuperAdminPanel';
 import { THEMES_30, ThemeDef } from './themesData';
 import { generateTemplateBlocks } from '@/services/templates';
 import RestaurantSelectorModal from '@/components/dashboard/RestaurantSelectorModal';
+import EcommerceSelectorModal from '@/components/dashboard/EcommerceSelectorModal';
 import TravelSelectorModal from '@/components/dashboard/TravelSelectorModal';
 import HospitalSelectorModal from '@/components/dashboard/HospitalSelectorModal';
 import GymSelectorModal from '@/components/dashboard/GymSelectorModal';
@@ -210,6 +211,13 @@ export default function DashboardPage() {
   const [selectedGymThemeId, setSelectedGymThemeId] = useState<string | null>(null);
   const [selectedGymThemeColor, setSelectedGymThemeColor] = useState<string | null>(null);
   const [selectedGymConfig, setSelectedGymConfig] = useState<any>(null);
+
+  // Ecommerce state variables
+  const [isEcommerceSelectorOpen, setIsEcommerceSelectorOpen] = useState(false);
+  const [selectedEcommerceCategory, setSelectedEcommerceCategory] = useState<string | null>(null);
+  const [selectedEcommerceThemeId, setSelectedEcommerceThemeId] = useState<string | null>(null);
+  const [selectedEcommerceThemeColor, setSelectedEcommerceThemeColor] = useState<string | null>(null);
+  const [selectedEcommerceConfig, setSelectedEcommerceConfig] = useState<any>(null);
 
   const [isRealEstateSelectorOpen, setIsRealEstateSelectorOpen] = useState(false);
   const [selectedRealEstateCategory, setSelectedRealEstateCategory] = useState<string | null>(null);
@@ -458,6 +466,8 @@ export default function DashboardPage() {
   const handleSelectTemplate = (templateId: string) => {
     if (templateId === 'restaurant') {
       setIsRestaurantSelectorOpen(true);
+    } else if (templateId === 'storefront') {
+      setIsEcommerceSelectorOpen(true);
     } else if (templateId === 'travel') {
       setIsTravelSelectorOpen(true);
     } else if (templateId === 'clinic') {
@@ -3212,6 +3222,39 @@ export default function DashboardPage() {
           }}
         />
       )}
+      {/* Ecommerce Category Selector Modal */}
+      {isEcommerceSelectorOpen && (
+        <EcommerceSelectorModal
+          isOpen={isEcommerceSelectorOpen}
+          onClose={() => setIsEcommerceSelectorOpen(false)}
+          onSelectCategory={(category, config) => {
+            setIsEcommerceSelectorOpen(false);
+            setSelectedTemplateId('storefront');
+            setSelectedEcommerceCategory(category);
+            setSelectedEcommerceThemeId(config.themeId);
+            setSelectedEcommerceThemeColor(config.themeColor);
+            setSelectedEcommerceConfig(config);
+            setIsWizardOpen(true);
+          }}
+          onBuildFromScratch={() => {
+            setIsEcommerceSelectorOpen(false);
+            setSelectedTemplateId('storefront');
+            setSelectedEcommerceCategory('scratch');
+            setSelectedEcommerceThemeId(null);
+            setSelectedEcommerceThemeColor(null);
+            setSelectedEcommerceConfig({
+              categoryName: 'scratch',
+              themeId: 'theme-slate',
+              themeColor: '#475569',
+              themeConfig: {
+                icon: '🛍️',
+                tagline: 'Custom scratch online store'
+              }
+            });
+            setIsWizardOpen(true);
+          }}
+        />
+      )}
 
       {/* Wedding Category Selector Modal */}
       {isWeddingSelectorOpen && (
@@ -3325,6 +3368,7 @@ export default function DashboardPage() {
           initialScratchConfig={selectedScratchConfig}
           initialTravelConfig={selectedTravelConfig}
           initialTravelCategory={selectedTravelCategory}
+          initialEcommerceConfig={selectedEcommerceConfig}
           projects={projects}
           onClose={() => {
             setIsWizardOpen(false);
@@ -3346,6 +3390,10 @@ export default function DashboardPage() {
             setSelectedScratchConfig(null);
             setSelectedTravelConfig(null);
             setSelectedTravelCategory(null);
+            setSelectedEcommerceCategory(null);
+            setSelectedEcommerceThemeId(null);
+            setSelectedEcommerceThemeColor(null);
+            setSelectedEcommerceConfig(null);
           }}
           onComplete={(newProj) => {
             setProjects((prev) => [newProj, ...prev]);
@@ -3354,6 +3402,10 @@ export default function DashboardPage() {
             setSelectedRestaurantConfig(null);
             setSelectedGymConfig(null);
             setSelectedScratchConfig(null);
+            setSelectedEcommerceCategory(null);
+            setSelectedEcommerceThemeId(null);
+            setSelectedEcommerceThemeColor(null);
+            setSelectedEcommerceConfig(null);
             setActiveTab('downloads');
           }}
           showToast={showToast}

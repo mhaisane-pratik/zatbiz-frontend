@@ -1672,7 +1672,7 @@ export default function RestaurantAdminDashboard({
                             </span>
                             <button onClick={() => handleUpdateEventBookingStatus(item, 'Approved')} className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-slate-800 font-black text-[10px] rounded-lg uppercase tracking-wide cursor-pointer border-none">Approve</button>
                             <button onClick={() => handleUpdateEventBookingStatus(item, 'Cancelled')} className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-slate-800 font-black text-[10px] rounded-lg uppercase tracking-wide cursor-pointer border-none">Cancel</button>
-                            <button onClick={() => handleDownloadAttendeeList(eb.eventName)} className="px-2.5 py-1.5 bg-stone-100 hover:bg-slate-750 text-slate-355 border border-slate-750 rounded-lg text-[10px] cursor-pointer">📥 CSV</button>
+                            <button onClick={() => handleDownloadAttendeeList(eb.eventName)} className="px-2.5 py-1.5 bg-stone-100 hover:bg-slate-750 text-slate-300 border border-slate-750 rounded-lg text-[10px] cursor-pointer">📥 CSV</button>
                           </div>
                         </div>
                       );
