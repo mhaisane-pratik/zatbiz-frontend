@@ -1233,15 +1233,15 @@ export const THEMES_30: ThemeDef[] = [
     icon: '🎨',
     brandIcon: '🛋️',
     tagline: 'Modern interior design and architecture blueprints.',
-    primaryColor: '#7c2d12',
+    primaryColor: '#c2410c',
     secondaryColor: '#d97706',
-    bgColor: '#fafaf9',
+    bgColor: '#fff7ed',
     textColor: '#431407',
     accentBg: '#ffedd5',
-    gradient: 'from-orange-850 to-amber-700',
-    bgGradClass: 'from-stone-955 via-stone-900 to-orange-950',
-    textColorClass: 'text-orange-800',
-    primaryBtnClass: 'bg-orange-805 hover:bg-orange-900 text-white',
+    gradient: 'from-orange-700 to-amber-500',
+    bgGradClass: 'from-stone-950 via-stone-900 to-orange-950',
+    textColorClass: 'text-orange-700',
+    primaryBtnClass: 'bg-orange-700 hover:bg-orange-800 text-white',
     sidebarBgClass: 'bg-stone-900 text-stone-100',
     heroImageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1000',
     bannerImageUrl: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1000',
@@ -1267,7 +1267,7 @@ export const THEMES_30: ThemeDef[] = [
     bgGradClass: 'from-blue-955 via-slate-900 to-black',
     textColorClass: 'text-blue-500',
     primaryBtnClass: 'bg-blue-600 hover:bg-blue-700 text-white',
-    sidebarBgClass: 'bg-zinc-950 text-zinc-100',
+    sidebarBgClass: 'bg-zinc-955 text-zinc-100',
     heroImageUrl: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1000',
     bannerImageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1000',
     products: [
@@ -1326,6 +1326,98 @@ export const THEMES_30: ThemeDef[] = [
     ]
   }
 ];
+
+// Dynamically generate and append 150 combinations (15 hospital types x 10 themes)
+const HOSPITAL_NICHE_TYPES = [
+  { subcategory: 'General Hospital', icon: '🏥', tagline: 'Comprehensive clinical care and diagnostic facilities for your family.' },
+  { subcategory: 'Multi Specialty Hospital', icon: '🏢', tagline: 'Multi-specialty surgical, trauma, and inpatient healthcare facilities.' },
+  { subcategory: 'Dental Clinic', icon: '🦷', tagline: 'Advanced orthodontic surgeries, root canal treatment, and smile design.' },
+  { subcategory: 'Eye Hospital', icon: '👁️', tagline: 'Laser vision correction, cataract surgery, and complete optical scans.' },
+  { subcategory: 'Orthopedic Hospital', icon: '🦴', tagline: 'Joint replacement surgeries, fracture trauma care, and physical rehab.' },
+  { subcategory: 'Cardiology Hospital', icon: '❤️', tagline: 'Advanced cardiothoracic surgeries, angiogram scans, and bypass therapies.' },
+  { subcategory: 'Neurology Hospital', icon: '🧠', tagline: 'Brain tumor surgeries, stroke therapies, and neural diagnostics.' },
+  { subcategory: 'Children Hospital', icon: '👶', tagline: 'Specialized neonatal care, pediatric surgeries, and vaccination schedules.' },
+  { subcategory: 'Women\'s Hospital', icon: '🤰', tagline: 'Compassionate maternity care, gynecological health, and neonatal wings.' },
+  { subcategory: 'Skin Clinic', icon: '🧴', tagline: 'Dermatological laser therapies, cosmetic skin care, and allergy clinics.' },
+  { subcategory: 'ENT Clinic', icon: '👂', tagline: 'Microscopic ear surgeries, sinus treatments, and throat disorder care.' },
+  { subcategory: 'Diagnostic Center', icon: '🧪', tagline: 'High-precision MRI scan, ultrasound, pathology blood testing, and biopsy.' },
+  { subcategory: 'Physiotherapy Clinic', icon: '🚶', tagline: 'Sports injury rehabilitation, post-stroke mobility, and pain management.' },
+  { subcategory: 'Mental Health Clinic', icon: '🧘', tagline: 'Professional clinical counseling, psychiatric support, and therapy groups.' },
+  { subcategory: 'Veterinary Hospital', icon: '🐾', tagline: 'Compassionate pet surgeries, emergency animal trauma, and vaccination care.' }
+];
+
+const THEME_ACCENTS_PRESETS = [
+  { name: 'Vibrant Teal', id: 'vibrant-teal', primary: '#0d9488', secondary: '#14b8a6', accentBg: 'bg-teal-50 dark:bg-teal-950/20', textClass: 'text-teal-600 dark:text-teal-400', btnClass: 'bg-teal-600 hover:bg-teal-700 text-white', logo: '🏥' },
+  { name: 'Royal Blue', id: 'royal-blue', primary: '#2563eb', secondary: '#3b82f6', accentBg: 'bg-blue-50 dark:bg-blue-950/20', textClass: 'text-blue-600 dark:text-blue-400', btnClass: 'bg-blue-600 hover:bg-blue-700 text-white', logo: '🩺' },
+  { name: 'Emerald Natural', id: 'emerald-natural', primary: '#059669', secondary: '#10b981', accentBg: 'bg-emerald-50 dark:bg-emerald-950/20', textClass: 'text-emerald-600 dark:text-emerald-400', btnClass: 'bg-emerald-600 hover:bg-emerald-700 text-white', logo: '🌿' },
+  { name: 'Neon Cyber-Health', id: 'neon-cyber', primary: '#7c3aed', secondary: '#06b6d4', accentBg: 'bg-purple-50 dark:bg-purple-950/20', textClass: 'text-purple-600 dark:text-purple-400', btnClass: 'bg-purple-600 hover:bg-purple-750 text-white', logo: '⚡' },
+  { name: 'Warm Amber', id: 'warm-amber', primary: '#d97706', secondary: '#f59e0b', accentBg: 'bg-amber-50 dark:bg-amber-950/20', textClass: 'text-amber-600 dark:text-amber-400', btnClass: 'bg-amber-600 hover:bg-amber-700 text-white', logo: '☀️' },
+  { name: 'Rose Coral', id: 'rose-coral', primary: '#e11d48', secondary: '#f43f5e', accentBg: 'bg-rose-50 dark:bg-rose-950/20', textClass: 'text-rose-600 dark:text-rose-400', btnClass: 'bg-rose-600 hover:bg-rose-700 text-white', logo: '🌸' },
+  { name: 'Clean Slate', id: 'clean-slate', primary: '#475569', secondary: '#64748b', accentBg: 'bg-slate-50 dark:bg-slate-950/20', textClass: 'text-slate-600 dark:text-slate-400', btnClass: 'bg-slate-700 hover:bg-slate-800 text-white', logo: '📁' },
+  { name: 'Dark Obsidian', id: 'dark-obsidian', primary: '#0f172a', secondary: '#1e293b', accentBg: 'bg-slate-100 dark:bg-slate-900', textClass: 'text-slate-905 dark:text-slate-200', btnClass: 'bg-slate-900 hover:bg-black text-white', logo: '💎' },
+  { name: 'Lilac Aura', id: 'lilac-aura', primary: '#7c3aed', secondary: '#a78bfa', accentBg: 'bg-violet-50 dark:bg-violet-950/20', textClass: 'text-violet-600 dark:text-violet-400', btnClass: 'bg-violet-600 hover:bg-violet-750 text-white', logo: '🔮' },
+  { name: 'Sunset Crimson', id: 'sunset-crimson', primary: '#be123c', secondary: '#fb7185', accentBg: 'bg-red-50 dark:bg-red-950/20', textClass: 'text-red-650 dark:text-red-400', btnClass: 'bg-red-700 hover:bg-red-800 text-white', logo: '🔥' }
+];
+
+const DEFAULT_DOCTOR_NAMES = [
+  ['Dr. Sarah Jenkins', 'Dr. John Miller', 'Dr. Amanda Ross'],
+  ['Dr. Robert Chen', 'Dr. Lisa Kudrow', 'Dr. David Geller'],
+  ['Dr. Emily Watson', 'Dr. Frank Sinatra', 'Dr. Clara Oswald']
+];
+
+HOSPITAL_NICHE_TYPES.forEach((niche) => {
+  THEME_ACCENTS_PRESETS.forEach((preset, pIdx) => {
+    const docNames = DEFAULT_DOCTOR_NAMES[pIdx % DEFAULT_DOCTOR_NAMES.length];
+    
+    THEMES_30.push({
+      id: `clinic-${niche.subcategory.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${preset.id}`,
+      name: `${niche.subcategory} - ${preset.name}`,
+      industry: 'Clinic',
+      desc: `Modern responsive layout for ${niche.subcategory} styled with ${preset.name} colors.`,
+      icon: niche.icon,
+      brandIcon: preset.logo,
+      tagline: niche.tagline,
+      primaryColor: preset.primary,
+      secondaryColor: preset.secondary,
+      bgColor: '#ffffff',
+      textColor: '#1e293b',
+      accentBg: preset.accentBg,
+      gradient: `from-[${preset.primary}] to-[${preset.secondary}]`,
+      bgGradClass: `from-[${preset.primary}] via-slate-900 to-slate-950`,
+      textColorClass: preset.textClass,
+      primaryBtnClass: preset.btnClass,
+      sidebarBgClass: 'bg-slate-900 text-slate-100',
+      heroImageUrl: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1000',
+      bannerImageUrl: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1000',
+      products: [
+        {
+          name: docNames[0],
+          description: `Chief Consulting Practitioner at our ${niche.subcategory} wing. MD, PhD with over 12 years of specialized residency.`,
+          price: 800,
+          category: niche.subcategory,
+          icon: '👨‍⚕️',
+          imageUrl: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=500'
+        },
+        {
+          name: docNames[1],
+          description: `Associate Specialist Doctor in the department of ${niche.subcategory}. Dedicated to patient-centric treatment and diagnostics.`,
+          price: 600,
+          category: niche.subcategory,
+          icon: '👩‍⚕️',
+          imageUrl: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500'
+        },
+        {
+          name: docNames[2],
+          description: `Resident Physician. Expert in outpatient consultations, primary care guidance, and health review.`,
+          price: 500,
+          category: niche.subcategory,
+          icon: '🧑‍⚕️',
+          imageUrl: 'https://images.unsplash.com/photo-1594824813573-246434de83fb?w=500'
+        }
+      ]
+    });
+  });
+});
 
 export interface StoreTheme {
   id: string;

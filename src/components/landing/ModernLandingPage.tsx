@@ -201,6 +201,7 @@ export default function ModernLandingPage() {
                       key={key}
                       onClick={() => setSimTheme(key)}
                       className={`w-full rounded-[22px] border p-4 text-left transition duration-300 ${isActive ? 'border-white/20 bg-white/10' : 'border-white/10 bg-white/5 hover:bg-white/8'}`}
+                      suppressHydrationWarning
                     >
                       <div className="flex items-center justify-between gap-4">
                         <div>
@@ -364,10 +365,12 @@ export default function ModernLandingPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
                   className="min-h-14 flex-1 rounded-full border border-white/10 bg-white/5 px-5 text-white outline-none transition placeholder:text-slate-400 focus:border-cyan-300/40 focus:bg-white/8"
+                  suppressHydrationWarning
                 />
                 <button
                   type="submit"
                   className="rounded-full bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-amber-300 px-7 py-4 text-sm font-black text-slate-950 transition hover:translate-y-[-1px]"
+                  suppressHydrationWarning
                 >
                   Go to dashboard
                 </button>

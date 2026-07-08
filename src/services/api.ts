@@ -312,6 +312,53 @@ export const api = {
         method: 'PUT',
         body: JSON.stringify(data),
       }),
+    // Doctors CRUD
+    doctors: {
+      list: (projectId: number) => request<any[]>(`/hospital/doctors?projectId=${projectId}`),
+      create: (data: any) => request<any>('/hospital/doctors', { method: 'POST', body: JSON.stringify(data) }),
+      update: (id: number, data: any) => request<any>(`/hospital/doctors/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+      delete: (id: number) => request<any>(`/hospital/doctors/${id}`, { method: 'DELETE' }),
+    },
+    // Appointments CRUD
+    appointments: {
+      list: (projectId: number) => request<any[]>(`/hospital/appointments?projectId=${projectId}`),
+      listByCustomer: (projectId: number, email: string) =>
+        request<any[]>(`/hospital/appointments/customer?projectId=${projectId}&email=${encodeURIComponent(email)}`),
+      create: (data: any) => request<any>('/hospital/appointments', { method: 'POST', body: JSON.stringify(data) }),
+      update: (id: number, data: any) => request<any>(`/hospital/appointments/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+      updateStatus: (id: number, status: string) =>
+        request<any>(`/hospital/appointments/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }),
+      delete: (id: number) => request<any>(`/hospital/appointments/${id}`, { method: 'DELETE' }),
+    },
+    // Patient Register/Login/Profile
+    patients: {
+      register: (data: any) => request<any>('/hospital/patients/register', { method: 'POST', body: JSON.stringify(data) }),
+      login: (data: any) => request<any>('/hospital/patients/login', { method: 'POST', body: JSON.stringify(data) }),
+      update: (id: number, data: any) => request<any>(`/hospital/patients/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    },
+    // Vitals log
+    vitals: {
+      list: (projectId: number) => request<any[]>(`/hospital/vitals?projectId=${projectId}`),
+      create: (data: any) => request<any>('/hospital/vitals', { method: 'POST', body: JSON.stringify(data) }),
+    },
+    // Lab tests log
+    labTests: {
+      list: (projectId: number) => request<any[]>(`/hospital/lab-tests?projectId=${projectId}`),
+      create: (data: any) => request<any>('/hospital/lab-tests', { method: 'POST', body: JSON.stringify(data) }),
+      update: (id: number, data: any) => request<any>(`/hospital/lab-tests/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    },
+    // Pharmacy inventory
+    medicine: {
+      list: (projectId: number) => request<any[]>(`/hospital/medicine?projectId=${projectId}`),
+      create: (data: any) => request<any>('/hospital/medicine', { method: 'POST', body: JSON.stringify(data) }),
+      delete: (id: number) => request<any>(`/hospital/medicine/${id}`, { method: 'DELETE' }),
+    },
+    // Billing invoices
+    invoices: {
+      list: (projectId: number) => request<any[]>(`/hospital/invoices?projectId=${projectId}`),
+      create: (data: any) => request<any>('/hospital/invoices', { method: 'POST', body: JSON.stringify(data) }),
+      update: (id: number, data: any) => request<any>(`/hospital/invoices/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    },
   },
 
   // Gym API

@@ -385,6 +385,46 @@ export default function DashboardPage() {
     router.push('/login');
   };
 
+  const handleOpenChat = async () => {
+    try {
+      const username = userEmail ? userEmail.split('@')[0] : 'demo';
+      const displayName = userEmail ? userEmail.split('@')[0].toUpperCase() : 'DEMO USER';
+      
+      console.log('Sending SSO token request to:', `/api/get-chat-token`);
+      const response = await fetch(`/api/get-chat-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username,
+          display_name: displayName,
+          profile_picture: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'
+        })
+      });
+
+      console.log('SSO response status:', response.status, response.statusText);
+
+      if (!response.ok) {
+        const errText = await response.text();
+        console.error('SSO response error body:', errText);
+        throw new Error(`Server Error (${response.status}): ${errText || response.statusText}`);
+      }
+
+      const data = await response.json();
+      if (!data.ssoToken) {
+        throw new Error('SSO Token missing in response');
+      }
+
+      // Redirect to the deployed ZatChat client using SSO token and pass referrer hostUrl
+      const targetChatUrl = `https://jdk-pi.vercel.app/chat-login?ssoToken=${encodeURIComponent(data.ssoToken)}&hostUrl=${encodeURIComponent(window.location.href)}`;
+      window.open(targetChatUrl, '_blank');
+    } catch (error: any) {
+      console.error('Failed to open chat:', error);
+      alert('ZatChat service is temporarily unavailable: ' + error.message);
+    }
+  };
+
   const handleDelete = async (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!confirm('Are you sure you want to delete this website project? This action is permanent!')) return;
@@ -3913,16 +3953,16 @@ export default function DashboardPage() {
         </div>
       )}
 
+
+
       {/* Floating Parent Login / Chat Link */}
-      <a
-        href={authToken && userEmail ? `https://jdk-pi.vercel.app/login?token=${encodeURIComponent(authToken)}&email=${encodeURIComponent(userEmail)}` : "https://jdk-pi.vercel.app/login"}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        onClick={handleOpenChat}
         className="fixed bottom-24 right-6 z-40 flex items-center gap-2 px-5 py-3 bg-white border border-slate-250 text-slate-800 hover:text-indigo-600 font-bold rounded-full shadow-lg transition hover:scale-105 hover:bg-slate-50 active:scale-95 cursor-pointer text-xs"
       >
         <span className="text-sm select-none">💬</span>
         <span>My Chat</span>
-      </a>
+      </button>
 
       {/* Toast Alert Log Container */}
       <ToastContainer toasts={toasts} onRemoveToast={removeToast} />

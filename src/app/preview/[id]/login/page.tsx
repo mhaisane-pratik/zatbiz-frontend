@@ -335,6 +335,7 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
   const [loading, setLoading] = useState(true);
   const [shopNiche, setShopNiche] = useState<string | null>(null);
   const [selectedLoginOption, setSelectedLoginOption] = useState<number>(1);
+  const [hospitalType, setHospitalType] = useState('General Hospital');
   const [scratchInfo, setScratchInfo] = useState<ScratchContent | null>(null);
 
   const [isSignUp, setIsSignUp] = useState(false);
@@ -648,6 +649,19 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
               .catch((e) => console.log('Not real estate or offline:', e));
           }
 
+          if (detectedTemplate === 'clinic') {
+            api.hospital.get(projectId)
+              .then((hData) => {
+                if (hData && hData.projectId) {
+                  if (hData.themeColor) setTheme(hData.themeColor);
+                  if (hData.companyName) setCompanyName(hData.companyName);
+                  if (hData.logoUrl) setLogoUrl(hData.logoUrl);
+                  if (hData.subcategory) setHospitalType(hData.subcategory);
+                }
+              })
+              .catch((e) => console.log('Not hospital or offline:', e));
+          }
+
           if (detectedTemplate === 'travel') {
             api.travel.get(projectId)
               .then((travelData) => {
@@ -709,6 +723,15 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
             address,
             projectId
           });
+        } else if (templateId === 'clinic') {
+          await api.hospital.patients.register({
+            name,
+            email,
+            password,
+            phone,
+            address,
+            projectId: String(projectId)
+          });
         } else {
           await api.customers.register({
             name,
@@ -733,6 +756,12 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
             email,
             password,
             projectId
+          });
+        } else if (templateId === 'clinic') {
+          res = await api.hospital.patients.login({
+            email,
+            password,
+            projectId: String(projectId)
           });
         } else {
           res = await api.customers.login({
@@ -939,7 +968,7 @@ export default function UserWebsiteLoginPage({ params }: PageProps) {
     case 'restaurant':
       return <RestaurantLogin {...loginProps} shopNiche={shopNiche} themePreset={theme} restaurantInfo={restaurantInfo} />;
     case 'clinic':
-      return <HospitalLogin {...loginProps} />;
+      return <HospitalLogin {...loginProps} hospitalType={hospitalType} themePreset={theme} />;
     case 'school':
       return <SchoolLogin {...loginProps} />;
     case 'gym':
