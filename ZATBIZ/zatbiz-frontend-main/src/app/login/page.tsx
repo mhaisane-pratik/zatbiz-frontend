@@ -18,10 +18,16 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const getApiBaseUrl = () => {
+    if (process.env.NEXT_PUBLIC_API_URL) {
+      return process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '');
+    }
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('zatbizApiEndpoint');
       if (saved) {
         return saved.replace(/\/$/, '');
+      }
+      if (window.location.hostname !== 'localhost') {
+        return 'https://zatbiz-backend.onrender.com';
       }
     }
     return 'http://localhost:8080';
