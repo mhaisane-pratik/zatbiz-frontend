@@ -55,32 +55,29 @@ export default function ModernLandingPage() {
   };
 
   return (
-    <div className="hero-theme relative min-h-screen overflow-hidden bg-[#050816] text-white selection:bg-cyan-300 selection:text-slate-950">
+    <div className="hero-theme relative min-h-screen overflow-hidden bg-[#f8fafc] text-slate-900 selection:bg-cyan-300 selection:text-slate-950 transition-colors duration-300">
       <div className="glowing-blobs">
-        <div className="blob blob-violet animate-blob-complex top-[-120px] right-[-120px] w-[620px] h-[620px] opacity-90" />
-        <div className="blob blob-cyan animate-blob-complex top-[18%] left-[-160px] w-[520px] h-[520px] opacity-80" style={{ animationDelay: '-7s' }} />
-        <div className="blob blob-rose animate-blob-complex bottom-[-160px] right-[12%] w-[460px] h-[460px] opacity-80" style={{ animationDelay: '-12s' }} />
+        <div className="blob blob-violet animate-blob-complex top-[-120px] right-[-120px] w-[620px] h-[620px] opacity-40 transition-opacity duration-500" />
+        <div className="blob blob-cyan animate-blob-complex top-[18%] left-[-160px] w-[520px] h-[520px] opacity-30 transition-opacity duration-500" style={{ animationDelay: '-7s' }} />
+        <div className="blob blob-rose animate-blob-complex bottom-[-160px] right-[12%] w-[460px] h-[460px] opacity-30 transition-opacity duration-500" style={{ animationDelay: '-12s' }} />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.16),_transparent_28%),radial-gradient(circle_at_75%_25%,_rgba(168,85,247,0.18),_transparent_20%),linear-gradient(180deg,_rgba(8,11,20,0)_0%,_rgba(8,11,20,0.85)_65%,_rgba(5,8,22,1)_100%)]" />
-
-
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(99,102,241,0.06),_transparent_35%),radial-gradient(circle_at_75%_25%,_rgba(244,63,94,0.04),_transparent_25%),linear-gradient(180deg,_rgba(248,250,252,0)_0%,_rgba(248,250,252,0.8)_70%,_rgba(248,250,252,1)_100%)] transition-opacity duration-500" />
 
       <main className="relative z-10">
         <section className="w-full pb-12 pt-0">
           <div className="relative w-full">
-            <div className="absolute left-[15%] top-10 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl pointer-events-none" />
-            <div className="absolute right-[15%] top-20 h-64 w-64 rounded-full bg-fuchsia-500/10 blur-3xl pointer-events-none" />
+            <div className="absolute left-[15%] top-10 h-64 w-64 rounded-full blur-3xl pointer-events-none transition-colors duration-500 bg-cyan-400/5" />
+            <div className="absolute right-[15%] top-20 h-64 w-64 rounded-full blur-3xl pointer-events-none transition-colors duration-500 bg-fuchsia-500/5" />
             
-            <div className="w-full bg-[#080d24]/60 backdrop-blur-xl border-y border-white/10 shadow-[0_45px_130px_-40px_rgba(14,165,233,0.3)] relative">
+            <div className="w-full border-y backdrop-blur-xl transition-all duration-300 relative bg-white/60 border-slate-200/60 shadow-[0_45px_130px_-40px_rgba(99,102,241,0.08)]">
               {/* Subtle top/bottom neon line accents */}
               <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60" />
               <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-fuchsia-500 to-transparent opacity-60" />
               
               <div className="w-full pt-0">
-                {/* Video container takes full screen width and is completely flush with the sides */}
                 <div className="w-full mt-0">
-                  <div className="relative overflow-hidden bg-black aspect-video w-full border-t border-white/5">
+                  <div className="relative overflow-hidden bg-black aspect-video w-full border-t transition-colors duration-300 border-slate-200/40">
                     <video
                       src="/Business_growth_collage_video_za_202607061245.mp4"
                       autoPlay
@@ -91,10 +88,10 @@ export default function ModernLandingPage() {
                     />
 
                     {/* Watermark Overlay */}
-                    <div className="absolute top-3 right-3 md:top-6 md:right-6 z-10 flex items-center gap-2.5 bg-slate-950/75 backdrop-blur-md px-3.5 py-1.5 md:px-5 md:py-2.5 rounded-full border border-white/10 shadow-2xl select-none">
-                      <span className="text-[9px] md:text-[10px] uppercase font-bold tracking-widest text-slate-350">ZatBiz Studio</span>
-                      <div className="h-3 w-[1px] bg-white/20" />
-                      <Link href="/login" className="text-[10px] md:text-[11px] font-black text-cyan-400 hover:text-cyan-350 transition">
+                    <div className="absolute top-3 right-3 md:top-6 md:right-6 z-10 flex items-center gap-2.5 backdrop-blur-md px-3.5 py-1.5 md:px-5 md:py-2.5 rounded-full border transition-all duration-300 shadow-2xl select-none bg-white/80 border-slate-200/80 text-slate-800">
+                      <span className="text-[9px] md:text-[10px] uppercase font-bold tracking-widest text-slate-500">ZatBiz Studio</span>
+                      <div className="h-3 w-[1px] bg-slate-200" />
+                      <Link href="/login" className="text-[10px] md:text-[11px] font-black transition-colors duration-300 text-indigo-650 hover:text-indigo-500">
                         Log in ➔
                       </Link>
                     </div>
@@ -107,9 +104,9 @@ export default function ModernLandingPage() {
 
         <section id="options" className="mx-auto max-w-7xl px-6 py-20 md:px-10 lg:px-16">
           <div className="mb-10 max-w-2xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-cyan-200">Business options</p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-white md:text-5xl">Choose the restaurant experience you want to sell.</h2>
-            <p className="mt-4 text-sm leading-7 text-slate-300 md:text-base">
+            <p className="text-[11px] font-bold uppercase tracking-[0.3em] transition-colors duration-300 text-indigo-600">Business options</p>
+            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] transition-colors duration-300 md:text-5xl text-slate-900">Choose the restaurant experience you want to sell.</h2>
+            <p className="mt-4 text-sm leading-7 transition-colors duration-300 md:text-base text-slate-600">
               The template should not feel locked to one layout. Give users clear paths for dining, delivery, catering, cafe, and event-led businesses.
             </p>
           </div>
@@ -137,11 +134,11 @@ export default function ModernLandingPage() {
                 accent: 'from-emerald-400 to-teal-500',
               },
             ].map((option) => (
-              <div key={option.title} className="rounded-[28px] border border-white/10 bg-white/5 p-6 backdrop-blur-md transition hover:-translate-y-1 hover:border-white/20">
+              <div key={option.title} className="rounded-[28px] border p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 border-slate-200/80 bg-white/80 shadow-[0_8px_30px_rgba(15,23,42,0.03)] hover:border-slate-300 hover:bg-white/95 hover:shadow-[0_15px_35px_rgba(15,23,42,0.06)]">
                 <div className={`h-1.5 w-20 rounded-full bg-gradient-to-r ${option.accent}`} />
-                <h3 className="mt-5 text-xl font-black text-white">{option.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-slate-300">{option.desc}</p>
-                <a href="/login" className="mt-5 inline-flex text-sm font-black uppercase tracking-[0.22em] text-cyan-200 transition hover:text-white">
+                <h3 className="mt-5 text-xl font-black transition-colors duration-300 text-slate-900">{option.title}</h3>
+                <p className="mt-3 text-sm leading-7 transition-colors duration-300 text-slate-600">{option.desc}</p>
+                <a href="/login" className="mt-5 inline-flex text-sm font-black uppercase tracking-[0.22em] transition-colors duration-300 text-indigo-600 hover:text-indigo-800">
                   Explore this option
                 </a>
               </div>
@@ -151,8 +148,8 @@ export default function ModernLandingPage() {
 
         <section id="features" className="mx-auto max-w-7xl px-6 py-20 md:px-10 lg:px-16">
           <div className="mb-10 max-w-2xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-cyan-200">Core capabilities</p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-white md:text-5xl">A polished visual system for modern business pages.</h2>
+            <p className="text-[11px] font-bold uppercase tracking-[0.3em] transition-colors duration-300 text-indigo-600">Core capabilities</p>
+            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] transition-colors duration-300 md:text-5xl text-slate-900">A polished visual system for modern business pages.</h2>
           </div>
 
           <div className="grid gap-5 md:grid-cols-3">
@@ -173,10 +170,10 @@ export default function ModernLandingPage() {
                 accent: 'from-amber-300 to-orange-500',
               },
             ].map((card) => (
-              <div key={card.title} className="glass-card-premium group rounded-[28px] p-6 text-slate-900 transition hover:-translate-y-1">
+              <div key={card.title} className="group rounded-[28px] p-6 transition-all duration-300 hover:-translate-y-1 border border-slate-200/80 bg-white/80 shadow-[0_8px_30px_rgba(15,23,42,0.03)] hover:border-slate-300 hover:bg-white/95">
                 <div className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${card.accent} shadow-lg`} />
-                <h3 className="mt-5 text-xl font-black text-white">{card.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-slate-300">{card.desc}</p>
+                <h3 className="mt-5 text-xl font-black transition-colors duration-300 text-slate-900">{card.title}</h3>
+                <p className="mt-3 text-sm leading-7 transition-colors duration-300 text-slate-600">{card.desc}</p>
               </div>
             ))}
           </div>
@@ -185,9 +182,9 @@ export default function ModernLandingPage() {
         <section id="simulator" className="mx-auto max-w-7xl px-6 py-20 md:px-10 lg:px-16">
           <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="space-y-6">
-              <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-fuchsia-200">Interactive studio</p>
-              <h2 className="text-3xl font-black tracking-[-0.04em] text-white md:text-5xl">Switch the mood, keep the same polished system.</h2>
-              <p className="max-w-xl text-sm leading-7 text-slate-300 md:text-base">
+              <p className="text-[11px] font-bold uppercase tracking-[0.3em] transition-colors duration-300 text-indigo-650">Interactive studio</p>
+              <h2 className="text-3xl font-black tracking-[-0.04em] transition-colors duration-300 md:text-5xl text-slate-900">Switch the mood, keep the same polished system.</h2>
+              <p className="max-w-xl text-sm leading-7 transition-colors duration-300 md:text-base text-slate-600">
                 The preview updates instantly so the homepage can tell a different story for hospitality, fitness, or events without looking generic.
               </p>
 
@@ -200,7 +197,11 @@ export default function ModernLandingPage() {
                     <button
                       key={key}
                       onClick={() => setSimTheme(key)}
-                      className={`w-full rounded-[22px] border p-4 text-left transition duration-300 ${isActive ? 'border-white/20 bg-white/10' : 'border-white/10 bg-white/5 hover:bg-white/8'}`}
+                      className={`w-full rounded-[22px] border p-4 text-left transition duration-300 ${
+                        isActive
+                          ? 'border-indigo-100 bg-white shadow-md'
+                          : 'border-slate-200/50 bg-slate-50/50 hover:bg-slate-50'
+                      }`}
                       suppressHydrationWarning
                     >
                       <div className="flex items-center justify-between gap-4">
@@ -208,9 +209,13 @@ export default function ModernLandingPage() {
                           <div className={`bg-gradient-to-r ${item.accent} bg-clip-text text-sm font-black text-transparent`}>
                             {item.title}
                           </div>
-                          <div className="mt-1 text-xs text-slate-400">{item.tag}</div>
+                          <div className="mt-1 text-xs transition-colors duration-300 text-slate-500">{item.tag}</div>
                         </div>
-                        <span className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] ${isActive ? 'border-cyan-300/30 bg-cyan-300/10 text-cyan-100' : 'border-white/10 bg-white/5 text-slate-300'}`}>
+                        <span className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] transition-all duration-300 ${
+                          isActive
+                            ? 'border-indigo-200 bg-indigo-50 text-indigo-700'
+                            : 'border-slate-200 bg-white text-slate-600'
+                        }`}>
                           Select
                         </span>
                       </div>
@@ -220,18 +225,18 @@ export default function ModernLandingPage() {
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-slate-950/80 p-6 shadow-[0_30px_100px_-30px_rgba(0,0,0,0.65)]">
-              <div className="absolute -left-10 top-8 h-36 w-36 rounded-full bg-white/10 blur-3xl" />
-              <div className="absolute -bottom-12 right-0 h-44 w-44 rounded-full bg-fuchsia-400/10 blur-3xl" />
+            <div className="relative overflow-hidden rounded-[36px] border p-6 transition-all duration-500 border-slate-200/60 bg-white/90 shadow-[0_30px_100px_-30px_rgba(99,102,241,0.08)]">
+              <div className="absolute -left-10 top-8 h-36 w-36 rounded-full blur-3xl transition-colors duration-500 bg-indigo-200/20" />
+              <div className="absolute -bottom-12 right-0 h-44 w-44 rounded-full blur-3xl transition-colors duration-500 bg-fuchsia-450/10" />
 
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div className="flex items-center justify-between border-b pb-4 transition-colors duration-300 border-slate-100">
                 <div>
-                  <div className="text-[10px] font-bold uppercase tracking-[0.28em] text-slate-400">Studio mode</div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.28em] transition-colors duration-300 text-slate-500">Studio mode</div>
                   <div className={`mt-1 bg-gradient-to-r ${activeTheme.accent} bg-clip-text text-xl font-black text-transparent`}>
                     {activeTheme.title}
                   </div>
                 </div>
-                <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-300">
+                <div className="rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] transition-all duration-300 border-slate-200 bg-slate-50 text-slate-650">
                   {activeTheme.tag}
                 </div>
               </div>
@@ -243,9 +248,9 @@ export default function ModernLandingPage() {
                   ['Motion layer', 'Soft orbiting gradients and subtle depth cues'],
                   ['Brand fit', 'Adapts to luxury, athletic, and romantic positioning'],
                 ].map(([title, desc]) => (
-                  <div key={title} className="rounded-[24px] border border-white/10 bg-white/5 p-5">
-                    <div className="text-sm font-black text-white">{title}</div>
-                    <div className="mt-2 text-sm leading-7 text-slate-300">{desc}</div>
+                  <div key={title} className="rounded-[24px] border p-5 transition-all duration-300 border-slate-200/50 bg-slate-50/50">
+                    <div className="text-sm font-black transition-colors duration-300 text-slate-900">{title}</div>
+                    <div className="mt-2 text-sm leading-7 transition-colors duration-300 text-slate-600">{desc}</div>
                   </div>
                 ))}
               </div>
@@ -255,8 +260,8 @@ export default function ModernLandingPage() {
 
         <section id="templates" className="mx-auto max-w-7xl px-6 py-20 md:px-10 lg:px-16">
           <div className="mb-10 max-w-2xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-amber-200">Templates</p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-white md:text-5xl">Ready-made looks that still feel custom.</h2>
+            <p className="text-[11px] font-bold uppercase tracking-[0.3em] transition-colors duration-300 text-amber-600">Templates</p>
+            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] transition-colors duration-300 md:text-5xl text-slate-900">Ready-made looks that still feel custom.</h2>
           </div>
 
           <div className="grid gap-5 md:grid-cols-3">
@@ -277,14 +282,14 @@ export default function ModernLandingPage() {
                 image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop&q=80',
               },
             ].map((template, index) => (
-              <div key={template.title} className="group overflow-hidden rounded-[30px] border border-white/10 bg-white/5 p-4 backdrop-blur-md">
+              <div key={template.title} className="group overflow-hidden rounded-[30px] border p-4 backdrop-blur-md transition-all duration-300 border-slate-200/80 bg-white/80 shadow-[0_8px_30px_rgba(15,23,42,0.03)] hover:border-slate-350">
                 <div className="relative h-56 overflow-hidden rounded-[24px]">
                   <div className="absolute inset-0 bg-cover bg-center transition duration-700 group-hover:scale-105" style={{ backgroundImage: `url('${template.image}')` }} />
                   <div className={`absolute inset-0 bg-gradient-to-t ${index === 0 ? 'from-slate-950 via-slate-950/20 to-transparent' : index === 1 ? 'from-cyan-950 via-slate-950/20 to-transparent' : 'from-rose-950 via-slate-950/20 to-transparent'}`} />
                 </div>
                 <div className="p-2 pt-5">
-                  <h3 className="text-xl font-black text-white">{template.title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-300">{template.desc}</p>
+                  <h3 className="text-xl font-black transition-colors duration-300 text-slate-900">{template.title}</h3>
+                  <p className="mt-2 text-sm leading-7 transition-colors duration-300 text-slate-600">{template.desc}</p>
                 </div>
               </div>
             ))}
@@ -293,8 +298,8 @@ export default function ModernLandingPage() {
 
         <section id="pricing" className="mx-auto max-w-7xl px-6 py-20 md:px-10 lg:px-16">
           <div className="mb-10 max-w-2xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-cyan-200">Pricing</p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-white md:text-5xl">Simple plans with a premium feel.</h2>
+            <p className="text-[11px] font-bold uppercase tracking-[0.3em] transition-colors duration-300 text-indigo-650">Pricing</p>
+            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] transition-colors duration-300 md:text-5xl text-slate-900">Simple plans with a premium feel.</h2>
           </div>
 
           <div className="grid gap-5 lg:grid-cols-3">
@@ -319,16 +324,20 @@ export default function ModernLandingPage() {
                 accent: 'from-amber-300 to-orange-500',
               },
             ].map((plan) => (
-              <div key={plan.name} className={`rounded-[30px] border p-6 ${plan.featured ? 'border-white/20 bg-white/10 shadow-[0_20px_70px_-30px_rgba(236,72,153,0.55)]' : 'border-white/10 bg-white/5'}`}>
+              <div key={plan.name} className={`rounded-[30px] border p-6 transition-all duration-300 ${
+                plan.featured 
+                  ? 'border-fuchsia-200 bg-white shadow-[0_20px_70px_-30px_rgba(236,72,153,0.15)] ring-1 ring-fuchsia-100'
+                  : 'border-slate-200 bg-white/80 shadow-[0_8px_30px_rgba(15,23,42,0.03)]'
+              }`}>
                 <div className={`h-1.5 w-20 rounded-full bg-gradient-to-r ${plan.accent}`} />
                 <div className="mt-5 flex items-end justify-between gap-4">
                   <div>
-                    <h3 className="text-2xl font-black text-white">{plan.name}</h3>
-                    <p className="mt-2 text-sm text-slate-400">For teams that want a sharper presence.</p>
+                    <h3 className="text-2xl font-black transition-colors duration-300 text-slate-900">{plan.name}</h3>
+                    <p className="mt-2 text-sm transition-colors duration-300 text-slate-500">For teams that want a sharper presence.</p>
                   </div>
-                  <div className="text-4xl font-black text-white">{plan.price}</div>
+                  <div className="text-4xl font-black transition-colors duration-300 text-slate-900">{plan.price}</div>
                 </div>
-                <ul className="mt-6 space-y-3 text-sm text-slate-300">
+                <ul className="mt-6 space-y-3 text-sm transition-colors duration-300 text-slate-600">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
                       <span className={`h-2.5 w-2.5 rounded-full bg-gradient-to-r ${plan.accent}`} />
@@ -338,7 +347,11 @@ export default function ModernLandingPage() {
                 </ul>
                 <Link
                   href="/login"
-                  className={`mt-8 inline-flex w-full items-center justify-center rounded-full px-4 py-3 text-sm font-black transition ${plan.featured ? 'bg-white text-slate-950 hover:bg-cyan-100' : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'}`}
+                  className={`mt-8 inline-flex w-full items-center justify-center rounded-full px-4 py-3 text-sm font-black transition-all duration-300 ${
+                    plan.featured 
+                      ? 'bg-slate-900 text-white hover:bg-slate-800 hover:shadow-md'
+                      : 'border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                  }`}
                 >
                   Choose plan
                 </Link>
@@ -349,12 +362,12 @@ export default function ModernLandingPage() {
 
         <section className="mx-auto max-w-7xl px-6 pb-24 pt-8 md:px-10 lg:px-16">
           <div className="rounded-[36px] border border-white/10 bg-gradient-to-r from-cyan-500/20 via-fuchsia-500/20 to-amber-300/20 p-[1px]">
-            <div className="rounded-[35px] bg-slate-950/80 px-6 py-10 text-center backdrop-blur-xl md:px-10">
-              <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-cyan-100">Ready to launch</p>
-              <h2 className="mx-auto mt-3 max-w-3xl text-3xl font-black tracking-[-0.04em] text-white md:text-5xl">
+            <div className="rounded-[35px] px-6 py-10 text-center backdrop-blur-xl md:px-10 transition-colors duration-500 bg-white/95 shadow-[0_20px_50px_rgba(0,0,0,0.03)]">
+              <p className="text-[11px] font-bold uppercase tracking-[0.3em] transition-colors duration-300 text-indigo-650">Ready to launch</p>
+              <h2 className="mx-auto mt-3 max-w-3xl text-3xl font-black tracking-[-0.04em] transition-colors duration-300 md:text-5xl text-slate-900">
                 Give the homepage the same polish as the product.
               </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-300 md:text-base">
+              <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 transition-colors duration-300 md:text-base text-slate-600">
                 Start with a vibrant first impression, then move users into a clean dashboard and a confident signup flow.
               </p>
 
@@ -364,12 +377,12 @@ export default function ModernLandingPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
-                  className="min-h-14 flex-1 rounded-full border border-white/10 bg-white/5 px-5 text-white outline-none transition placeholder:text-slate-400 focus:border-cyan-300/40 focus:bg-white/8"
+                  className="min-h-14 flex-1 rounded-full border px-5 outline-none transition-all duration-300 border-slate-200 bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:border-indigo-400/40 focus:bg-white"
                   suppressHydrationWarning
                 />
                 <button
                   type="submit"
-                  className="rounded-full bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-amber-300 px-7 py-4 text-sm font-black text-slate-950 transition hover:translate-y-[-1px]"
+                  className="rounded-full bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-amber-300 px-7 py-4 text-sm font-black text-slate-950 transition hover:translate-y-[-1px] hover:shadow-lg active:translate-y-[0px]"
                   suppressHydrationWarning
                 >
                   Go to dashboard
