@@ -1,0 +1,493 @@
+'use client';
+
+import React, { useState } from 'react';
+
+interface ThemeOption {
+  id: string;
+  name: string;
+  desc: string;
+  color: string;
+  bgColor: string;
+  accentBg: string;
+  text: string;
+  imageUrl?: string;
+}
+
+interface LayoutOption {
+  id: string;
+  name: string;
+  desc: string;
+  previewIcon: string;
+  imageUrl: string;
+}
+
+// 20 Restaurant Themes
+export const RESTAURANT_THEMES: ThemeOption[] = [
+  { id: 'gold-luxury', name: 'Gourmet Gold', desc: 'Fine dining feel. Warm gold and rich champagne highlights.', color: '#c5a880', bgColor: 'bg-[#c5a880]', accentBg: 'bg-[#c5a880]/10', text: 'text-[#c5a880]', imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&auto=format&fit=crop&q=80' },
+  { id: 'rose-vintage', name: 'Vintage Rose', desc: 'Cozy cafes and bakeries. Soft dusty rose pink accents.', color: '#ec4899', bgColor: 'bg-pink-500', accentBg: 'bg-pink-50', text: 'text-pink-700', imageUrl: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&auto=format&fit=crop&q=80' },
+  { id: 'emerald-mint', name: 'Emerald Mint', desc: 'Healthy & organic food. Clean, fresh mint green styling.', color: '#10b981', bgColor: 'bg-emerald-500', accentBg: 'bg-emerald-50', text: 'text-emerald-700', imageUrl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&auto=format&fit=crop&q=80' },
+  { id: 'ruby-wine', name: 'Ruby Wine', desc: 'Romantic pizzerias and lounges. Deep crimson red accents.', color: '#e11d48', bgColor: 'bg-rose-600', accentBg: 'bg-rose-50', text: 'text-rose-700', imageUrl: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&auto=format&fit=crop&q=80' },
+  { id: 'amber-spiced', name: 'Amber Spiced', desc: 'Bustling bistros and grills. Vivid amber orange gradients.', color: '#d97706', bgColor: 'bg-amber-600', accentBg: 'bg-amber-50', text: 'text-amber-700', imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&auto=format&fit=crop&q=80' },
+  { id: 'indigo-ocean', name: 'Indigo Ocean', desc: 'Seafood and modern fusion. Classic navy blue shades.', color: '#4f46e5', bgColor: 'bg-indigo-600', accentBg: 'bg-indigo-50', text: 'text-indigo-700', imageUrl: 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=400&auto=format&fit=crop&q=80' },
+  { id: 'charcoal-slate', name: 'Charcoal Slate', desc: 'Sleek gastropubs. Minimalist dark slate grey and off-white.', color: '#475569', bgColor: 'bg-slate-600', accentBg: 'bg-slate-100', text: 'text-slate-800', imageUrl: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400&auto=format&fit=crop&q=80' },
+  { id: 'tangerine-peel', name: 'Tangerine Sprout', desc: 'Bright fast food. Energetic warm tangerine and lime.', color: '#f97316', bgColor: 'bg-orange-500', accentBg: 'bg-orange-50', text: 'text-orange-700', imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&auto=format&fit=crop&q=80' },
+  { id: 'forest-herbs', name: 'Forest Herbs', desc: 'Eco-conscious vegan cafes. Deep forest green branding.', color: '#047857', bgColor: 'bg-emerald-700', accentBg: 'bg-emerald-50', text: 'text-emerald-800', imageUrl: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&auto=format&fit=crop&q=80' },
+  { id: 'velvet-plum', name: 'Velvet Plum', desc: 'Sweets, ice-cream, and dessert shops. Premium dark plum.', color: '#7c3aed', bgColor: 'bg-violet-600', accentBg: 'bg-violet-50', text: 'text-violet-750', imageUrl: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=400&auto=format&fit=crop&q=80' },
+  { id: 'terracotta-clay', name: 'Terracotta Bistro', desc: 'Earthy clays and brick. Great for wood-fired pizzerias.', color: '#c2410c', bgColor: 'bg-orange-700', accentBg: 'bg-orange-50', text: 'text-orange-800', imageUrl: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&auto=format&fit=crop&q=80' },
+  { id: 'cyan-breeze', name: 'Cyan Breeze', desc: 'Coastal dining, juice bars, and modern sea grills.', color: '#06b6d4', bgColor: 'bg-cyan-500', accentBg: 'bg-cyan-50', text: 'text-cyan-750', imageUrl: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=400&auto=format&fit=crop&q=80' },
+  { id: 'sunset-gold', name: 'Sunset Grill', desc: 'High-energy steakhouse, grill and live smoke houses.', color: '#ea580c', bgColor: 'bg-orange-600', accentBg: 'bg-orange-50', text: 'text-orange-700', imageUrl: 'https://images.unsplash.com/photo-1555996273-367ea4eb4db5?w=400&auto=format&fit=crop&q=80' },
+  { id: 'matcha-zen', name: 'Matcha Zen', desc: 'Zen tea rooms, wellness cafes, and fresh sushi lounges.', color: '#84cc16', bgColor: 'bg-lime-500', accentBg: 'bg-lime-50', text: 'text-lime-750', imageUrl: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=400&auto=format&fit=crop&q=80' },
+  { id: 'chocolate-truffle', name: 'Cocoa Velvet', desc: 'Premium artisan chocolatier, bakeries and coffee spots.', color: '#451a03', bgColor: 'bg-amber-900', accentBg: 'bg-amber-50', text: 'text-amber-900', imageUrl: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=400&auto=format&fit=crop&q=80' },
+  { id: 'lavender-bliss', name: 'Lavender Pastry', desc: 'Whimsical high tea salons and boutique cupcake spaces.', color: '#a78bfa', bgColor: 'bg-violet-400', accentBg: 'bg-violet-50', text: 'text-violet-600', imageUrl: 'https://images.unsplash.com/photo-1514517604298-cf80e0fb7f1e?w=400&auto=format&fit=crop&q=80' },
+  { id: 'crimson-blaze', name: 'Crimson Blaze', desc: 'Spicy Asian kitchens, hot-pots, and vibrant curries.', color: '#b91c1c', bgColor: 'bg-red-650', accentBg: 'bg-red-50', text: 'text-red-700', imageUrl: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&auto=format&fit=crop&q=80' },
+  { id: 'lemon-zest', name: 'Lemon Citron', desc: 'Crisp organic salads, breakfast spots, and citrus bars.', color: '#eab308', bgColor: 'bg-yellow-500', accentBg: 'bg-yellow-50', text: 'text-yellow-750', imageUrl: 'https://images.unsplash.com/photo-1610970881699-44a5587caa90?w=400&auto=format&fit=crop&q=80' },
+  { id: 'peach-blossom', name: 'Sweet Peach', desc: 'Brunch houses, waffle spots, and summer mocktail hubs.', color: '#fb923c', bgColor: 'bg-orange-400', accentBg: 'bg-orange-50', text: 'text-orange-705', imageUrl: 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=400&auto=format&fit=crop&q=80' },
+  { id: 'royal-gold', name: 'Imperial Palace', desc: 'Upscale banquet dining and high-end oriental dining.', color: '#d97706', bgColor: 'bg-amber-500', accentBg: 'bg-amber-50', text: 'text-amber-705', imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&auto=format&fit=crop&q=80' },
+];
+
+// 10 Homepage Layout Options
+export const RESTAURANT_HOMEPAGES: LayoutOption[] = [
+  { id: 'menu-grid-focus', name: 'Menu Grid Focus', desc: 'Highlights your dish items directly on the home banner.', previewIcon: '🍔', imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&auto=format&fit=crop&q=80' },
+  { id: 'reservation-banner', name: 'Table Booking Center', desc: 'Sticky booking calendar in the hero block for instant reservations.', previewIcon: '📅', imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=80' },
+  { id: 'chef-specials', name: 'Chef Signature Slides', desc: 'Spotlights rotating signature recipes, wines, and chef interviews.', previewIcon: '👨‍🍳', imageUrl: 'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=500&auto=format&fit=crop&q=80' },
+  { id: 'category-circles', name: 'Visual Category Circles', desc: 'Renders circular cuisine selectors (Pizza, Cafe, Fast Food) on top.', previewIcon: '🍕', imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&auto=format&fit=crop&q=80' },
+  { id: 'deal-hero', name: 'Coupon & Offers Focus', desc: 'Prominent banner showcasing current happy hours and combo packages.', previewIcon: '🏷️', imageUrl: 'https://images.unsplash.com/photo-1543353071-10c8ba85a904?w=500&auto=format&fit=crop&q=80' },
+  { id: 'blog-articles', name: 'Culinary Advisory Blog', desc: 'Highlight food recipe articles, team updates, and newsletter signups.', previewIcon: '📰', imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=80' },
+  { id: 'gallery-carousel', name: 'Dining Room Photo Stream', desc: 'Features a large visual grid of plates and dining room atmospheres.', previewIcon: '📸', imageUrl: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=500&auto=format&fit=crop&q=80' },
+  { id: 'sidebar-menu', name: 'Left Sidebar Categories', desc: 'Left categories scroll sidebar with right-side scrolling food items.', previewIcon: '🧱', imageUrl: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=500&auto=format&fit=crop&q=80' },
+  { id: 'reviews-showcase', name: 'Client Testimonials Focus', desc: 'Displays social proofs, ratings, and critic write-ups prominently.', previewIcon: '⭐', imageUrl: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&auto=format&fit=crop&q=80' },
+  { id: 'map-timings', name: 'Store Locator & Map', desc: 'Focuses on Google Maps coordinates, address, and live open status.', previewIcon: '📍', imageUrl: 'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=500&auto=format&fit=crop&q=80' },
+];
+
+// 10 Login Layout Options
+export const RESTAURANT_LOGINS: LayoutOption[] = [
+  { id: 'left-illustration', name: 'Left Chef Illustration', desc: 'Gourmet Chef artwork on the left side, login inputs on the right.', previewIcon: '🎨', imageUrl: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=500&auto=format&fit=crop&q=80' },
+  { id: 'right-illustration', name: 'Right Buffet Vector', desc: 'Vibrant dining scene illustration on the right, form on the left.', previewIcon: '🖼', imageUrl: 'https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=500&auto=format&fit=crop&q=80' },
+  { id: 'floating-dishes', name: 'Floating Culinary Glassmorphism', desc: 'Form card floating over floating vector food ingredients.', previewIcon: '🍅', imageUrl: 'https://images.unsplash.com/photo-1506368249639-73a05d6f6488?w=500&auto=format&fit=crop&q=80' },
+  { id: 'minimal-logo', name: 'Minimal Emblem Card', desc: 'Simple centered login card with a clean restaurant crest on top.', previewIcon: '🍴', imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&auto=format&fit=crop&q=80' },
+  { id: 'curved-wave', name: 'Curved Wave Divider', desc: 'Form separated from illustration with a curved wave design.', previewIcon: '🌊', imageUrl: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&auto=format&fit=crop&q=80' },
+  { id: 'neon-dark', name: 'Vibrant Neon Dark Mode', desc: 'Deep slate grey backdrop with neon orange and gold borders.', previewIcon: '🌙', imageUrl: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=500&auto=format&fit=crop&q=80' },
+  { id: 'double-banner', name: 'Laboratory Buffet Panels', desc: 'Centered login forms framed by gourmet vector illustrations.', previewIcon: '🍷', imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=80' },
+  { id: 'chef-overlay', name: 'Gourmet Chef Overlay', desc: 'Inputs floating over a background chef illustration.', previewIcon: '🍳', imageUrl: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500&auto=format&fit=crop&q=80' },
+  { id: 'biological-grid', name: 'Dining Table Grid', desc: 'Inputs flanked by a structural pattern resembling restaurant seating.', previewIcon: '🪑', imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=80' },
+  { id: 'delivery-scooter', name: 'Scooter Delivery Stand', desc: 'Delivery rider illustration beside a giant mobile login screen.', previewIcon: '🛵', imageUrl: 'https://images.unsplash.com/photo-1512152497639-6133999e9e40?w=500&auto=format&fit=crop&q=80' },
+];
+
+// 10 Dashboard Layout Options
+export const RESTAURANT_DASHBOARDS: LayoutOption[] = [
+  { id: 'metric-overview', name: 'Sales Metric Console', desc: 'Heavy on visual counters for sales totals, ticket entries, and reviews.', previewIcon: '📊', imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&auto=format&fit=crop&q=80' },
+  { id: 'menu-catalog', name: 'Menu CRUD Catalog Manager', desc: 'Immediate view of catalog status and category selectors.', previewIcon: '📦', imageUrl: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&auto=format&fit=crop&q=80' },
+  { id: 'reservations-inbox', name: 'Table Reservation Log', desc: 'Highlights upcoming bookings and table assignment lists.', previewIcon: '📥', imageUrl: 'https://images.unsplash.com/photo-1588675646184-f5b0b0b0b2de?w=500&auto=format&fit=crop&q=80' },
+  { id: 'courier-tracking', name: 'Delivery Partners Dispatcher', desc: 'Focuses on driver status tracking and earnings summaries.', previewIcon: '🚚', imageUrl: 'https://images.unsplash.com/photo-1512152497639-6133999e9e40?w=500&auto=format&fit=crop&q=80' },
+  { id: 'points-wallet', name: 'Points & Wallet Balances', desc: 'User-side screen displaying active loyalty cash and credits.', previewIcon: '✨', imageUrl: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=500&auto=format&fit=crop&q=80' },
+  { id: 'simple-tables', name: 'Clean Table Logs', desc: 'Basic data tables omitting charts for fast, clean operations.', previewIcon: '📋', imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&auto=format&fit=crop&q=80' },
+  { id: 'neon-dark-admin', name: 'Neon Admin Dark Mode', desc: 'Dark theme utilizing high-contrast gold and slate colors.', previewIcon: '🕶️', imageUrl: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=500&auto=format&fit=crop&q=80' },
+  { id: 'compact-sidebar', name: 'Compact Icon-Only Menu', desc: 'Collapsible navigation sidebar suited for kitchen tablets.', previewIcon: '📱', imageUrl: 'https://images.unsplash.com/photo-1542744094-3a31f103e35f?w=500&auto=format&fit=crop&q=80' },
+  { id: 'dispatch-tracker', name: 'Gps Dispatch Tracker', desc: 'Focuses on active order delivery maps and route planning.', previewIcon: '🗺️', imageUrl: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=500&auto=format&fit=crop&q=80' },
+  { id: 'telemetry-hub', name: 'Monthly Telemetry & Analytics', desc: 'Provides comparison graphs, profit margins, and food waste.', previewIcon: '📉', imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format&fit=crop&q=80' },
+];
+
+interface RestaurantSelectorModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelectCategory: (categoryName: string, configData: any) => void;
+}
+
+export default function RestaurantSelectorModal({
+  isOpen,
+  onClose,
+  onSelectCategory
+}: RestaurantSelectorModalProps) {
+  const [step, setStep] = useState(1);
+
+  // Business Information States
+  const [restaurantName, setRestaurantName] = useState('');
+  const [ownerName, setOwnerName] = useState('');
+  const [mobileNo, setMobileNo] = useState('');
+  const [email, setEmail] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [pincode, setPincode] = useState('');
+  const [subcategory, setSubcategory] = useState('Fine Dining');
+  const [description, setDescription] = useState('');
+
+  // Styling Selections
+  const [selectedTheme, setSelectedTheme] = useState('gold-luxury');
+  const [selectedHomepageLayout, setSelectedHomepageLayout] = useState('menu-grid-focus');
+  const [selectedLoginLayout, setSelectedLoginLayout] = useState('left-illustration');
+  const [selectedDashboardLayout, setSelectedDashboardLayout] = useState('metric-overview');
+
+  if (!isOpen) return null;
+
+  const handleNext = () => setStep(prev => prev + 1);
+  const handleBack = () => setStep(prev => prev - 1);
+
+  const handleSubmit = () => {
+    const configData = {
+      restaurantName: restaurantName.trim() || 'Gourmet Kitchen',
+      ownerName: ownerName.trim() || 'Head Chef',
+      mobileNo: mobileNo.trim() || '+91 98765 43210',
+      email: email.trim() || 'chef@gourmet.com',
+      city: city.trim() || 'Noida',
+      state: state.trim() || 'UP',
+      country: 'India',
+      pincode: pincode.trim() || '201301',
+      subcategory,
+      description: description.trim() || 'A premium dining experience.',
+      themeColor: RESTAURANT_THEMES.find(t => t.id === selectedTheme)?.color || '#c5a880',
+      selectedTheme,
+      selectedHomepageLayout,
+      selectedLoginLayout,
+      selectedDashboardLayout
+    };
+    onSelectCategory('Restaurant', configData);
+  };
+
+  const getThemeColorClass = () => {
+    return RESTAURANT_THEMES.find(t => t.id === selectedTheme) || RESTAURANT_THEMES[0];
+  };
+
+  const activeTheme = getThemeColorClass();
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-900 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in-95 duration-200 text-slate-800 dark:text-white">
+        
+        {/* Header */}
+        <div className="p-6 border-b border-slate-200 dark:border-slate-900 flex justify-between items-center bg-slate-50/85 dark:bg-slate-950/80 backdrop-blur">
+          <div className="text-left">
+            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-[#c5a880]">Setup Wizard</span>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mt-1">Configure Restaurant Storefront</h2>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-full text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition cursor-pointer bg-transparent border-none text-lg">✕</button>
+        </div>
+
+        {/* Step Progress bar */}
+        <div className="px-8 py-3 bg-slate-100/50 dark:bg-slate-900/30 flex justify-between items-center text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">
+          {['Profile info', 'Branding Color', 'Homepage Layout', 'Login Layout', 'Dashboard Layout'].map((label, idx) => {
+            const stepNum = idx + 1;
+            const isDone = step > stepNum;
+            const isActive = step === stepNum;
+            return (
+              <div key={idx} className="flex items-center gap-2">
+                <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] border transition ${
+                  isDone ? 'bg-indigo-650 border-indigo-650 text-white dark:bg-[#c5a880] dark:border-[#c5a880] dark:text-slate-950' :
+                  isActive ? 'border-indigo-650 text-indigo-650 dark:border-[#c5a880] dark:text-[#c5a880] font-black' : 'border-slate-200 text-slate-400 dark:border-slate-800 dark:text-slate-500'
+                }`}>{isDone ? '✓' : stepNum}</span>
+                <span className={isActive ? 'text-indigo-650 dark:text-white font-black' : 'hidden sm:inline'}>{label}</span>
+                {idx < 4 && <span className="text-slate-300 dark:text-slate-800 ml-2 hidden sm:inline">⟶</span>}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Form Body Content */}
+        <div className="flex-grow p-8 overflow-y-auto min-h-0 scrollbar-thin">
+          
+          {/* Step 1: Restaurant Info */}
+          {step === 1 && (
+            <div className="space-y-6 max-w-2xl mx-auto text-left">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1 sm:col-span-2">
+                  <label className="text-[10px] font-black text-slate-700 dark:text-slate-400 uppercase">Restaurant Name *</label>
+                  <input
+                    type="text"
+                    value={restaurantName}
+                    onChange={e => setRestaurantName(e.target.value)}
+                    placeholder="Gourmet Kitchen"
+                    className="w-full bg-slate-50 border border-slate-205 focus:border-indigo-650 rounded-xl px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none dark:bg-slate-900 dark:border-slate-800 dark:focus:border-[#c5a880] dark:text-white dark:placeholder-slate-500"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-slate-700 dark:text-slate-400 uppercase">Owner/Chef Name *</label>
+                  <input
+                    type="text"
+                    value={ownerName}
+                    onChange={e => setOwnerName(e.target.value)}
+                    placeholder="Chef Marcus"
+                    className="w-full bg-slate-50 border border-slate-250 focus:border-indigo-650 rounded-xl px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none dark:bg-slate-900 dark:border-slate-800 dark:focus:border-[#c5a880] dark:text-white dark:placeholder-slate-500"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-slate-700 dark:text-slate-400 uppercase">Contact Mobile *</label>
+                  <input
+                    type="text"
+                    value={mobileNo}
+                    onChange={e => setMobileNo(e.target.value)}
+                    placeholder="+91 98765 43210"
+                    className="w-full bg-slate-50 border border-slate-250 focus:border-indigo-650 rounded-xl px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none dark:bg-slate-900 dark:border-slate-800 dark:focus:border-[#c5a880] dark:text-white dark:placeholder-slate-500"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-slate-700 dark:text-slate-400 uppercase">Business Email *</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="chef@gourmet.com"
+                    className="w-full bg-slate-50 border border-slate-250 focus:border-indigo-650 rounded-xl px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none dark:bg-slate-900 dark:border-slate-800 dark:focus:border-[#c5a880] dark:text-white dark:placeholder-slate-500"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-slate-700 dark:text-slate-400 uppercase">Pincode *</label>
+                  <input
+                    type="text"
+                    value={pincode}
+                    onChange={e => setPincode(e.target.value)}
+                    placeholder="201301"
+                    className="w-full bg-slate-50 border border-slate-250 focus:border-indigo-650 rounded-xl px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none dark:bg-slate-900 dark:border-slate-800 dark:focus:border-[#c5a880] dark:text-white dark:placeholder-slate-500"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-slate-700 dark:text-slate-400 uppercase">City *</label>
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={e => setCity(e.target.value)}
+                    placeholder="Noida"
+                    className="w-full bg-slate-50 border border-slate-250 focus:border-indigo-650 rounded-xl px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none dark:bg-slate-900 dark:border-slate-800 dark:focus:border-[#c5a880] dark:text-white dark:placeholder-slate-500"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-slate-700 dark:text-slate-400 uppercase">State *</label>
+                  <input
+                    type="text"
+                    value={state}
+                    onChange={e => setState(e.target.value)}
+                    placeholder="UP"
+                    className="w-full bg-slate-50 border border-slate-250 focus:border-indigo-650 rounded-xl px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none dark:bg-slate-900 dark:border-slate-800 dark:focus:border-[#c5a880] dark:text-white dark:placeholder-slate-500"
+                  />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-700 dark:text-slate-400 uppercase">Restaurant Description</label>
+                <textarea
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  placeholder="Describe your kitchen dining experience, ambiance and specialization..."
+                  rows={3}
+                  className="w-full bg-slate-50 border border-slate-250 focus:border-indigo-650 rounded-xl px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 outline-none resize-none dark:bg-slate-900 dark:border-slate-800 dark:focus:border-[#c5a880] dark:text-white dark:placeholder-slate-500"
+                />
+              </div>
+
+              <div className="border-t border-slate-200 dark:border-slate-900 pt-6">
+                <label className="text-[10px] font-black text-indigo-600 dark:text-[#c5a880] uppercase tracking-widest block mb-4">Select Restaurant Niche</label>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                  {[
+                    { id: 'Fine Dining', name: 'Fine Dining', icon: '⚜️', img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=300', desc: 'Gourmet plates & wine pairings' },
+                    { id: 'Fast Food', name: 'Fast Food', icon: '🍔', img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300', desc: 'Flame-grilled burgers & fries' },
+                    { id: 'Pizza', name: 'Pizza & Pasta', icon: '🍕', img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300', desc: 'Wood-fired Neapolitan pizzas' },
+                    { id: 'Indian', name: 'Indian Cuisine', icon: '🍲', img: 'https://images.unsplash.com/photo-1585938338392-50a59970642c?w=300', desc: 'Biryanis & rich curries' },
+                    { id: 'Cafe', name: 'Cafe & Roastery', icon: '☕', img: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=300', desc: 'Specialty coffee & pastries' }
+                  ].map((cat) => {
+                    const isSelected = subcategory === cat.id;
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setSubcategory(cat.id)}
+                        className={`flex flex-col bg-slate-50 dark:bg-slate-900 border text-left overflow-hidden rounded-2xl group transition duration-300 ${
+                          isSelected ? 'border-indigo-650 ring-1 ring-indigo-650 dark:border-[#c5a880] dark:ring-[#c5a880]' : 'border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="h-20 w-full overflow-hidden relative">
+                          <img src={cat.img} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                          <span className="absolute top-2 right-2 w-6 h-6 bg-slate-950/80 backdrop-blur rounded-full flex items-center justify-center text-xs">{cat.icon}</span>
+                        </div>
+                        <div className="p-3 space-y-1">
+                          <h4 className="text-slate-900 dark:text-white font-extrabold text-[10px] uppercase truncate">{cat.name}</h4>
+                          <p className="text-slate-500 dark:text-slate-400 text-[8px] leading-normal font-semibold line-clamp-2">{cat.desc}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: Theme Selector */}
+          {step === 2 && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+              {/* Big Screen Mockup */}
+              <div className="md:col-span-2 bg-slate-50/50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-900 rounded-3xl p-6 flex flex-col justify-between min-h-[300px]">
+                <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-900 pb-3">
+                  <span className="text-[9px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500">Live Mockup Preview</span>
+                  <div className="flex gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                  </div>
+                </div>
+                <div className="flex-grow flex flex-col items-center justify-center p-6 space-y-4">
+                  <div className="w-24 h-24 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <span className="text-4xl">🍳</span>
+                  </div>
+                  <h3 className="text-xl font-bold font-serif text-slate-900 dark:text-white">{restaurantName || 'Gourmet Kitchen'}</h3>
+                  <div className="flex gap-2">
+                    <span className={`px-4 py-1.5 ${activeTheme.bgColor} text-slate-950 text-[10px] font-black rounded-lg shadow-lg`}>Book Table</span>
+                    <span className={`px-4 py-1.5 ${activeTheme.accentBg} ${activeTheme.text} text-[10px] font-black rounded-lg border border-slate-200 dark:border-slate-900`}>View Menu</span>
+                  </div>
+                </div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-500 text-center font-bold">
+                  Active Brand Color Code: <span className="font-mono text-slate-800 dark:text-white">{activeTheme.color}</span>
+                </div>
+              </div>
+
+              {/* Theme swatches list */}
+              <div className="space-y-3 max-h-[350px] overflow-y-auto pr-2 scrollbar-thin">
+                {RESTAURANT_THEMES.map((themeOpt) => (
+                  <button
+                    key={themeOpt.id}
+                    onClick={() => setSelectedTheme(themeOpt.id)}
+                    className={`w-full p-2.5 border rounded-2xl flex items-center gap-3 transition cursor-pointer text-left ${
+                      selectedTheme === themeOpt.id ? 'border-indigo-650 bg-indigo-50/10 dark:border-[#c5a880] dark:bg-[#c5a880]/5' : 'border-slate-200 bg-slate-50 dark:border-slate-900 dark:bg-slate-900/20 hover:border-slate-350 dark:hover:border-slate-800'
+                    }`}
+                  >
+                    {themeOpt.imageUrl ? (
+                      <div className="relative w-16 h-12 rounded-lg overflow-hidden flex-shrink-0 border border-slate-200 dark:border-slate-850 bg-slate-100 dark:bg-slate-900">
+                        <img src={themeOpt.imageUrl} alt={themeOpt.name} className="w-full h-full object-cover" />
+                        <span className={`absolute bottom-1 right-1 w-3 h-3 rounded-full ${themeOpt.bgColor} border border-white dark:border-slate-950 shadow-sm`} />
+                      </div>
+                    ) : (
+                      <span className={`w-8 h-8 rounded-full ${themeOpt.bgColor} flex-shrink-0 border border-white/10`} />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">{themeOpt.name}</h4>
+                      <p className="text-[9px] text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2 leading-snug">{themeOpt.desc}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+              {/* Step 3: Homepage Layout Selector */}
+              {step === 3 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left max-h-[50vh] overflow-y-auto pr-2 scrollbar-thin">
+                  {RESTAURANT_HOMEPAGES.map((layoutOpt) => (
+                    <button
+                      key={layoutOpt.id}
+                      type="button"
+                      onClick={() => setSelectedHomepageLayout(layoutOpt.id)}
+                      className={`p-4 border rounded-2xl flex flex-col justify-between transition cursor-pointer text-left ${
+                        selectedHomepageLayout === layoutOpt.id ? 'border-indigo-650 bg-indigo-50/10 dark:border-[#c5a880] dark:bg-[#c5a880]/5 shadow-sm' : 'border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/20 hover:border-slate-300 dark:hover:border-slate-750'
+                      }`}
+                    >
+                      <div className="relative w-full h-32 rounded-xl overflow-hidden mb-3 border border-slate-200 dark:border-slate-850 bg-slate-100 dark:bg-slate-950">
+                        <img 
+                          src={layoutOpt.imageUrl} 
+                          alt={layoutOpt.name} 
+                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                        />
+                        <span className="absolute top-2 right-2 bg-black/70 backdrop-blur-md w-7 h-7 rounded-full flex items-center justify-center text-xs select-none">
+                          {layoutOpt.previewIcon}
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">{layoutOpt.name}</h4>
+                        <p className="text-[9px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">{layoutOpt.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Step 4: Login Layout Selector */}
+              {step === 4 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left max-h-[50vh] overflow-y-auto pr-2 scrollbar-thin">
+                  {RESTAURANT_LOGINS.map((layoutOpt) => (
+                    <button
+                      key={layoutOpt.id}
+                      type="button"
+                      onClick={() => setSelectedLoginLayout(layoutOpt.id)}
+                      className={`p-4 border rounded-2xl flex flex-col justify-between transition cursor-pointer text-left ${
+                        selectedLoginLayout === layoutOpt.id ? 'border-indigo-650 bg-indigo-50/10 dark:border-[#c5a880] dark:bg-[#c5a880]/5 shadow-sm' : 'border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/20 hover:border-slate-300 dark:hover:border-slate-750'
+                      }`}
+                    >
+                      <div className="relative w-full h-32 rounded-xl overflow-hidden mb-3 border border-slate-200 dark:border-slate-850 bg-slate-100 dark:bg-slate-950">
+                        <img 
+                          src={layoutOpt.imageUrl} 
+                          alt={layoutOpt.name} 
+                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                        />
+                        <span className="absolute top-2 right-2 bg-black/70 backdrop-blur-md w-7 h-7 rounded-full flex items-center justify-center text-xs select-none">
+                          {layoutOpt.previewIcon}
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">{layoutOpt.name}</h4>
+                        <p className="text-[9px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">{layoutOpt.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Step 5: Dashboard Layout Selector */}
+              {step === 5 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-left max-h-[50vh] overflow-y-auto pr-2 scrollbar-thin">
+                  {RESTAURANT_DASHBOARDS.map((layoutOpt) => (
+                    <button
+                      key={layoutOpt.id}
+                      type="button"
+                      onClick={() => setSelectedDashboardLayout(layoutOpt.id)}
+                      className={`p-4 border rounded-2xl flex flex-col justify-between transition cursor-pointer text-left ${
+                        selectedDashboardLayout === layoutOpt.id ? 'border-indigo-650 bg-indigo-50/10 dark:border-[#c5a880] dark:bg-[#c5a880]/5 shadow-sm' : 'border-slate-200 bg-slate-50 dark:border-slate-850 dark:bg-slate-900/20 hover:border-slate-350 dark:hover:border-slate-700'
+                      }`}
+                    >
+                      <div className="relative w-full h-32 rounded-xl overflow-hidden mb-3 border border-slate-200 dark:border-slate-850 bg-slate-100 dark:bg-slate-950">
+                        <img 
+                          src={layoutOpt.imageUrl} 
+                          alt={layoutOpt.name} 
+                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                        />
+                        <span className="absolute top-2 right-2 bg-black/70 backdrop-blur-md w-7 h-7 rounded-full flex items-center justify-center text-xs select-none">
+                          {layoutOpt.previewIcon}
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">{layoutOpt.name}</h4>
+                        <p className="text-[9px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">{layoutOpt.desc}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+        </div>
+
+        {/* Footer Navigation Buttons */}
+        <div className="p-6 border-t border-slate-200 dark:border-slate-900 flex justify-between bg-slate-50/85 dark:bg-slate-950/80 backdrop-blur">
+          {step > 1 ? (
+            <button
+              onClick={handleBack}
+              className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-900 dark:hover:bg-slate-850 dark:text-white text-xs font-bold rounded-xl transition cursor-pointer border-none"
+            >
+              Back
+            </button>
+          ) : (
+            <div />
+          )}
+
+          {step < 5 ? (
+            <button
+              onClick={handleNext}
+              className="px-5 py-2.5 bg-indigo-650 hover:bg-indigo-700 text-white dark:bg-[#c5a880] dark:hover:bg-[#b0936b] dark:text-slate-950 text-xs font-black rounded-xl shadow-lg transition cursor-pointer border-none"
+            >
+              Continue
+            </button>
+          ) : (
+            <button
+              onClick={handleSubmit}
+              className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-xl shadow-lg transition cursor-pointer border-none animate-bounce"
+            >
+              Generate Restaurant Workspace ✓
+            </button>
+          )}
+        </div>
+
+      </div>
+    </div>
+  );
+}
