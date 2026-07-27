@@ -18,12 +18,20 @@ const NICHE_IMAGES: Record<string, string[]> = {
     u('photo-1490481651871-ab68de25d43d'),
     u('photo-1445205170230-053b83016050'),
     u('photo-1469334031218-e382a71b716b'),
+    u('photo-1441984904996-e0b6ba687e04'),
+    u('photo-1487222477894-8943e31ef7b2'),
+    u('photo-1529139574466-a303027c1d8b'),
+    u('photo-1515886657613-9f3515b0c78f'),
   ],
   electronics: [
     u('photo-1505740420928-5e560c06d30e'),
     u('photo-1498049794561-7780e7231661'),
     u('photo-1550009158-9ebf69173e03'),
     u('photo-1519389950473-47ba0277781c'),
+    u('photo-1526738549149-8e07eca6c147'),
+    u('photo-1587831990711-23ca6441447b'),
+    u('photo-1593642702821-c8da6771f0c6'),
+    u('photo-1531297484001-80022131f5a1'),
   ],
   grocery: [
     u('photo-1542838132-92c53300491e'),
@@ -128,11 +136,31 @@ const GENERIC_IMAGES = [
   u('photo-1472851294608-062f824d29cc'),
   u('photo-1556740738-b6a63e27c4df'),
   u('photo-1534452203293-494d7ddbf7e0'),
+  u('photo-1607082348824-0a96f2a4b9da'),
+  u('photo-1483058712412-4245e9b90334'),
+  u('photo-1542744173-8e7e53415bb0'),
+  u('photo-1557821552-17105176677c'),
 ];
 
 export type VariantSurface = 'dark' | 'light';
-export type HeroLayout = 'overlay' | 'split' | 'centered' | 'editorial';
-export type EcomLoginLayout = 'split-image' | 'centered-glass' | 'minimal-light' | 'dark-panel';
+export type HeroLayout =
+  | 'overlay'
+  | 'split'
+  | 'centered'
+  | 'editorial'
+  | 'minimal'
+  | 'showcase'
+  | 'diagonal'
+  | 'spotlight';
+export type EcomLoginLayout =
+  | 'split-image'
+  | 'centered-glass'
+  | 'minimal-light'
+  | 'dark-panel'
+  | 'right-panel'
+  | 'gradient-split'
+  | 'boxed-center'
+  | 'fullbleed-form';
 
 export interface EcomVariantStyle {
   /** Suffix appended to the niche name, e.g. "Noir" -> "Fashion Noir" */
@@ -181,6 +209,42 @@ export const VARIANT_STYLES: EcomVariantStyle[] = [
     badge: 'The Journal',
     tagline: (n) => `${n}, told like a magazine`,
     desc: (n) => `Magazine-style layout for ${n.toLowerCase()} — asymmetric hero, serif accents and lookbook-style product storytelling.`,
+  },
+  {
+    suffix: 'Mono',
+    surface: 'light',
+    heroLayout: 'minimal',
+    loginLayout: 'boxed-center',
+    badge: 'Less, but better',
+    tagline: (n) => `${n}. Nothing you don’t need`,
+    desc: (n) => `Stark monochrome storefront for ${n.toLowerCase()} — centred type-led hero, hairline rules and a quiet, confident product grid.`,
+  },
+  {
+    suffix: 'Luxe',
+    surface: 'dark',
+    heroLayout: 'spotlight',
+    loginLayout: 'right-panel',
+    badge: 'By Appointment',
+    tagline: (n) => `The art of ${n.toLowerCase()}`,
+    desc: (n) => `Gallery-grade storefront for ${n.toLowerCase()} — spotlit hero, serif display, and a slow, considered browsing experience.`,
+  },
+  {
+    suffix: 'Pop',
+    surface: 'light',
+    heroLayout: 'showcase',
+    loginLayout: 'fullbleed-form',
+    badge: 'New · New · New',
+    tagline: (n) => `${n} that pops off the shelf`,
+    desc: (n) => `Playful, colour-blocked storefront for ${n.toLowerCase()} — product-first showcase hero, chunky cards and a fun checkout.`,
+  },
+  {
+    suffix: 'Aurora',
+    surface: 'dark',
+    heroLayout: 'diagonal',
+    loginLayout: 'gradient-split',
+    badge: 'Limited Drop',
+    tagline: (n) => `${n}, dialled all the way up`,
+    desc: (n) => `Gradient-soaked storefront for ${n.toLowerCase()} — diagonal split hero, aurora glow accents and neon call-to-actions.`,
   },
 ];
 

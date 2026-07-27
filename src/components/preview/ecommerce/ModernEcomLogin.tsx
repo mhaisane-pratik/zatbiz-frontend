@@ -188,6 +188,58 @@ export default function ModernEcomLogin({
     );
   }
 
+  if (layout === 'boxed-center') {
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center p-8">
+        <div className="w-full max-w-md border-2 border-slate-900 p-10">{form}</div>
+      </main>
+    );
+  }
+
+  if (layout === 'right-panel') {
+    return (
+      <main className="min-h-screen grid lg:grid-cols-[1fr_1.2fr]" style={{ backgroundColor: '#0a0a0d' }}>
+        <div className="flex items-center justify-center p-8 sm:p-14">{form}</div>
+        <div className="relative hidden lg:block overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none z-10" style={{ background: `radial-gradient(ellipse at 50% 0%, ${accent}33, transparent 60%)` }} />
+          <img src={heroImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0a0a0d]/60" />
+          <div className="relative h-full flex flex-col justify-end p-12 text-white space-y-3 z-20">
+            <h2 className="text-3xl font-black tracking-tight leading-tight" style={{ fontFamily: 'Georgia, serif' }}>{theme?.tagline || brand}</h2>
+            <p className="text-white/70 text-[13px] max-w-sm">{theme?.desc || ''}</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (layout === 'gradient-split') {
+    return (
+      <main className="min-h-screen grid lg:grid-cols-2" style={{ backgroundColor: '#0b0b0f' }}>
+        <div className="relative hidden lg:block overflow-hidden">
+          <div className="absolute inset-0" style={{ background: `linear-gradient(140deg, ${accent}, ${theme?.secondaryColor || accent} 70%, #0b0b0f)` }} />
+          <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 30% 30%, rgba(255,255,255,.15), transparent 40%)` }} />
+          <div className="relative h-full flex flex-col justify-center p-12 text-white space-y-4">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/70">{theme?.badge}</span>
+            <h2 className="text-4xl font-black tracking-tight leading-tight">{theme?.tagline || brand}</h2>
+            <p className="text-white/80 text-[13px] max-w-sm">{theme?.desc || ''}</p>
+          </div>
+        </div>
+        <div className="flex items-center justify-center p-8 sm:p-14">{form}</div>
+      </main>
+    );
+  }
+
+  if (layout === 'fullbleed-form') {
+    return (
+      <main className="min-h-screen relative flex items-center justify-center p-8" style={{ backgroundColor: `${accent}12` }}>
+        <div className="absolute top-0 left-0 w-40 h-40 rounded-full blur-3xl opacity-40" style={{ backgroundColor: accent }} />
+        <div className="absolute bottom-0 right-0 w-56 h-56 rounded-full blur-3xl opacity-30" style={{ backgroundColor: theme?.secondaryColor || accent }} />
+        <div className="relative w-full max-w-md bg-white rounded-[28px] p-10 shadow-2xl border border-white">{form}</div>
+      </main>
+    );
+  }
+
   if (darkPanel) {
     return (
       <main className="min-h-screen grid lg:grid-cols-2" style={{ backgroundColor: '#0b0b0f' }}>

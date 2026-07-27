@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { EcomTheme, getEcomThemes } from './ecomThemeVariants';
+import { getVariantContent } from './ecomVariantContent';
 import { Ed, EdImg, EDIT_STYLES, EditFn } from '@/components/preview/gym/Editable';
 
 /* ------------------------------------------------------------------ */
@@ -21,6 +22,7 @@ export interface EcomContent {
   products: { name: string; price: number; imageUrl: string }[];
   features: { i: string; h: string; d: string }[];
   reviews: { n: string; r: string; q: string }[];
+  reviewsHeading: string;
   newsTitle: string;
   newsSub: string;
 }
@@ -36,28 +38,25 @@ export function buildEcomContent(theme: EcomTheme, overrides?: any): EcomContent
     baseProducts.push({ name: `Item ${i + 1}`, price: 499 + i * 200, imageUrl: theme.heroImageUrl });
   }
 
+  // Per-variant content (marquee, features, reviews, headings) so each of the
+  // 8 variants reads differently — lives in ecomVariantContent.ts.
+  const v = getVariantContent(theme.suffix);
+
   const base: EcomContent = {
     badge: theme.badge,
     tagline: theme.tagline,
     desc: theme.desc,
     heroImageUrl: theme.heroImageUrl,
     navLinks: ['New In', 'Shop', 'Collections', 'Sale', 'About'],
-    marquee: ['Free shipping over ₹999', 'Easy 7-day returns', 'Cash on delivery', 'Secure checkout', '4.9★ from 2,400 reviews'],
-    shopTitle: 'Shop the collection',
-    shopEyebrow: 'Bestsellers',
+    marquee: v.marquee,
+    shopTitle: v.shopTitle,
+    shopEyebrow: v.shopEyebrow,
     products: baseProducts,
-    features: [
-      { i: '🚚', h: 'Fast Dispatch', d: 'Orders placed before 2 PM ship the same day, tracked door to door.' },
-      { i: '↩️', h: 'Easy Returns', d: 'Seven-day no-questions returns with instant refund on pickup.' },
-      { i: '🔒', h: 'Secure Checkout', d: 'UPI, cards and COD — every payment fully encrypted.' },
-    ],
-    reviews: [
-      { n: 'Ananya Rao', r: 'Verified buyer', q: 'Ordered on Monday, delivered Wednesday, quality exactly as pictured. Rare these days.' },
-      { n: 'Marcus Lee', r: 'Repeat customer', q: 'Checkout took under a minute and the tracking actually updated in real time.' },
-      { n: 'Priya Nair', r: 'Verified buyer', q: 'Returns were painless — printed the label, dropped it off, refunded in two days.' },
-    ],
-    newsTitle: 'Get 10% off your first order',
-    newsSub: 'Join the list for early drops, restocks and members-only pricing.',
+    features: v.features,
+    reviews: v.reviews,
+    reviewsHeading: v.reviewsHeading,
+    newsTitle: v.newsTitle,
+    newsSub: v.newsSub,
   };
 
   if (!overrides || typeof overrides !== 'object') return base;
@@ -295,6 +294,104 @@ export default function ModernEcomStorefront({
       );
     }
 
+    // MINIMAL — monochrome, type-led, image as a quiet band beneath
+    if (theme.heroLayout === 'minimal') {
+      return (
+        <section data-section="hero" className="border-b" style={{ borderColor: dark ? '#ffffff18' : '#e2e8f0' }}>
+          <div className="max-w-4xl mx-auto px-6 py-24 text-center space-y-6">
+            {E('badge', c.badge, `zb-hero-t inline-block text-[10px] font-black uppercase tracking-[0.35em] ${t.muted}`, 'span', { animationDelay: '.1s' })}
+            {E('tagline', c.tagline, 'zb-hero-t block text-4xl sm:text-6xl font-black leading-[1.02] tracking-tight', 'h1', { animationDelay: '.22s' }, true)}
+            {E('desc', c.desc, `zb-hero-t block text-[15px] leading-relaxed font-medium max-w-xl mx-auto ${t.soft}`, 'p', { animationDelay: '.34s' }, true)}
+            <div className="zb-hero-t flex flex-wrap gap-3 pt-2 justify-center" style={{ animationDelay: '.46s' }}>
+              <a href="#shop" className="px-8 py-3.5 text-[12px] font-black uppercase tracking-widest rounded-none text-white transition hover:opacity-90" style={{ backgroundColor: accent }}>
+                Shop the Collection
+              </a>
+              <LoginBtn className={`px-8 py-3.5 text-[12px] font-black uppercase tracking-widest rounded-none border transition ${t.navBtn}`}>Sign In</LoginBtn>
+            </div>
+          </div>
+          <div className={`h-[280px] overflow-hidden ${imgWrap}`}>
+            {I('heroImageUrl', c.heroImageUrl, 'zb-hero-img w-full h-full object-cover grayscale-[0.15]', brand)}
+          </div>
+        </section>
+      );
+    }
+
+    // SPOTLIGHT — dark gallery, centred image in a lit frame
+    if (theme.heroLayout === 'spotlight') {
+      return (
+        <section data-section="hero" className="relative overflow-hidden" style={{ backgroundColor: '#0a0a0d' }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 50% 0%, ${accent}33, transparent 60%)` }} />
+          <div className="relative max-w-5xl mx-auto px-6 py-20 text-center space-y-7 text-white">
+            {E('badge', c.badge, 'zb-hero-t inline-block text-[10px] font-black uppercase tracking-[0.3em] px-3 py-1.5 rounded-full border border-white/20', 'span', { color: accent, animationDelay: '.1s' })}
+            {E('tagline', c.tagline, 'zb-hero-t block text-4xl sm:text-6xl font-black leading-[1.02] tracking-tight', 'h1', { animationDelay: '.22s', fontFamily: 'Georgia, serif' }, true)}
+            <div className={`zb-hero-img mx-auto max-w-3xl rounded-3xl overflow-hidden border border-white/10 shadow-2xl ${imgWrap}`}>
+              {I('heroImageUrl', c.heroImageUrl, 'w-full h-[340px] object-cover', brand)}
+            </div>
+            {E('desc', c.desc, 'zb-hero-t block text-white/60 text-[14px] leading-relaxed max-w-xl mx-auto', 'p', { animationDelay: '.34s' }, true)}
+            <div className="zb-hero-t flex flex-wrap gap-3 justify-center" style={{ animationDelay: '.46s' }}>
+              <a href="#shop" className="px-8 py-3.5 text-[12px] font-black uppercase tracking-widest rounded-full text-white shadow-xl transition hover:scale-[1.03]" style={{ backgroundColor: accent }}>
+                Explore Collection
+              </a>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // SHOWCASE — playful colour block, product-first cards peeking in
+    if (theme.heroLayout === 'showcase') {
+      return (
+        <section data-section="hero" className="relative overflow-hidden" style={{ backgroundColor: `${accent}14` }}>
+          <div className="max-w-7xl mx-auto px-6 py-16 grid lg:grid-cols-2 gap-10 items-center">
+            <div className="space-y-6">
+              <span className="zb-hero-t inline-block text-[11px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full text-white" style={{ backgroundColor: accent, animationDelay: '.1s' }}>
+                {E('badge', c.badge)}
+              </span>
+              {E('tagline', c.tagline, 'zb-hero-t block text-4xl sm:text-6xl font-black leading-[1] tracking-tight', 'h1', { animationDelay: '.22s' }, true)}
+              {E('desc', c.desc, `zb-hero-t block text-[15px] leading-relaxed font-medium ${t.soft}`, 'p', { animationDelay: '.34s' }, true)}
+              <div className="zb-hero-t flex flex-wrap gap-3" style={{ animationDelay: '.46s' }}>
+                <a href="#shop" className="px-8 py-4 text-[12px] font-black uppercase tracking-widest rounded-2xl text-white shadow-xl transition hover:scale-[1.03]" style={{ backgroundColor: accent }}>Shop Now</a>
+                <LoginBtn className={`px-8 py-4 text-[12px] font-black uppercase tracking-widest rounded-2xl border transition ${t.navBtn}`}>Sign In</LoginBtn>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className={`rounded-3xl overflow-hidden h-64 shadow-lg translate-y-4 ${imgWrap}`}>
+                {I('heroImageUrl', c.heroImageUrl, 'zb-hero-img w-full h-full object-cover', brand)}
+              </div>
+              <div className="rounded-3xl overflow-hidden h-64 shadow-lg -translate-y-2">
+                <img src={products[1]?.imageUrl || c.heroImageUrl} alt="" className="w-full h-full object-cover" />
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // DIAGONAL — gradient aurora, angled image split
+    if (theme.heroLayout === 'diagonal') {
+      return (
+        <section data-section="hero" className="relative min-h-[560px] overflow-hidden" style={{ backgroundColor: '#0b0b0f' }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(120deg, ${accent}55, transparent 55%), radial-gradient(circle at 85% 20%, ${theme.secondaryColor || accent}44, transparent 45%)` }} />
+          <div className={`absolute top-0 right-0 w-1/2 h-full overflow-hidden ${imgWrap}`} style={{ clipPath: 'polygon(22% 0, 100% 0, 100% 100%, 0% 100%)' }}>
+            {I('heroImageUrl', c.heroImageUrl, 'zb-hero-img w-full h-full object-cover', brand)}
+          </div>
+          <div className="relative max-w-7xl mx-auto px-6 py-24 flex items-center min-h-[560px]">
+            <div className="max-w-lg space-y-6 text-white">
+              <span className="zb-hero-t inline-block text-[10px] font-black uppercase tracking-[0.3em] px-3 py-1.5 rounded-full" style={{ backgroundColor: accent, animationDelay: '.1s' }}>
+                {E('badge', c.badge)}
+              </span>
+              {E('tagline', c.tagline, 'zb-hero-t block text-4xl sm:text-6xl font-black leading-[1.02] tracking-tight', 'h1', { animationDelay: '.22s' }, true)}
+              {E('desc', c.desc, 'zb-hero-t block text-white/70 text-[15px] leading-relaxed font-medium', 'p', { animationDelay: '.34s' }, true)}
+              <div className="zb-hero-t flex flex-wrap gap-3 pt-1" style={{ animationDelay: '.46s' }}>
+                <a href="#shop" className="px-8 py-3.5 text-[12px] font-black uppercase tracking-widest rounded-xl text-slate-900 bg-white shadow-2xl transition hover:scale-[1.03]">Shop the Drop</a>
+                <LoginBtn className="px-8 py-3.5 text-[12px] font-black uppercase tracking-widest rounded-xl border border-white/25 text-white hover:bg-white/10 transition">Sign In</LoginBtn>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
     const centered = theme.heroLayout === 'centered';
     return (
       <section data-section="hero" className={`relative min-h-[580px] flex items-center overflow-hidden ${imgWrap}`}>
@@ -453,7 +550,7 @@ export default function ModernEcomStorefront({
       <section data-section="reviews" className="max-w-7xl mx-auto px-6 py-20">
         <div data-reveal className="text-center space-y-3 mb-12">
           <span className="text-[10px] font-black uppercase tracking-[0.25em]" style={{ color: accent }}>Reviews</span>
-          <h2 className="text-3xl sm:text-4xl font-black tracking-tight">What customers say</h2>
+          {E('reviewsHeading', c.reviewsHeading, 'block text-3xl sm:text-4xl font-black tracking-tight', 'h2')}
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {c.reviews.map((r, i) => (

@@ -396,6 +396,43 @@ function LoginPreview({ theme, brand, logoIcon }: { theme: any; brand: string; l
       </main>
     );
   }
+  if (theme.loginLayout === 'boxed-center') {
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center p-8">
+        <div className="w-full max-w-md border-2 border-slate-900 p-10">{form}</div>
+      </main>
+    );
+  }
+  if (theme.loginLayout === 'right-panel') {
+    return (
+      <main className="min-h-screen grid lg:grid-cols-[1fr_1.2fr]" style={{ backgroundColor: '#0a0a0d' }}>
+        <div className="flex items-center justify-center p-8 sm:p-14">{form}</div>
+        <div className="relative hidden lg:block overflow-hidden">
+          <img src={theme.heroImageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0a0a0d]/60" />
+        </div>
+      </main>
+    );
+  }
+  if (theme.loginLayout === 'gradient-split') {
+    return (
+      <main className="min-h-screen grid lg:grid-cols-2" style={{ backgroundColor: '#0b0b0f' }}>
+        <div className="relative hidden lg:block overflow-hidden">
+          <div className="absolute inset-0" style={{ background: `linear-gradient(140deg, ${accent}, ${theme.secondaryColor || accent} 70%, #0b0b0f)` }} />
+        </div>
+        <div className="flex items-center justify-center p-8 sm:p-14">{form}</div>
+      </main>
+    );
+  }
+  if (theme.loginLayout === 'fullbleed-form') {
+    return (
+      <main className="min-h-screen relative flex items-center justify-center p-8" style={{ backgroundColor: `${accent}12` }}>
+        <div className="absolute top-0 left-0 w-40 h-40 rounded-full blur-3xl opacity-40" style={{ backgroundColor: accent }} />
+        <div className="absolute bottom-0 right-0 w-56 h-56 rounded-full blur-3xl opacity-30" style={{ backgroundColor: theme.secondaryColor || accent }} />
+        <div className="relative w-full max-w-md bg-white rounded-[28px] p-10 shadow-2xl">{form}</div>
+      </main>
+    );
+  }
   if (darkPanel) {
     return (
       <main className="min-h-screen grid lg:grid-cols-2" style={{ backgroundColor: '#0b0b0f' }}>
