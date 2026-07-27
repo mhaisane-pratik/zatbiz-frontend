@@ -1,0 +1,10 @@
+- [x] Overhaul gym landing page structure in `Landing.tsx` to modern aesthetic light theme
+- [x] Incorporate generated premium asset `/gym_hero_interior.png`
+- [x] Add smooth hover animations and micro-animations to telemetry cards
+- [x] Run tsc validation check on new changes
+- [x] Run Next.js production build verification
+- [x] Force gym template preview mode in preview page when gymInfo or gym keywords are detected
+- [x] Add a functional Login / Dashboard button after Tour in the header navbar
+- [x] Overhaul restaurant landing page to modern light theme with beautiful generated food asset
+- [x] Resolve Spring Boot compilation / Maven JPA dependency errors in backend
+- [x] Build, package, and boot Spring Boot backend on port 8080 using JetBrains JBR JDK 21
