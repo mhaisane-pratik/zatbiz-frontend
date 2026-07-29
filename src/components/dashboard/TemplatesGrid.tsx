@@ -118,6 +118,15 @@ export const TEMPLATES: Template[] = [
     category: 'ecommerce',
     image: '/images/medical_shop_template.png',
     gradient: 'from-emerald-500 to-teal-500'
+  },
+  {
+    id: 'hotel',
+    name: 'Hotel & Resort Web Application',
+    desc: 'Premium hospitality platform with room listings, live availability search, and an end-to-end room booking flow.',
+    icon: '🏨',
+    category: 'agency',
+    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&auto=format&fit=crop&q=80',
+    gradient: 'from-sky-500 to-cyan-500'
   }
 ];
 
@@ -150,14 +159,14 @@ export default function TemplatesGrid({ selectedCategory, onSelectTemplate }: Te
       )}
 
       {filteredTemplates.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {filteredTemplates.map((tpl) => (
             <div
               key={tpl.id}
-              className="group flex flex-col bg-white border border-slate-200/70 rounded-2xl overflow-hidden shadow-sm hover:-translate-y-1 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-100/50 transition-all duration-300 relative"
+              className="group flex flex-col bg-white border border-slate-200/70 rounded-xl overflow-hidden hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-100/50 transition-all duration-200 relative"
             >
               {/* Header Image Thumbnail Mockup */}
-              <div className="w-full h-44 overflow-hidden relative bg-slate-50 border-b border-slate-100 flex-shrink-0">
+              <div className="w-full h-24 overflow-hidden relative bg-slate-50 border-b border-slate-100 flex-shrink-0">
                 {/* Accent gradient overlay */}
                 <div className={`absolute inset-0 bg-gradient-to-tr ${tpl.gradient} opacity-10 group-hover:opacity-[0.06] transition duration-300 z-10`} />
                 <img
@@ -165,46 +174,48 @@ export default function TemplatesGrid({ selectedCategory, onSelectTemplate }: Te
                   alt={tpl.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                {/* Category badge */}
-                <span className="absolute top-3 left-3 bg-white/95 backdrop-blur text-[10px] text-slate-700 px-3 py-1 rounded-full font-semibold uppercase tracking-wide shadow-sm z-20">
-                  {tpl.category}
-                </span>
                 {/* Floating Emoji Icon Badge */}
-                <div className="w-10 h-10 rounded-xl bg-white shadow-sm border border-slate-100 flex items-center justify-center text-lg absolute bottom-[-16px] right-4 z-20">
+                <div className="w-7 h-7 rounded-lg bg-white shadow-sm border border-slate-100 flex items-center justify-center text-sm absolute bottom-2 right-2 z-20">
                   {tpl.icon}
                 </div>
               </div>
 
               {/* Card Contents */}
-              <div className="p-5 flex-1 flex flex-col justify-between">
-                <div className="space-y-2">
-                  <h3 className="text-base font-semibold text-slate-900 tracking-tight">{tpl.name}</h3>
-                  <p className="text-[13px] text-slate-500 leading-relaxed mb-5 line-clamp-3">
-                    {tpl.desc}
-                  </p>
+              <div className="p-3 flex-1 flex flex-col justify-between">
+                <div className="space-y-1 mb-3">
+                  <span className="text-[9px] text-slate-400 font-semibold uppercase tracking-wide">{tpl.category}</span>
+                  <h3 className="text-[13px] font-semibold text-slate-900 tracking-tight leading-snug line-clamp-1">{tpl.name}</h3>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1.5">
                   <button
                     onClick={() => onSelectTemplate(tpl.id)}
-                    className="w-full py-3 text-sm font-medium bg-slate-900 hover:bg-indigo-600 text-white rounded-xl transition-colors text-center cursor-pointer flex items-center justify-center gap-1.5"
+                    className="w-full py-2 text-xs font-medium bg-slate-900 hover:bg-indigo-600 text-white rounded-lg transition-colors text-center cursor-pointer flex items-center justify-center gap-1"
                   >
-                    Customize &amp; Create
+                    Customize
                     <span className="transition-transform group-hover:translate-x-0.5">→</span>
                   </button>
                   {tpl.category === 'ecommerce' && (
                     <button
                       onClick={() => window.open(tpl.id === 'medical-shop' ? '/medical-preview' : '/templates-preview', '_blank')}
-                      className="w-full py-2.5 text-sm font-medium bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-xl transition text-center cursor-pointer flex items-center justify-center gap-1.5"
+                      className="w-full py-1.5 text-xs font-medium bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-lg transition text-center cursor-pointer flex items-center justify-center gap-1"
                     >
-                      👁 {tpl.id === 'medical-shop' ? 'Live Preview · 5 Niche Themes' : 'Live Studio Preview'}
+                      👁 Preview
                     </button>
                   )}
                   {tpl.id === 'corporate' && (
                     <button
                       onClick={() => window.open('/corporate-preview', '_blank')}
-                      className="w-full py-2.5 text-sm font-medium bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-xl transition text-center cursor-pointer flex items-center justify-center gap-1.5"
+                      className="w-full py-1.5 text-xs font-medium bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-lg transition text-center cursor-pointer flex items-center justify-center gap-1"
                     >
-                      👁 Live Preview · 4 Templates × 4 Themes
+                      👁 Preview
+                    </button>
+                  )}
+                  {tpl.id === 'hotel' && (
+                    <button
+                      onClick={() => window.open('/hotel-preview', '_blank')}
+                      className="w-full py-1.5 text-xs font-medium bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-lg transition text-center cursor-pointer flex items-center justify-center gap-1"
+                    >
+                      👁 Preview · 4 Themes
                     </button>
                   )}
                 </div>
@@ -214,30 +225,25 @@ export default function TemplatesGrid({ selectedCategory, onSelectTemplate }: Te
 
           {/* Persistent Build from Scratch Card */}
           <div
-            className="bg-indigo-50/30 border border-dashed border-indigo-200 rounded-2xl overflow-hidden flex flex-col justify-between hover:-translate-y-1 hover:border-indigo-300 hover:shadow-xl hover:shadow-indigo-100/50 transition duration-300 group"
+            className="bg-indigo-50/30 border border-dashed border-indigo-200 rounded-xl overflow-hidden flex flex-col justify-between hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-100/50 transition duration-200 group"
           >
             {/* Header mockup representing blank slate */}
-            <div className="w-full h-44 bg-slate-50 border-b border-dashed border-indigo-200/50 flex flex-col items-center justify-center relative flex-shrink-0">
+            <div className="w-full h-24 bg-slate-50 border-b border-dashed border-indigo-200/50 flex flex-col items-center justify-center relative flex-shrink-0">
               <div className="blueprint-grid absolute inset-0 opacity-40" />
-              <span className="text-4xl transition duration-300 z-10 select-none">✨</span>
-              <span className="absolute top-3 left-3 bg-white/95 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wide shadow-sm z-20">
-                Blank Canvas
-              </span>
+              <span className="text-2xl transition duration-300 z-10 select-none">✨</span>
             </div>
 
             {/* Contents */}
-            <div className="p-5 flex-1 flex flex-col justify-between">
-              <div className="space-y-2">
-                <h3 className="text-base font-semibold text-slate-900 tracking-tight">Build from Scratch</h3>
-                <p className="text-[13px] text-slate-500 leading-relaxed mb-5">
-                  Skip template presets. Initialize a completely blank website, custom page links, default sections, and design your layout exactly how you want.
-                </p>
+            <div className="p-3 flex-1 flex flex-col justify-between">
+              <div className="space-y-1 mb-3">
+                <span className="text-[9px] text-indigo-500 font-semibold uppercase tracking-wide">Blank Canvas</span>
+                <h3 className="text-[13px] font-semibold text-slate-900 tracking-tight leading-snug">Build from Scratch</h3>
               </div>
               <button
                 onClick={() => onSelectTemplate('scratch')}
-                className="w-full py-3 text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition text-center cursor-pointer flex items-center justify-center gap-1.5"
+                className="w-full py-2 text-xs font-medium bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition text-center cursor-pointer flex items-center justify-center gap-1"
               >
-                Start Blank Canvas →
+                Start Blank →
               </button>
             </div>
           </div>

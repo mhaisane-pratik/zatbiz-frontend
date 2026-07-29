@@ -108,45 +108,109 @@ export default function LoginPage() {
       {/* Single Unified Container Card */}
       <div className="w-full max-w-[1080px] bg-white/80 backdrop-blur-2xl rounded-[36px] border border-white/60 shadow-[0_35px_80px_-20px_rgba(49,46,129,0.35)] grid lg:grid-cols-2 overflow-hidden relative z-10">
 
-        {/* Left Side: Vibrant branded panel */}
-        <div className="relative hidden lg:flex flex-col justify-between overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-600 to-fuchsia-600 p-10 text-white">
-          {/* Animated glow orbs */}
-          <div className="absolute -top-16 -right-10 w-64 h-64 rounded-full bg-white/10 blur-2xl animate-blob-complex" />
-          <div className="absolute bottom-0 -left-16 w-72 h-72 rounded-full bg-fuchsia-400/30 blur-3xl animate-blob-complex" style={{ animationDelay: '-6s' }} />
+        {/* Left Side: Midnight slate branded panel */}
+        <div className="relative hidden lg:flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-8 text-white">
+          {/* Accent glow orbs */}
+          <div className="absolute -top-20 -right-16 w-72 h-72 rounded-full bg-violet-600/25 blur-3xl animate-blob-complex" />
+          <div className="absolute bottom-[-6rem] -left-16 w-72 h-72 rounded-full bg-indigo-600/20 blur-3xl animate-blob-complex" style={{ animationDelay: '-6s' }} />
           {/* Grid texture */}
-          <div className="absolute inset-0 opacity-[0.08] bg-[linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] bg-[size:36px_36px]" />
+          <div className="absolute inset-0 opacity-[0.05] bg-[linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] bg-[size:36px_36px]" />
 
           <div className="relative z-10 flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center font-extrabold text-lg ring-1 ring-white/30">Z</div>
+            <div className="w-9 h-9 rounded-xl bg-violet-500/20 backdrop-blur flex items-center justify-center font-extrabold text-lg ring-1 ring-violet-400/40 text-violet-200">Z</div>
             <span className="font-extrabold text-xl tracking-tight">Zatbiz</span>
           </div>
 
           <div className="relative z-10">
-            <h1 className="text-3xl font-black leading-[1.15] tracking-tight">
-              Run your entire store from one beautiful dashboard.
+            <style>{`
+              @keyframes zb-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+              @keyframes zb-float2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+              @keyframes zb-dash { to { stroke-dashoffset: 0; } }
+              @keyframes zb-grow { 0%,100%{transform:scaleY(0.55)} 50%{transform:scaleY(1)} }
+              @keyframes zb-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.45;transform:scale(1.35)} }
+              @keyframes zb-shine { 0%{transform:translateX(-60px)} 100%{transform:translateX(300px)} }
+              .zb-win{animation:zb-float 5s ease-in-out infinite}
+              .zb-phone{animation:zb-float2 4s ease-in-out infinite;transform-origin:center}
+              .zb-line{stroke-dasharray:260;stroke-dashoffset:260;animation:zb-dash 2.2s ease-out forwards}
+              .zb-bar{transform-origin:bottom;animation:zb-grow 2.6s ease-in-out infinite}
+              .zb-dot{transform-origin:center;animation:zb-pulse 1.8s ease-in-out infinite}
+              .zb-shine{animation:zb-shine 3.2s ease-in-out infinite}
+            `}</style>
+            <h1 className="text-2xl font-bold leading-[1.15] tracking-tight">
+              Your business online, beautifully.
             </h1>
-            <p className="mt-4 text-sm leading-7 text-white/80 font-medium max-w-sm">
-              Launch, manage, and grow dining, retail, and event businesses with a premium storefront and real-time insights.
+            <p className="mt-2 text-[13px] leading-6 text-white/70">
+              Sign in to manage everything in one place.
             </p>
 
-            <div className="mt-8 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-4">
-              <img
-                src="/images/login_illustration.png"
-                alt="Zatbiz Workspace Illustration"
-                className="w-full max-h-64 object-contain drop-shadow-xl"
-              />
+            {/* Modern animated illustration */}
+            <div className="mt-5 rounded-2xl bg-violet-500/[0.07] backdrop-blur-md border border-violet-400/20 ring-1 ring-inset ring-white/5 p-4 overflow-hidden relative">
+              <div className="zb-shine absolute top-0 -left-16 w-16 h-full bg-violet-300/10 blur-xl pointer-events-none" />
+              <svg viewBox="0 0 360 200" className="w-full max-h-48 drop-shadow-xl" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zatbiz live dashboard">
+                {/* browser window (floats) */}
+                <g className="zb-win">
+                  <rect x="16" y="18" width="250" height="164" rx="12" fill="#ffffff" />
+                  <rect x="16" y="18" width="250" height="24" rx="12" fill="#eef0ff" />
+                  <circle cx="32" cy="30" r="3.5" fill="#f87171" />
+                  <circle cx="44" cy="30" r="3.5" fill="#fbbf24" />
+                  <circle cx="56" cy="30" r="3.5" fill="#34d399" />
+                  {/* chart card */}
+                  <rect x="30" y="52" width="138" height="76" rx="9" fill="#f4f2ff" />
+                  <polyline className="zb-line" points="42,110 66,92 90,100 114,74 138,84 156,60" fill="none" stroke="#7c3aed" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle className="zb-dot" cx="156" cy="60" r="4" fill="#7c3aed" />
+                  {/* stat card */}
+                  <rect x="178" y="52" width="72" height="35" rx="8" fill="#ede9fe" />
+                  <rect x="188" y="61" width="40" height="8" rx="4" fill="#a78bfa" />
+                  <rect x="188" y="74" width="26" height="6" rx="3" fill="#c4b5fd" />
+                  <rect x="178" y="93" width="72" height="35" rx="8" fill="#e0f2fe" />
+                  <rect x="188" y="102" width="40" height="8" rx="4" fill="#38bdf8" />
+                  <rect x="188" y="115" width="26" height="6" rx="3" fill="#7dd3fc" />
+                  {/* animated bars */}
+                  <rect className="zb-bar" x="42"  y="140" width="14" height="30" rx="3" fill="#a5b4fc" style={{ animationDelay: '0s' }} />
+                  <rect className="zb-bar" x="64"  y="140" width="14" height="30" rx="3" fill="#c4b5fd" style={{ animationDelay: '.2s' }} />
+                  <rect className="zb-bar" x="86"  y="140" width="14" height="30" rx="3" fill="#a5b4fc" style={{ animationDelay: '.4s' }} />
+                  <rect className="zb-bar" x="108" y="140" width="14" height="30" rx="3" fill="#c4b5fd" style={{ animationDelay: '.6s' }} />
+                  <rect className="zb-bar" x="130" y="140" width="14" height="30" rx="3" fill="#a5b4fc" style={{ animationDelay: '.8s' }} />
+                </g>
+                {/* phone (floats opposite) */}
+                <g className="zb-phone">
+                  <rect x="278" y="66" width="68" height="118" rx="14" fill="#0f172a" />
+                  <rect x="285" y="74" width="54" height="102" rx="8" fill="#22d3ee" />
+                  <rect x="294" y="86" width="36" height="8" rx="4" fill="#ffffff" opacity="0.9" />
+                  <rect x="294" y="100" width="24" height="6" rx="3" fill="#ffffff" opacity="0.6" />
+                  <rect x="294" y="150" width="36" height="16" rx="8" fill="#ffffff" opacity="0.85" />
+                </g>
+              </svg>
+            </div>
+
+            {/* Feature list (minimal) */}
+            <div className="mt-5 space-y-2.5">
+              {[
+                { title: 'Secure OTP verification', d: 'M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-4z' },
+                { title: 'Email & mobile sign-in', d: 'M4 6h16a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V7a1 1 0 011-1zm0 2l8 5 8-5' },
+                { title: 'Publish in under 10 minutes', d: 'M15 4a4 4 0 11-3.4 6.1L5 16.7V19h2.3l6.6-6.6A4 4 0 0115 4z' },
+              ].map((f) => (
+                <div key={f.title} className="flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-lg bg-violet-500/15 border border-violet-400/25 text-violet-300 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                      <path d={f.d} />
+                    </svg>
+                  </span>
+                  <span className="text-[13px] font-medium text-white/85">{f.title}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="relative z-10 flex items-center gap-6">
+          <div className="relative z-10 flex items-center gap-6 pt-5">
             {[
               { value: '12k+', label: 'Stores live' },
               { value: '99.9%', label: 'Uptime' },
               { value: '4.9/5', label: 'Rating' },
             ].map((s) => (
               <div key={s.label}>
-                <div className="text-2xl font-black">{s.value}</div>
-                <div className="text-[10px] uppercase tracking-[0.18em] text-white/70 font-bold">{s.label}</div>
+                <div className="text-2xl font-bold">{s.value}</div>
+                <div className="text-[10px] uppercase tracking-[0.18em] text-white/70 font-semibold">{s.label}</div>
               </div>
             ))}
           </div>

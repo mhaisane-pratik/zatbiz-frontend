@@ -24,6 +24,51 @@ export const api = {
       }),
   },
 
+  // Hotel & Resort template API
+  // Maps to backend: /api/hotel, /api/hotel-data, /api/hotel/users
+  hotel: {
+    // Hotel profile / settings (HotelInfo)
+    info: {
+      get: (projectId: number) => request<any>(`/hotel?projectId=${projectId}`),
+      save: (projectId: number, data: any) =>
+        request<any>(`/hotel?projectId=${projectId}`, {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
+    },
+    // Flexible data store: rooms, bookings, amenities... (HotelData)
+    data: {
+      list: (projectId: number, dataType?: string) =>
+        request<any[]>(`/hotel-data?projectId=${projectId}${dataType ? `&dataType=${encodeURIComponent(dataType)}` : ''}`),
+      create: (item: { projectId: number; dataType: string; dataJson: string }) =>
+        request<any>('/hotel-data', {
+          method: 'POST',
+          body: JSON.stringify(item),
+        }),
+      update: (id: number, item: { dataType?: string; dataJson?: string }) =>
+        request<any>(`/hotel-data/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify(item),
+        }),
+      remove: (id: number) =>
+        request<void>(`/hotel-data/${id}`, { method: 'DELETE' }),
+    },
+    // Guest accounts (HotelUser)
+    users: {
+      list: (projectId: number) => request<any[]>(`/hotel/users?projectId=${projectId}`),
+      register: (data: { projectId: number; name: string; email: string; phone?: string; address?: string; password: string }) =>
+        request<any>('/hotel/users/register', {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }),
+      login: (data: { projectId: number; email: string; password: string }) =>
+        request<any>('/hotel/users/login', {
+          method: 'POST',
+          body: JSON.stringify({ ...data, projectId: String(data.projectId) }),
+        }),
+    },
+  },
+
   // Products API
   products: {
     list: (projectId: number) => request<Product[]>(`/products?projectId=${projectId}`),

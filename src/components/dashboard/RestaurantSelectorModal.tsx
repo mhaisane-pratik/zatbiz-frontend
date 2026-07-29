@@ -288,8 +288,8 @@ export default function RestaurantSelectorModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in-95 duration-200 text-slate-800 dark:text-white">
+    <div className="fixed inset-0 z-50 bg-white dark:bg-slate-900">
+      <div className="bg-white dark:bg-slate-900 w-full h-full overflow-hidden flex flex-col animate-in fade-in duration-200 text-slate-800 dark:text-white">
         
         {/* Header */}
         <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-950 backdrop-blur">
@@ -310,7 +310,7 @@ export default function RestaurantSelectorModal({
         </div>
 
         {/* Dynamic Wizard Steps */}
-        <div className="flex-grow overflow-y-auto p-6 scrollbar-thin">
+        <div className="flex-grow overflow-y-auto p-6 scrollbar-thin [&>*]:max-w-7xl [&>*]:mx-auto">
 
           {/* STEP 1: CHOOSE TEMPLATE GALLERY */}
           {step === 1 && (
@@ -320,7 +320,7 @@ export default function RestaurantSelectorModal({
                 <p className="text-xs text-slate-500 dark:text-slate-400">Explore 24 hand-designed restaurant layouts. Hover to demo layouts or check info cards.</p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
                 {RESTAURANT_TEMPLATES.map((tpl) => {
                   const isFav = favorites.includes(tpl.id);
                   return (

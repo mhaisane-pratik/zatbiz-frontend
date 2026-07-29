@@ -398,24 +398,24 @@ export default function RestaurantThemeStudio({
       <aside className="w-96 bg-slate-900 border-r border-slate-800 flex flex-col justify-between h-full select-none z-20">
         
         {/* Workspace Brand details */}
-        <div className="p-4 border-b border-slate-800 bg-slate-900/50 flex justify-between items-center">
-          <div className="flex items-center gap-2 text-left">
-            <span className="text-xl">🎨</span>
-            <div>
-              <span className="text-[9px] font-black uppercase text-indigo-400 tracking-wider">ZATBIZ Theme Studio</span>
-              <h2 className="text-xs font-bold text-white truncate max-w-[180px]">{companyName} Customizer</h2>
+        <div className="p-4 border-b border-slate-800/70 flex justify-between items-center">
+          <div className="flex items-center gap-2.5 text-left">
+            <span className="w-8 h-8 flex items-center justify-center rounded-xl bg-indigo-500/15 text-base">🎨</span>
+            <div className="leading-tight">
+              <span className="text-[10px] font-medium text-indigo-400 tracking-wide">Theme Studio</span>
+              <h2 className="text-[13px] font-semibold text-white truncate max-w-[170px]">{companyName}</h2>
             </div>
           </div>
           <button
             onClick={() => router.push('/dashboard')}
-            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-[9px] font-bold transition cursor-pointer border-none"
+            className="px-3 py-1.5 bg-slate-800/70 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-[11px] font-medium transition cursor-pointer border-none"
           >
-            ← Exit Studio
+            ← Exit
           </button>
         </div>
 
         {/* Tab Selection Row */}
-        <div className="grid grid-cols-7 border-b border-slate-800 text-[10px] font-bold uppercase tracking-wider text-center text-slate-400">
+        <div className="grid grid-cols-7 gap-1 px-2 py-2 border-b border-slate-800/70 text-[10px] font-medium text-center text-slate-400">
           {[
             { id: 'theme', label: 'Theme', icon: '🎨' },
             { id: 'layout', label: 'Layout', icon: '✏️' },
@@ -428,7 +428,7 @@ export default function RestaurantThemeStudio({
             <button
               key={tab.id}
               onClick={() => setEditorSection(tab.id as any)}
-              className={`py-3.5 flex flex-col items-center gap-1 border-none cursor-pointer transition ${editorSection === tab.id ? 'bg-indigo-650/15 text-indigo-400 font-black border-b-2 border-indigo-500' : 'bg-transparent hover:text-white'}`}
+              className={`py-2 rounded-lg flex flex-col items-center gap-1 border-none cursor-pointer transition ${editorSection === tab.id ? 'bg-indigo-500/15 text-indigo-300 font-semibold' : 'bg-transparent hover:bg-slate-800/60 hover:text-white'}`}
             >
               <span className="text-sm">{tab.icon}</span>
               <span>{tab.label}</span>
@@ -443,8 +443,8 @@ export default function RestaurantThemeStudio({
           {editorSection === 'theme' && (
             <div className="space-y-5">
               <div>
-                <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Color Presets</h4>
-                <p className="text-[9.5px] text-slate-500 mt-1">Select a premium curated swatch or choose a custom hex color.</p>
+                <h4 className="text-[13px] font-semibold tracking-tight text-slate-100">Color Presets</h4>
+                <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Select a premium curated swatch or choose a custom hex color.</p>
               </div>
 
               <div className="grid grid-cols-2 gap-2.5">
@@ -460,19 +460,19 @@ export default function RestaurantThemeStudio({
                   <button
                     key={themeOpt.id}
                     onClick={() => setSelectedTheme(themeOpt.id)}
-                    className={`p-3 border rounded-xl flex flex-col gap-2 cursor-pointer transition text-left ${selectedTheme === themeOpt.id ? 'border-indigo-500 bg-indigo-950/20' : 'border-slate-800 bg-slate-950 hover:border-slate-700'}`}
+                    className={`p-3 border rounded-xl flex flex-col gap-1.5 cursor-pointer transition text-left ${selectedTheme === themeOpt.id ? 'border-indigo-500 bg-indigo-500/10' : 'border-slate-800 bg-slate-900/40 hover:border-slate-700'}`}
                   >
                     <div className="flex items-center gap-2">
-                      <span className="w-3.5 h-3.5 rounded-full border border-white/20 shadow-inner" style={{ backgroundColor: themeOpt.color }} />
-                      <span className="text-[10px] font-black text-white">{themeOpt.name}</span>
+                      <span className="w-4 h-4 rounded-full border border-white/20" style={{ backgroundColor: themeOpt.color }} />
+                      <span className="text-[11px] font-medium text-white">{themeOpt.name}</span>
                     </div>
-                    <span className="text-[8.5px] text-slate-400 leading-none">{themeOpt.desc}</span>
+                    <span className="text-[9.5px] text-slate-400 leading-tight">{themeOpt.desc}</span>
                   </button>
                 ))}
               </div>
 
               <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Custom Accent Hex</label>
+                <label className="text-[11px] font-medium text-slate-300 block">Custom accent hex</label>
                 <div className="flex gap-2">
                   <input
                     type="color"
@@ -501,8 +501,8 @@ export default function RestaurantThemeStudio({
           {editorSection === 'fonts' && (
             <div className="space-y-4">
               <div>
-                <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Typography Studio</h4>
-                <p className="text-[9.5px] text-slate-500 mt-1">Choose a visual font family to override layout headings.</p>
+                <h4 className="text-[13px] font-semibold tracking-tight text-slate-100">Typography Studio</h4>
+                <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Choose a visual font family to override layout headings.</p>
               </div>
 
               <div className="space-y-2">
@@ -533,8 +533,8 @@ export default function RestaurantThemeStudio({
               {/* Button Shape */}
               <div className="space-y-3.5">
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Buttons Borders</h4>
-                  <p className="text-[9.5px] text-slate-500 mt-1">Select the edge alignment variables for buttons.</p>
+                  <h4 className="text-[13px] font-semibold tracking-tight text-slate-100">Buttons Borders</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Select the edge alignment variables for buttons.</p>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   {[
@@ -558,8 +558,8 @@ export default function RestaurantThemeStudio({
               {/* Animations */}
               <div className="space-y-3.5">
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Transitions & Animations</h4>
-                  <p className="text-[9.5px] text-slate-500 mt-1">Define load effects and scrolling transitions.</p>
+                  <h4 className="text-[13px] font-semibold tracking-tight text-slate-100">Transitions & Animations</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Define load effects and scrolling transitions.</p>
                 </div>
                 <div className="space-y-2">
                   {[
@@ -589,8 +589,8 @@ export default function RestaurantThemeStudio({
               {/* Headers layout */}
               <div className="space-y-3.5">
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Headers Alignment</h4>
-                  <p className="text-[9.5px] text-slate-500 mt-1">Configure sticky positioning, absolute overlays or modern headers.</p>
+                  <h4 className="text-[13px] font-semibold tracking-tight text-slate-100">Headers Alignment</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Configure sticky positioning, absolute overlays or modern headers.</p>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   {[
@@ -614,8 +614,8 @@ export default function RestaurantThemeStudio({
               {/* Homepage Template layout */}
               <div className="space-y-3.5">
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Homepage Sections Layout</h4>
-                  <p className="text-[9.5px] text-slate-500 mt-1">Toggle custom visual layout categories.</p>
+                  <h4 className="text-[13px] font-semibold tracking-tight text-slate-100">Homepage Sections Layout</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Toggle custom visual layout categories.</p>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   {[
@@ -638,8 +638,8 @@ export default function RestaurantThemeStudio({
               {/* Login Template layout */}
               <div className="space-y-3.5">
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Login Page Layout</h4>
-                  <p className="text-[9.5px] text-slate-500 mt-1">Customize the portal access page grid layout.</p>
+                  <h4 className="text-[13px] font-semibold tracking-tight text-slate-100">Login Page Layout</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Customize the portal access page grid layout.</p>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   {[
@@ -662,8 +662,8 @@ export default function RestaurantThemeStudio({
               {/* Dashboard Layout */}
               <div className="space-y-3.5">
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Admin Dashboard Console</h4>
-                  <p className="text-[9.5px] text-slate-500 mt-1">Configure layout styles for reservations summaries.</p>
+                  <h4 className="text-[13px] font-semibold tracking-tight text-slate-100">Admin Dashboard Console</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Configure layout styles for reservations summaries.</p>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   {[
@@ -764,8 +764,8 @@ export default function RestaurantThemeStudio({
             return (
               <div className="space-y-5">
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Layout Editor</h4>
-                  <p className="text-[9.5px] text-slate-500 mt-1">Click a section to edit its text and images. Use the eye to hide it, arrows to reorder. Everything autosaves and shows live in the preview.</p>
+                  <h4 className="text-[13px] font-semibold tracking-tight text-slate-100">Layout Editor</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Click a section to edit its text and images. Use the eye to hide it, arrows to reorder. Everything autosaves and shows live in the preview.</p>
                 </div>
 
                 {/* Page selector pills */}
@@ -909,8 +909,8 @@ export default function RestaurantThemeStudio({
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Food Menu Catalog</h4>
-                  <p className="text-[9.5px] text-slate-500 mt-1">Manage dishes visible on your digital menu.</p>
+                  <h4 className="text-[13px] font-semibold tracking-tight text-slate-100">Food Menu Catalog</h4>
+                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Manage dishes visible on your digital menu.</p>
                 </div>
               </div>
 
@@ -943,8 +943,8 @@ export default function RestaurantThemeStudio({
           {editorSection === 'publish' && (
             <div className="space-y-5">
               <div>
-                <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Secure site subdomain</h4>
-                <p className="text-[9.5px] text-slate-500 mt-1">Configure your online presence URL prefix.</p>
+                <h4 className="text-[13px] font-semibold tracking-tight text-slate-100">Secure site subdomain</h4>
+                <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Configure your online presence URL prefix.</p>
               </div>
 
               <div className="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-4">
@@ -986,9 +986,9 @@ export default function RestaurantThemeStudio({
         </div>
 
         {/* Footer publisher summary */}
-        <div className="p-4 border-t border-slate-800 bg-slate-900/40 text-[9px] font-bold text-slate-500 flex justify-between items-center">
-          <span>Autosave: Active ✅</span>
-          <span>H2 Database Sync</span>
+        <div className="p-3.5 border-t border-slate-800/70 text-[10px] font-medium text-slate-500 flex justify-between items-center">
+          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Autosave active</span>
+          <span>H2 sync</span>
         </div>
 
       </aside>

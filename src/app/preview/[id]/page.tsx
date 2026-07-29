@@ -7,6 +7,7 @@ import { api } from '@/services/api';
 import { Project, Block, Product, Order } from '@/types';
 import BlockMarkup from '@/components/preview/BlockMarkup';
 import RestaurantStorefront from '@/components/preview/restaurant/RestaurantStorefront';
+import HotelExperience from '@/components/preview/hotel/HotelExperience';
 import WeddingStorefront from '@/components/preview/wedding/WeddingStorefront';
 import ScratchStorefront from '@/components/preview/scratch/ScratchStorefront';
 import EcommerceStorefront from '@/components/preview/ecommerce/EcommerceStorefront';
@@ -811,6 +812,21 @@ function PreviewPageContent({ params }: PageProps) {
           </p>
         </div>
       </div>
+    );
+  }
+
+  /* ------------------------------------------------------------------
+   * HOTEL & RESORT SHORT-CIRCUIT
+   * Published hotel projects render the self-contained hotel template
+   * live, using the theme chosen at publish time.
+   * ------------------------------------------------------------------ */
+  if (projectConfig?.businessType === 'hotel') {
+    return (
+      <HotelExperience
+        projectId={Number(projectId)}
+        initialThemeId={(projectConfig.selectedTheme as any) || 'azure'}
+        liveMode
+      />
     );
   }
 

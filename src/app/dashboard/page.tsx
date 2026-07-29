@@ -493,6 +493,8 @@ export default function DashboardPage() {
       setIsCorporateSelectorOpen(true);
     } else if (templateId === 'medical-shop') {
       setIsMedicalShopSelectorOpen(true);
+    } else if (templateId === 'hotel') {
+      window.open('/hotel-preview', '_blank');
     } else if (templateId === 'scratch') {
       setIsScratchSelectorOpen(true);
     } else {
